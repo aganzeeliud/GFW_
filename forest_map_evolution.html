@@ -279,10 +279,148 @@
             padding-top: 10px;
             border-top: 1px solid #ddd;
         }
+
+        .map-time-slider {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid #2d5016;
+        }
+
+        .time-slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .time-slider-header h3 {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d5016;
+            margin: 0;
+        }
+
+        .year-indicator {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d9534f;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .time-slider-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .time-slider-controls button {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2d5016;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: background-color 0.3s;
+        }
+
+        .time-slider-controls button:hover {
+            background-color: #1f3a10;
+        }
+
+        .time-slider-controls button.active {
+            background-color: #d9534f;
+        }
+
+        .slider-track {
+            margin: 12px 0;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .year-stats-mini {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .year-stat-mini {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .year-stat-mini-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+
+        .year-stat-mini-label {
+            color: #999;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
+    
+    <!-- Time Slider on Map -->
+    <div class="map-time-slider">
+        <div class="time-slider-header">
+            <h3>⏱️ Timeline (2000-2025)</h3>
+            <div class="year-indicator" id="mapYearDisplay">2025</div>
+        </div>
+        
+        <div class="time-slider-controls">
+            <button id="mapPlayBtn" onclick="playMapAnimation()">▶ Play</button>
+            <button id="mapResetBtn" onclick="resetMapYear()">↻ Reset</button>
+            <button id="mapLatestBtn" onclick="goToMapLatest()">⏭ 2025</button>
+        </div>
+
+        <div class="slider-track">
+            <input type="range" id="mapYearSlider" min="2000" max="2025" value="2025" step="1">
+            <div class="slider-labels">
+                <span>2000</span>
+                <span>2025</span>
+            </div>
+        </div>
+
+        <div class="year-stats-mini">
+            <div class="year-stat-mini">
+                <div class="year-stat-mini-value" id="miniLoss">1,742.13</div>
+                <div class="year-stat-mini-label">Annual Loss (ha)</div>
+            </div>
+            <div class="year-stat-mini">
+                <div class="year-stat-mini-value" id="miniCover">1,370,858</div>
+                <div class="year-stat-mini-label">Forest Cover (ha)</div>
+            </div>
+            <div class="year-stat-mini">
+                <div class="year-stat-mini-value" id="miniCumulative">24,925</div>
+                <div class="year-stat-mini-label">Cumulative Loss</div>
+            </div>
+        </div>
+    </div>
     
     <div class="timeline-panel">
         <h1>🌳 Forest Evolution</h1>
@@ -370,6 +508,7 @@
     <script>
         // Historical data (2001-2025)
         const yearlyData = {
+            2000: {loss: 450.00, cover: 1371600.00, label: "2000"},
             2001: {loss: 465.88, cover: 1371134.12, label: "2001"},
             2002: {loss: 586.46, cover: 1370547.66, label: "2002"},
             2003: {loss: 142.08, cover: 1370405.58, label: "2003"},
@@ -454,7 +593,37 @@
         document.getElementById('yearSlider').addEventListener('input', function(e) {
             currentYear = parseInt(e.target.value);
             updateDisplay();
+            updateMapTimeSlider();
+            document.getElementById('mapYearSlider').value = currentYear;
         });
+
+        // Map time slider event
+        document.getElementById('mapYearSlider').addEventListener('input', function(e) {
+            currentYear = parseInt(e.target.value);
+            updateDisplay();
+            updateMapTimeSlider();
+            document.getElementById('yearSlider').value = currentYear;
+        });
+
+        function updateMapTimeSlider() {
+            const data = yearlyData[currentYear];
+            
+            // Update year display on map slider
+            document.getElementById('mapYearDisplay').textContent = currentYear;
+            
+            // Update mini stats
+            document.getElementById('miniLoss').textContent = data.loss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('miniCover').textContent = Math.round(data.cover).toLocaleString();
+            
+            // Calculate cumulative loss
+            let cumulative = 0;
+            for (let year = 2000; year <= currentYear; year++) {
+                if (yearlyData[year]) {
+                    cumulative += yearlyData[year].loss;
+                }
+            }
+            document.getElementById('miniCumulative').textContent = cumulative.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        }
 
         function updateDisplay() {
             const data = yearlyData[currentYear];
@@ -550,7 +719,7 @@
             markers = [];
 
             // Calculate reduction factor based on year progression
-            const yearFraction = (currentYear - 2001) / (2025 - 2001);
+            const yearFraction = (currentYear - 2000) / (2025 - 2000);
 
             // Add core zones
             coreZones.forEach(zone => {
@@ -633,40 +802,58 @@
             isPlaying = true;
             document.getElementById('playBtn').classList.add('active');
             document.getElementById('playBtn').textContent = '⏸ Pause';
+            document.getElementById('mapPlayBtn').classList.add('active');
+            document.getElementById('mapPlayBtn').textContent = '⏸ Pause';
 
-            let year = 2001;
+            let year = 2000;
             const interval = setInterval(() => {
                 if (year > 2025 || !isPlaying) {
                     clearInterval(interval);
                     isPlaying = false;
                     document.getElementById('playBtn').classList.remove('active');
                     document.getElementById('playBtn').textContent = '▶ Play';
+                    document.getElementById('mapPlayBtn').classList.remove('active');
+                    document.getElementById('mapPlayBtn').textContent = '▶ Play';
                     return;
                 }
                 currentYear = year;
                 updateDisplay();
+                updateMapTimeSlider();
+                document.getElementById('mapYearSlider').value = currentYear;
+                document.getElementById('yearSlider').value = currentYear;
                 year++;
-            }, 300);
+            }, 250);
         }
 
         function resetYear() {
-            currentYear = 2001;
+            currentYear = 2000;
             updateDisplay();
+            updateMapTimeSlider();
+            document.getElementById('mapYearSlider').value = currentYear;
+            document.getElementById('yearSlider').value = currentYear;
             isPlaying = false;
             document.getElementById('playBtn').classList.remove('active');
             document.getElementById('playBtn').textContent = '▶ Play';
+            document.getElementById('mapPlayBtn').classList.remove('active');
+            document.getElementById('mapPlayBtn').textContent = '▶ Play';
         }
 
         function goToLatest() {
             currentYear = 2025;
             updateDisplay();
+            updateMapTimeSlider();
+            document.getElementById('mapYearSlider').value = currentYear;
+            document.getElementById('yearSlider').value = currentYear;
             isPlaying = false;
             document.getElementById('playBtn').classList.remove('active');
             document.getElementById('playBtn').textContent = '▶ Play';
+            document.getElementById('mapPlayBtn').classList.remove('active');
+            document.getElementById('mapPlayBtn').textContent = '▶ Play';
         }
 
         // Initial display
         updateDisplay();
+        updateMapTimeSlider();
     </script>
 </body>
 </html>
