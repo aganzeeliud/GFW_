@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okapi Wildlife Reserve - Forest Cover Map 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        
+        .control-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .control-panel h1 {
+            font-size: 18px;
+            color: #2d5016;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #2d5016;
+            padding-bottom: 8px;
+        }
+        
+        .control-panel h2 {
+            font-size: 14px;
+            color: #3d6b1f;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        
+        .stat {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #2d5016;
+            font-size: 13px;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #d9534f;
+        }
+        
+        .stat-label {
+            color: #555;
+            font-size: 12px;
+        }
+        
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 13px;
+        }
+        
+        .legend-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+        
+        .zone-info {
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+            border-left: 3px solid #2d5016;
+        }
+        
+        .popup-title {
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 5px;
+        }
+        
+        .popup-content {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="control-panel">
+        <h1>🌳 Okapi Wildlife Reserve</h1>
+        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Forest Loss & Tree Cover Analysis 2001-2025</p>
+        
+        <h2>Reserve Summary (2025)</h2>
+        <div class="stat">
+            <div class="stat-label">Annual Forest Loss</div>
+            <div class="stat-value">1,742.13 ha</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Total Forest Cover</div>
+            <div class="stat-value">1,370,857.87 ha</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Loss Rate</div>
+            <div class="stat-value">0.127%</div>
+        </div>
+        
+        <h2>Cumulative Loss (2001-2025)</h2>
+        <div class="stat">
+            <div class="stat-label">Total Loss</div>
+            <div class="stat-value">24,925.38 ha</div>
+        </div>
+        
+        <h2>Zone Categories</h2>
+        <div class="zone-info">
+            <div style="font-weight: bold; color: #2d5016;">🔵 Core Zones</div>
+            <div style="font-size: 11px; color: #666; margin-top: 4px;">Protected core areas: Mont Mbia, Enjewe, Forêt de Zoo, Lenda, Afarama</div>
+        </div>
+        <div class="zone-info">
+            <div style="font-weight: bold; color: #2d5016;">🟢 Agricultural Zones (ZAD)</div>
+            <div style="font-size: 11px; color: #666; margin-top: 4px;">31 zone d'aménagement durable zones for sustainable use</div>
+        </div>
+        <div class="zone-info">
+            <div style="font-weight: bold; color: #2d5016;">🟠 Hunting Zones (ZChasse)</div>
+            <div style="font-size: 11px; color: #666; margin-top: 4px;">32 designated hunting zones with managed wildlife</div>
+        </div>
+    </div>
+    
+    <div class="legend">
+        <div style="font-weight: bold; color: #2d5016; margin-bottom: 10px;">Legend</div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #1a5490;"></div>
+            <span>Core Zones</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #7cb342;"></div>
+            <span>Agricultural Zones</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #f57c00;"></div>
+            <span>Hunting Zones</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #d32f2f;"></div>
+            <span>High Loss Area</span>
+        </div>
+    </div>
+    
+    <div class="info">
+        📍 Reserve location: Northeastern DRC<br/>
+        Data period: 2001-2025 | Last update: May 2026
+    </div>
+
+    <script>
+        // Initialize map centered on Okapi Wildlife Reserve
+        const map = L.map('map').setView([-1.25, 27.85], 8);
+        
+        // Add base layers
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Add satellite layer as optional
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 18
+        });
+        
+        // Approximate boundaries of Okapi Wildlife Reserve (simplified polygon)
+        const reservePolygon = [
+            [-0.5, 27.0],
+            [-0.5, 28.7],
+            [-2.0, 28.7],
+            [-2.0, 27.0]
+        ];
+        
+        // Draw reserve boundary
+        L.polygon(reservePolygon, {
+            color: '#2d5016',
+            weight: 3,
+            opacity: 0.7,
+            fillColor: '#90ee90',
+            fillOpacity: 0.1
+        }).bindPopup('<div class="popup-title">Okapi Wildlife Reserve</div><div class="popup-content">Area: 13,726 km²<br/>Location: Northeastern DRC<br/>Established: 1992</div>').addTo(map);
+        
+        // Core zones (example locations - these are approximate)
+        const coreZones = [
+            {name: 'Mont Mbia', lat: -0.8, lng: 27.5, loss: 0.93},
+            {name: 'Enjewe', lat: -1.2, lng: 27.8, loss: 1049.46},
+            {name: 'Forêt de Zoo', lat: -1.5, lng: 28.2, loss: 9.54},
+            {name: 'Lenda', lat: -1.0, lng: 28.0, loss: 2.33},
+            {name: 'Afarama', lat: -1.3, lng: 27.2, loss: 134.16}
+        ];
+        
+        // Add core zone markers
+        coreZones.forEach(zone => {
+            const marker = L.circleMarker([zone.lat, zone.lng], {
+                radius: Math.min(zone.loss / 100 + 5, 20),
+                fillColor: '#1a5490',
+                color: '#0d3a5c',
+                weight: 2,
+                opacity: 0.8,
+                fillOpacity: 0.6
+            });
+            
+            marker.bindPopup(`
+                <div class="popup-title">${zone.name}</div>
+                <div class="popup-content">
+                    <strong>Zone Type:</strong> Core Protected Zone<br/>
+                    <strong>Annual Loss (2025):</strong> ${zone.loss.toFixed(2)} ha<br/>
+                    <strong>Status:</strong> Primary protection
+                </div>
+            `);
+            
+            marker.addTo(map);
+        });
+        
+        // Add 5 sample agricultural zones
+        const agZones = [
+            {name: 'Uekomba', lat: -0.7, lng: 27.2, loss: 34.45},
+            {name: 'Bongupanda', lat: -1.0, lng: 27.5, loss: 102.50},
+            {name: 'Badengaido', lat: -1.3, lng: 27.8, loss: 3022.14},
+            {name: 'Molokay', lat: -1.6, lng: 28.1, loss: 338.47},
+            {name: 'Bandisende', lat: -0.9, lng: 28.3, loss: 2410.70}
+        ];
+        
+        agZones.forEach(zone => {
+            const marker = L.circleMarker([zone.lat, zone.lng], {
+                radius: Math.min(zone.loss / 200 + 4, 15),
+                fillColor: '#7cb342',
+                color: '#558b2f',
+                weight: 2,
+                opacity: 0.8,
+                fillOpacity: 0.6
+            });
+            
+            marker.bindPopup(`
+                <div class="popup-title">${zone.name}</div>
+                <div class="popup-content">
+                    <strong>Zone Type:</strong> Agricultural Zone (ZAD)<br/>
+                    <strong>Annual Loss (2025):</strong> ${zone.loss.toFixed(2)} ha<br/>
+                    <strong>Status:</strong> Sustainable management
+                </div>
+            `);
+            
+            marker.addTo(map);
+        });
+        
+        // Add 5 sample hunting zones
+        const huntingZones = [
+            {name: 'Babama', lat: -0.6, lng: 27.9, loss: 299.98},
+            {name: 'Molokay-Hunt', lat: -1.1, lng: 27.6, loss: 459.75},
+            {name: 'Salate', lat: -1.4, lng: 28.2, loss: 501.73},
+            {name: 'Ebiane', lat: -1.2, lng: 27.3, loss: 160.23},
+            {name: 'Mamopi', lat: -1.5, lng: 28.0, loss: 83.34}
+        ];
+        
+        huntingZones.forEach(zone => {
+            const marker = L.circleMarker([zone.lat, zone.lng], {
+                radius: Math.min(zone.loss / 150 + 4, 14),
+                fillColor: '#f57c00',
+                color: '#e65100',
+                weight: 2,
+                opacity: 0.8,
+                fillOpacity: 0.6
+            });
+            
+            marker.bindPopup(`
+                <div class="popup-title">${zone.name}</div>
+                <div class="popup-content">
+                    <strong>Zone Type:</strong> Hunting Zone (ZChasse)<br/>
+                    <strong>Annual Loss (2025):</strong> ${zone.loss.toFixed(2)} ha<br/>
+                    <strong>Status:</strong> Controlled hunting
+                </div>
+            `);
+            
+            marker.addTo(map);
+        });
+        
+        // Add a high-loss alert marker
+        const alertMarker = L.circleMarker([-1.3, 27.8], {
+            radius: 25,
+            fillColor: '#d32f2f',
+            color: '#9a0007',
+            weight: 3,
+            opacity: 1,
+            fillOpacity: 0.3,
+            dashArray: '5, 5'
+        });
+        
+        alertMarker.bindPopup(`
+            <div class="popup-title">⚠️ High Loss Alert</div>
+            <div class="popup-content">
+                <strong>Area:</strong> Badengaido Zone<br/>
+                <strong>2025 Loss:</strong> 3,022.14 ha<br/>
+                <strong>Status:</strong> Requires intervention
+            </div>
+        `);
+        
+        alertMarker.addTo(map);
+        
+        // Layer control
+        const baseLayers = {
+            'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }),
+            'Satellite': satelliteLayer
+        };
+        
+        L.control.layers(baseLayers).addTo(map);
+        
+        // Add scale
+        L.control.scale().addTo(map);
+        
+        // Timeline/year selector (simple version)
+        const timelineControl = L.Control.extend({
+            options: {
+                position: 'topleft'
+            },
+            onAdd: function(map) {
+                const div = L.DomUtil.create('div', 'timeline-control');
+                div.style.background = 'white';
+                div.style.padding = '10px';
+                div.style.borderRadius = '5px';
+                div.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                div.innerHTML = `
+                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">Data Year</div>
+                    <input type="range" min="2001" max="2025" value="2025" style="width: 150px;" id="yearSlider">
+                    <div id="yearDisplay" style="margin-top: 5px; text-align: center; font-weight: bold;">2025</div>
+                `;
+                
+                document.getElementById('yearSlider').addEventListener('change', function(e) {
+                    document.getElementById('yearDisplay').textContent = e.target.value;
+                });
+                
+                return div;
+            }
+        });
+        
+        new timelineControl().addTo(map);
+    </script>
+</body>
+</html>
