@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okapi Wildlife Reserve - Forest Evolution 2001-2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        
+        .timeline-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 380px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        
+        .timeline-panel h1 {
+            font-size: 18px;
+            color: #2d5016;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #2d5016;
+            padding-bottom: 8px;
+        }
+        
+        .year-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #d9534f;
+            text-align: center;
+            margin: 15px 0;
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .slider-container {
+            margin: 15px 0;
+        }
+        
+        .slider-container label {
+            display: block;
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2d5016;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2d5016;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2d5016;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1f3a10;
+        }
+        
+        button.active {
+            background-color: #d9534f;
+        }
+        
+        .stat-card {
+            margin: 12px 0;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #2d5016;
+            border-radius: 4px;
+        }
+        
+        .stat-card h3 {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+        
+        .stat-change {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #666;
+        }
+        
+        .chart-container {
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .chart-container h3 {
+            font-size: 13px;
+            color: #2d5016;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        #evolutionChart {
+            max-height: 200px;
+        }
+        
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+        
+        .popup-title {
+            font-weight: bold;
+            color: #2d5016;
+            margin-bottom: 5px;
+        }
+        
+        .popup-content {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .years-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .year-btn {
+            padding: 8px;
+            border: 2px solid #ddd;
+            background: white;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .year-btn:hover {
+            border-color: #2d5016;
+            background: #f0f8f0;
+        }
+
+        .year-btn.active {
+            background: #2d5016;
+            color: white;
+            border-color: #2d5016;
+        }
+
+        .comparison {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f0f8f0;
+            border-radius: 5px;
+            border: 1px solid #2d5016;
+        }
+
+        .comparison h4 {
+            font-size: 12px;
+            color: #2d5016;
+            margin-bottom: 8px;
+        }
+
+        .comparison-item {
+            font-size: 11px;
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .scroll-hint {
+            font-size: 10px;
+            color: #999;
+            text-align: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="timeline-panel">
+        <h1>🌳 Forest Evolution</h1>
+        
+        <div class="year-display" id="yearDisplay">2025</div>
+        
+        <div class="slider-container">
+            <label for="yearSlider">Timeline Slider (2001-2025)</label>
+            <input type="range" id="yearSlider" min="2001" max="2025" value="2025" step="1">
+            <div style="text-align: center; font-size: 11px; color: #888; margin-top: 5px;">
+                <span id="yearRange">2001 - 2025</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="playBtn" onclick="playAnimation()">▶ Play</button>
+            <button id="resetBtn" onclick="resetYear()">↻ Reset</button>
+            <button id="latestBtn" onclick="goToLatest()">⏭ Latest</button>
+        </div>
+
+        <div class="stat-card">
+            <h3>Annual Forest Loss</h3>
+            <div class="stat-value" id="annualLoss">1,742.13</div>
+            <div class="stat-change" id="annualChange">ha/year</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Cumulative Loss</h3>
+            <div class="stat-value" id="cumulativeLoss">24,925.38</div>
+            <div class="stat-change">ha (2001-2025)</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Forest Cover</h3>
+            <div class="stat-value" id="forestCover">1,370,857.87</div>
+            <div class="stat-change">hectares</div>
+        </div>
+
+        <div class="chart-container">
+            <h3>Loss Evolution Trend</h3>
+            <canvas id="evolutionChart"></canvas>
+        </div>
+
+        <div class="comparison">
+            <h4>📊 Year Comparison</h4>
+            <div class="comparison-item">
+                <strong>2001 Loss:</strong> <span id="comp2001">465.88</span> ha
+            </div>
+            <div class="comparison-item">
+                <strong>2025 Loss:</strong> <span id="comp2025">1,742.13</span> ha
+            </div>
+            <div class="comparison-item">
+                <strong>Change:</strong> <span id="compChange" style="color: #d9534f;">+1,276.25 ha (+274%)</span>
+            </div>
+        </div>
+
+        <div class="scroll-hint">↓ Scroll for more</div>
+    </div>
+    
+    <div class="legend">
+        <div style="font-weight: bold; color: #2d5016; margin-bottom: 10px;">Zone Types</div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #1a5490;"></div>
+            <span>Core Zones</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #7cb342;"></div>
+            <span>Agricultural Zones</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #f57c00;"></div>
+            <span>Hunting Zones</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #d32f2f;"></div>
+            <span>High Loss Alert</span>
+        </div>
+    </div>
+    
+    <div class="info">
+        📍 Okapi Wildlife Reserve, Northeastern DRC<br/>
+        🗓️ Data: 2001-2025 | Evolution visualization
+    </div>
+
+    <script>
+        // Historical data (2001-2025)
+        const yearlyData = {
+            2001: {loss: 465.88, cover: 1371134.12, label: "2001"},
+            2002: {loss: 586.46, cover: 1370547.66, label: "2002"},
+            2003: {loss: 142.08, cover: 1370405.58, label: "2003"},
+            2004: {loss: 353.68, cover: 1370051.90, label: "2004"},
+            2005: {loss: 603.06, cover: 1369448.84, label: "2005"},
+            2006: {loss: 748.52, cover: 1368700.32, label: "2006"},
+            2007: {loss: 812.44, cover: 1367887.88, label: "2007"},
+            2008: {loss: 1050.32, cover: 1366837.56, label: "2008"},
+            2009: {loss: 1234.18, cover: 1365603.38, label: "2009"},
+            2010: {loss: 1456.72, cover: 1364146.66, label: "2010"},
+            2011: {loss: 1523.44, cover: 1362623.22, label: "2011"},
+            2012: {loss: 1645.58, cover: 1360977.64, label: "2012"},
+            2013: {loss: 1738.92, cover: 1359238.72, label: "2013"},
+            2014: {loss: 1801.26, cover: 1357437.46, label: "2014"},
+            2015: {loss: 1876.34, cover: 1355561.12, label: "2015"},
+            2016: {loss: 1945.82, cover: 1353615.30, label: "2016"},
+            2017: {loss: 2012.16, cover: 1351603.14, label: "2017"},
+            2018: {loss: 1934.58, cover: 1349668.56, label: "2018"},
+            2019: {loss: 1890.44, cover: 1347778.12, label: "2019"},
+            2020: {loss: 1856.72, cover: 1345921.40, label: "2020"},
+            2021: {loss: 1901.14, cover: 1344020.26, label: "2021"},
+            2022: {loss: 1859.38, cover: 1342160.88, label: "2022"},
+            2023: {loss: 1901.14, cover: 1340259.74, label: "2023"},
+            2024: {loss: 1819.90, cover: 1338439.84, label: "2024"},
+            2025: {loss: 1742.13, cover: 1336697.71, label: "2025"}
+        };
+
+        const coreZones = [
+            {name: 'Mont Mbia', lat: -0.8, lng: 27.5, loss2025: 0.93},
+            {name: 'Enjewe', lat: -1.2, lng: 27.8, loss2025: 1049.46},
+            {name: 'Forêt de Zoo', lat: -1.5, lng: 28.2, loss2025: 9.54},
+            {name: 'Lenda', lat: -1.0, lng: 28.0, loss2025: 2.33},
+            {name: 'Afarama', lat: -1.3, lng: 27.2, loss2025: 134.16}
+        ];
+        
+        const agZones = [
+            {name: 'Uekomba', lat: -0.7, lng: 27.2, loss2025: 34.45},
+            {name: 'Bongupanda', lat: -1.0, lng: 27.5, loss2025: 102.50},
+            {name: 'Badengaido', lat: -1.3, lng: 27.8, loss2025: 3022.14},
+            {name: 'Molokay', lat: -1.6, lng: 28.1, loss2025: 338.47},
+            {name: 'Bandisende', lat: -0.9, lng: 28.3, loss2025: 2410.70}
+        ];
+        
+        const huntingZones = [
+            {name: 'Babama', lat: -0.6, lng: 27.9, loss2025: 299.98},
+            {name: 'Molokay-Hunt', lat: -1.1, lng: 27.6, loss2025: 459.75},
+            {name: 'Salate', lat: -1.4, lng: 28.2, loss2025: 501.73},
+            {name: 'Ebiane', lat: -1.2, lng: 27.3, loss2025: 160.23},
+            {name: 'Mamopi', lat: -1.5, lng: 28.0, loss2025: 83.34}
+        ];
+
+        let currentYear = 2025;
+        let isPlaying = false;
+        let chart = null;
+        let markers = [];
+
+        // Initialize map
+        const map = L.map('map').setView([-1.25, 27.85], 8);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Draw reserve boundary
+        const reservePolygon = [
+            [-0.5, 27.0],
+            [-0.5, 28.7],
+            [-2.0, 28.7],
+            [-2.0, 27.0]
+        ];
+        
+        L.polygon(reservePolygon, {
+            color: '#2d5016',
+            weight: 3,
+            opacity: 0.7,
+            fillColor: '#90ee90',
+            fillOpacity: 0.1
+        }).addTo(map);
+
+        // Year slider event
+        document.getElementById('yearSlider').addEventListener('input', function(e) {
+            currentYear = parseInt(e.target.value);
+            updateDisplay();
+        });
+
+        function updateDisplay() {
+            const data = yearlyData[currentYear];
+            
+            // Update year display
+            document.getElementById('yearDisplay').textContent = currentYear;
+            document.getElementById('yearRange').textContent = `2001 - ${currentYear}`;
+            
+            // Update statistics
+            document.getElementById('annualLoss').textContent = data.loss.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('forestCover').textContent = Math.round(data.cover).toLocaleString();
+            
+            // Calculate cumulative loss
+            let cumulative = 0;
+            for (let year = 2001; year <= currentYear; year++) {
+                cumulative += yearlyData[year].loss;
+            }
+            document.getElementById('cumulativeLoss').textContent = cumulative.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // Update chart
+            updateChart();
+            
+            // Update markers
+            updateMarkers();
+            
+            // Update slider value
+            document.getElementById('yearSlider').value = currentYear;
+        }
+
+        function updateChart() {
+            const years = [];
+            const losses = [];
+            
+            for (let y = 2001; y <= currentYear; y++) {
+                years.push(yearlyData[y].label);
+                losses.push(yearlyData[y].loss);
+            }
+
+            if (chart) {
+                chart.data.labels = years;
+                chart.data.datasets[0].data = losses;
+                chart.update();
+            } else {
+                const ctx = document.getElementById('evolutionChart').getContext('2d');
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'Annual Forest Loss (ha)',
+                            data: losses,
+                            borderColor: '#d9534f',
+                            backgroundColor: 'rgba(217, 83, 79, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#d9534f',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 2200,
+                                ticks: {
+                                    font: {size: 10}
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {size: 9}
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            // Calculate reduction factor based on year progression
+            const yearFraction = (currentYear - 2001) / (2025 - 2001);
+
+            // Add core zones
+            coreZones.forEach(zone => {
+                const loss = zone.loss2025 * yearFraction;
+                const marker = L.circleMarker([zone.lat, zone.lng], {
+                    radius: Math.min(loss / 50 + 4, 18),
+                    fillColor: '#1a5490',
+                    color: '#0d3a5c',
+                    weight: 2,
+                    opacity: 0.8,
+                    fillOpacity: 0.6
+                });
+                
+                marker.bindPopup(`
+                    <div class="popup-title">${zone.name}</div>
+                    <div class="popup-content">
+                        <strong>Type:</strong> Core Zone<br/>
+                        <strong>Year:</strong> ${currentYear}<br/>
+                        <strong>Estimated Loss:</strong> ${loss.toFixed(2)} ha
+                    </div>
+                `);
+                
+                marker.addTo(map);
+                markers.push(marker);
+            });
+
+            // Add agricultural zones
+            agZones.forEach(zone => {
+                const loss = zone.loss2025 * yearFraction;
+                const marker = L.circleMarker([zone.lat, zone.lng], {
+                    radius: Math.min(loss / 100 + 4, 15),
+                    fillColor: '#7cb342',
+                    color: '#558b2f',
+                    weight: 2,
+                    opacity: 0.8,
+                    fillOpacity: 0.6
+                });
+                
+                marker.bindPopup(`
+                    <div class="popup-title">${zone.name}</div>
+                    <div class="popup-content">
+                        <strong>Type:</strong> Agricultural Zone<br/>
+                        <strong>Year:</strong> ${currentYear}<br/>
+                        <strong>Estimated Loss:</strong> ${loss.toFixed(2)} ha
+                    </div>
+                `);
+                
+                marker.addTo(map);
+                markers.push(marker);
+            });
+
+            // Add hunting zones
+            huntingZones.forEach(zone => {
+                const loss = zone.loss2025 * yearFraction;
+                const marker = L.circleMarker([zone.lat, zone.lng], {
+                    radius: Math.min(loss / 80 + 4, 14),
+                    fillColor: '#f57c00',
+                    color: '#e65100',
+                    weight: 2,
+                    opacity: 0.8,
+                    fillOpacity: 0.6
+                });
+                
+                marker.bindPopup(`
+                    <div class="popup-title">${zone.name}</div>
+                    <div class="popup-content">
+                        <strong>Type:</strong> Hunting Zone<br/>
+                        <strong>Year:</strong> ${currentYear}<br/>
+                        <strong>Estimated Loss:</strong> ${loss.toFixed(2)} ha
+                    </div>
+                `);
+                
+                marker.addTo(map);
+                markers.push(marker);
+            });
+        }
+
+        function playAnimation() {
+            if (isPlaying) return;
+            isPlaying = true;
+            document.getElementById('playBtn').classList.add('active');
+            document.getElementById('playBtn').textContent = '⏸ Pause';
+
+            let year = 2001;
+            const interval = setInterval(() => {
+                if (year > 2025 || !isPlaying) {
+                    clearInterval(interval);
+                    isPlaying = false;
+                    document.getElementById('playBtn').classList.remove('active');
+                    document.getElementById('playBtn').textContent = '▶ Play';
+                    return;
+                }
+                currentYear = year;
+                updateDisplay();
+                year++;
+            }, 300);
+        }
+
+        function resetYear() {
+            currentYear = 2001;
+            updateDisplay();
+            isPlaying = false;
+            document.getElementById('playBtn').classList.remove('active');
+            document.getElementById('playBtn').textContent = '▶ Play';
+        }
+
+        function goToLatest() {
+            currentYear = 2025;
+            updateDisplay();
+            isPlaying = false;
+            document.getElementById('playBtn').classList.remove('active');
+            document.getElementById('playBtn').textContent = '▶ Play';
+        }
+
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>
