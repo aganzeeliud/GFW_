@@ -327,25 +327,50 @@
             <div class="infographic-cards">
                 <div class="info-card">
                     <span class="info-card-value">1.37M</span>
-                    <span class="info-card-label">Hectares Forested</span>
+                    <span class="info-card-label">Reserve Hectares</span>
                 </div>
                 <div class="info-card">
                     <span class="info-card-value">21,921</span>
-                    <span class="info-card-label">Total Hectares Lost</span>
+                    <span class="info-card-label">Reserve Loss (ha)</span>
                 </div>
                 <div class="info-card">
-                    <span class="info-card-value">0.07%</span>
-                    <span class="info-card-label">Current Loss Rate</span>
+                    <span class="info-card-value">433,399</span>
+                    <span class="info-card-label">Buffer Loss (ha)</span>
                 </div>
                 <div class="info-card">
-                    <span class="info-card-value">UNESCO</span>
-                    <span class="info-card-label">World Heritage Site</span>
+                    <span class="info-card-value">50km</span>
+                    <span class="info-card-label">Monitoring Buffer</span>
                 </div>
             </div>
         </div>
     </section>
 
     <div class="container">
+        <!-- Comparison Section -->
+        <section class="content-section">
+            <div class="section-header" style="text-align: center;">
+                <h2><i class="fas fa-balance-scale"></i> Comparison: Reserve vs. Buffer</h2>
+                <p style="margin: 0 auto;">Analyzing forest loss inside the Okapi Wildlife Reserve versus the surrounding 50km buffer zone.</p>
+            </div>
+            <div class="chart-box">
+                <div class="chart-container" style="height: 450px;">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div class="stat-card" style="padding: 1.5rem; background: #f8faf9; border-radius: 12px; border-left: 5px solid var(--primary);">
+                    <h4 style="color: var(--primary);">Inside Reserve</h4>
+                    <p style="font-size: 1.8rem; font-weight: 800;">21,921 ha</p>
+                    <p style="font-size: 0.85rem; color: var(--text-light);">Cumulative loss since 2001. Protected status significantly limits deforestation.</p>
+                </div>
+                <div class="stat-card" style="padding: 1.5rem; background: #fdf2f2; border-radius: 12px; border-left: 5px solid var(--accent);">
+                    <h4 style="color: var(--accent);">50km Buffer Zone</h4>
+                    <p style="font-size: 1.8rem; font-weight: 800;">433,399 ha</p>
+                    <p style="font-size: 0.85rem; color: var(--text-light);">Cumulative loss since 2001. Area under high human pressure and agricultural expansion.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Importance Section -->
         <section class="content-section">
             <div class="grid-2">
@@ -461,8 +486,45 @@
     <script>
         const years = ['2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'];
         const lossData = [465.6, 589.1, 141.2, 353.9, 605.0, 356.4, 1240.5, 265.2, 759.3, 344.2, 810.0, 293.9, 443.3, 853.0, 738.6, 992.3, 1071.0, 1069.2, 1166.5, 1326.4, 1445.4, 1964.8, 1904.4, 1818.0, 903.5];
+        const bufferLossData = [4831.4, 8866.6, 2860.6, 4945.1, 6204.8, 3387.8, 14742.2, 2357.0, 8857.2, 4629.2, 10817.0, 4755.1, 9403.7, 18345.2, 14138.8, 22422.5, 26417.9, 24351.8, 25262.3, 30312.2, 26770.0, 40363.9, 32438.9, 40074.4, 45843.4];
         const coverData = [1372134.4, 1372010.9, 1372458.8, 1372246.1, 1371995.0, 1372243.6, 1371359.5, 1372334.8, 1371840.7, 1372255.8, 1371790.0, 1372306.1, 1372156.7, 1371747.0, 1371861.4, 1371607.7, 1371529.1, 1371530.8, 1371433.5, 1371273.6, 1371154.6, 1370635.2, 1370695.6, 1370782.0, 1371696.6];
         const rateData = [0.03, 0.04, 0.01, 0.03, 0.04, 0.03, 0.09, 0.02, 0.06, 0.03, 0.06, 0.02, 0.03, 0.06, 0.05, 0.07, 0.08, 0.08, 0.09, 0.10, 0.11, 0.14, 0.14, 0.13, 0.07];
+
+        // Comparison Chart
+        new Chart(document.getElementById('comparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: 'Inside Reserve Loss (ha)',
+                        data: lossData,
+                        backgroundColor: '#2d5016',
+                        borderRadius: 4
+                    },
+                    {
+                        label: '50km Buffer Loss (ha)',
+                        data: bufferLossData,
+                        backgroundColor: '#d9534f',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        title: { display: true, text: 'Hectares (ha)' }
+                    }
+                }
+            }
+        });
 
         // Loss Chart
         new Chart(document.getElementById('lossChart'), {

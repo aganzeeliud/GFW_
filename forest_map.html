@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turf/6.5.0/turf.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -219,6 +220,7 @@
         <div class="legend-item"><div class="legend-color" style="background: #7cb342;"></div> Agricultural</div>
         <div class="legend-item"><div class="legend-color" style="background: #f57c00;"></div> Hunting</div>
         <div class="legend-item"><div class="legend-color" style="background: #d32f2f;"></div> High Loss Alert</div>
+        <div class="legend-item"><div class="legend-color" style="background: rgba(217, 83, 79, 0.1); border: 1px solid #d9534f; border-style: dashed;"></div> 50km Buffer Zone</div>
     </div>
 
     <script>
@@ -260,9 +262,23 @@
         fetch('OWR_Limit_OWR_2024.json')
             .then(res => res.json())
             .then(data => {
+                // Reserve Boundary
                 L.geoJSON(data, {
                     style: { color: '#2d5016', weight: 3, opacity: 0.8, fillOpacity: 0.05 }
                 }).addTo(map);
+
+                // 50km Buffer Layer
+                try {
+                    // Note: If coordinates are UTM, Turf buffer will fail or be incorrect.
+                    // This assumes the GeoJSON is compatible with Turf's expectations.
+                    const buffered = turf.buffer(data, 50, {units: 'kilometers'});
+                    L.geoJSON(buffered, {
+                        style: { color: '#d9534f', weight: 1, dashArray: '5, 5', fillOpacity: 0.1 }
+                    }).addTo(map);
+                } catch (e) {
+                    console.error("Turf Buffer Error:", e);
+                }
+
                 map.fitBounds(L.geoJSON(data).getBounds(), {padding: [50, 50]});
             });
         
