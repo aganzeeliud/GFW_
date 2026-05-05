@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Okapi Wildlife Reserve - Forest Cover Map 2025</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <style>
         * {
@@ -14,117 +15,13 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f5f5f5;
         }
         
         #map {
             height: 100vh;
             width: 100%;
-        }
-        
-        .control-panel {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            max-width: 350px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .control-panel h1 {
-            font-size: 18px;
-            color: #2d5016;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #2d5016;
-            padding-bottom: 8px;
-        }
-        
-        .control-panel h2 {
-            font-size: 14px;
-            color: #3d6b1f;
-            margin-top: 15px;
-            margin-bottom: 8px;
-        }
-        
-        .stat {
-            margin: 8px 0;
-            padding: 8px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #2d5016;
-            font-size: 13px;
-        }
-        
-        .stat-value {
-            font-weight: bold;
-            color: #d9534f;
-        }
-        
-        .stat-label {
-            color: #555;
-            font-size: 12px;
-        }
-        
-        .legend {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            font-size: 13px;
-        }
-        
-        .legend-item {
-            margin: 8px 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            border-radius: 50%;
-        }
-        
-        .zone-info {
-            margin-top: 12px;
-            padding: 10px;
-            background-color: #f0f8ff;
-            border-radius: 4px;
-            border-left: 3px solid #2d5016;
-        }
-        
-        .popup-title {
-            font-weight: bold;
-            color: #2d5016;
-            margin-bottom: 5px;
-        }
-        
-        .popup-content {
-            font-size: 12px;
-            line-height: 1.6;
-        }
-
-        .info {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            font-size: 11px;
-            color: #666;
         }
 
         /* Navigation */
@@ -145,7 +42,7 @@
 
         .nav-logo {
             font-size: 1.2rem;
-            font-weight: bold;
+            font-weight: 800;
             color: #2d5016;
             text-decoration: none;
         }
@@ -158,333 +55,246 @@
         .nav-links a {
             text-decoration: none;
             color: #666;
-            font-weight: 500;
+            font-weight: 600;
             transition: color 0.3s;
         }
 
         .nav-links a:hover, .nav-links a.active {
-            color: #d9534f;
+            color: #2d5016;
+        }
+        
+        .control-panel {
+            position: fixed;
+            top: 75px;
+            left: 15px;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-width: 350px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        .control-panel h1 {
+            font-size: 1.2rem;
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
         }
 
-        /* Adjust other elements to account for nav */
-        .control-panel {
-            top: 70px;
+        .control-panel h2 {
+            font-size: 0.9rem;
+            color: #d9534f;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .stat {
+            margin: 10px 0;
+            padding: 1rem;
+            background-color: #f8faf9;
+            border-left: 4px solid #2d5016;
+            border-radius: 4px;
+        }
+        
+        .stat-value {
+            font-weight: 800;
+            color: #2d5016;
+            font-size: 1.4rem;
+            display: block;
+        }
+
+        .stat-value.loss {
+            color: #d9534f;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        
+        .legend {
+            position: fixed;
+            bottom: 25px;
+            right: 15px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            font-size: 0.85rem;
+        }
+        
+        .legend-item {
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+        
+        .zone-info {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background-color: #f0f8ff;
+            border-radius: 6px;
+            border-left: 3px solid #2d5016;
+            font-size: 0.8rem;
+        }
+        
+        .timeline-control {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #2d5016;
         }
     </style>
 </head>
 <body>
     <nav class="main-nav">
-        <a href="index.html" class="nav-logo">🌳 OWR Dashboard</a>
+        <a href="index.html" class="nav-logo">🌳 OWR RESERVE</a>
         <div class="nav-links">
             <a href="index.html">Dashboard</a>
             <a href="forest_map.html" class="active">2025 Map</a>
             <a href="forest_map_evolution.html">Evolution Map</a>
         </div>
     </nav>
+
     <div id="map"></div>
     
     <div class="control-panel">
         <h1>🌳 Okapi Wildlife Reserve</h1>
-        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Forest Loss & Tree Cover Analysis 2001-2025</p>
+        <p style="font-size: 0.8rem; color: #888;">Forest Cover Analysis 2001-2025</p>
         
-        <h2>Reserve Summary (2025)</h2>
+        <h2 id="summaryTitle">Reserve Summary (2025)</h2>
         <div class="stat">
             <div class="stat-label">Annual Forest Loss</div>
-            <div class="stat-value">45,843.4 ha</div>
+            <div class="stat-value loss" id="statLoss">903.45 ha</div>
         </div>
         <div class="stat">
             <div class="stat-label">Total Forest Cover</div>
-            <div class="stat-value">2,457,492.5 ha</div>
+            <div class="stat-value" id="statCover">1,371,697 ha</div>
         </div>
         <div class="stat">
-            <div class="stat-label">Loss Rate</div>
-            <div class="stat-value">1.83%</div>
+            <div class="stat-label">Annual Loss Rate</div>
+            <div class="stat-value" id="statRate">0.067%</div>
         </div>
         
-        <h2>Cumulative Loss (2001-2025)</h2>
-        <div class="stat">
-            <div class="stat-label">Total Loss</div>
-            <div class="stat-value">433,399.0 ha</div>
+        <div class="stat" style="border-left-color: #d9534f;">
+            <div class="stat-label">Cumulative Loss (since 2001)</div>
+            <div class="stat-value loss" id="statCumulative">21,920.7 ha</div>
         </div>
         
-        <h2>Zone Categories</h2>
+        <h2>Management Zones</h2>
         <div class="zone-info">
-            <div style="font-weight: bold; color: #2d5016;">🔵 Core Zones</div>
-            <div style="font-size: 11px; color: #666; margin-top: 4px;">Protected core areas: Mont Mbia, Enjewe, Forêt de Zoo, Lenda, Afarama</div>
+            <div style="font-weight: 800; color: #1a5490;">🔵 Core Protected Zones</div>
+            <div style="margin-top: 4px; opacity: 0.8;">Primary protection areas with restricted access.</div>
         </div>
-        <div class="zone-info">
-            <div style="font-weight: bold; color: #2d5016;">🟢 Agricultural Zones (ZAD)</div>
-            <div style="font-size: 11px; color: #666; margin-top: 4px;">31 zone d'aménagement durable zones for sustainable use</div>
+        <div class="zone-info" style="background-color: #f8faf0;">
+            <div style="font-weight: 800; color: #7cb342;">🟢 Agricultural Zones (ZAD)</div>
+            <div style="margin-top: 4px; opacity: 0.8;">Areas designated for sustainable human use.</div>
         </div>
-        <div class="zone-info">
-            <div style="font-weight: bold; color: #2d5016;">🟠 Hunting Zones (ZChasse)</div>
-            <div style="font-size: 11px; color: #666; margin-top: 4px;">32 designated hunting zones with managed wildlife</div>
+        <div class="zone-info" style="background-color: #fffaf0;">
+            <div style="font-weight: 800; color: #f57c00;">🟠 Hunting Zones</div>
+            <div style="margin-top: 4px; opacity: 0.8;">Controlled hunting areas for local communities.</div>
         </div>
     </div>
     
     <div class="legend">
-        <div style="font-weight: bold; color: #2d5016; margin-bottom: 10px;">Legend</div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: #1a5490;"></div>
-            <span>Core Zones</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: #7cb342;"></div>
-            <span>Agricultural Zones</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: #f57c00;"></div>
-            <span>Hunting Zones</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: #d32f2f;"></div>
-            <span>High Loss Area</span>
-        </div>
-    </div>
-    
-    <div class="info">
-        📍 Reserve location: Northeastern DRC<br/>
-        Data period: 2001-2025 | Last update: May 2026
+        <div style="font-weight: 800; margin-bottom: 0.8rem; text-transform: uppercase; font-size: 0.75rem;">Map Key</div>
+        <div class="legend-item"><div class="legend-color" style="background: #1a5490;"></div> Core Zones</div>
+        <div class="legend-item"><div class="legend-color" style="background: #7cb342;"></div> Agricultural</div>
+        <div class="legend-item"><div class="legend-color" style="background: #f57c00;"></div> Hunting</div>
+        <div class="legend-item"><div class="legend-color" style="background: #d32f2f;"></div> High Loss Alert</div>
     </div>
 
     <script>
-        // Initialize map centered on Okapi Wildlife Reserve
-        const map = L.map('map').setView([-1.25, 27.85], 8);
+        const map = L.map('map', {zoomControl: false}).setView([-1.25, 27.85], 8);
+        L.control.zoom({position: 'topright'}).addTo(map);
         
-        // Add base layers
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19
+            attribution: '© OpenStreetMap contributors'
         }).addTo(map);
-        
-        // Add satellite layer as optional
-        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri',
-            maxZoom: 18
-        });
-        
-        // Fetch and draw OWR boundary from GeoJSON
-        fetch('OWR_Limit_OWR_2024.json')
-            .then(response => response.json())
-            .then(data => {
-                L.geoJSON(data, {
-                    style: {
-                        color: '#2d5016',
-                        weight: 3,
-                        opacity: 0.8,
-                        fillColor: '#90ee90',
-                        fillOpacity: 0.1
-                    },
-                    onEachFeature: function(feature, layer) {
-                        layer.bindPopup('<div class="popup-title">Okapi Wildlife Reserve</div><div class="popup-content">Area: 13,726 km²<br/>Location: Northeastern DRC<br/>Established: 1992</div>');
-                    }
-                }).addTo(map);
-                
-                // Fit map to bounds
-                const bounds = L.geoJSON(data).getBounds();
-                map.fitBounds(bounds, {padding: [50, 50]});
-            })
-            .catch(error => console.error('Error loading OWR boundary:', error));
-        
-        // Core zones (example locations - these are approximate)
-        const coreZones = [
-            {name: 'Mont Mbia', lat: -0.8, lng: 27.5, loss: 0.93},
-            {name: 'Enjewe', lat: -1.2, lng: 27.8, loss: 1049.46},
-            {name: 'Forêt de Zoo', lat: -1.5, lng: 28.2, loss: 9.54},
-            {name: 'Lenda', lat: -1.0, lng: 28.0, loss: 2.33},
-            {name: 'Afarama', lat: -1.3, lng: 27.2, loss: 134.16}
-        ];
-        
-        // Add core zone markers
-        coreZones.forEach(zone => {
-            const marker = L.circleMarker([zone.lat, zone.lng], {
-                radius: Math.min(zone.loss / 100 + 5, 20),
-                fillColor: '#1a5490',
-                color: '#0d3a5c',
-                weight: 2,
-                opacity: 0.8,
-                fillOpacity: 0.6
-            });
-            
-            marker.bindPopup(`
-                <div class="popup-title">${zone.name}</div>
-                <div class="popup-content">
-                    <strong>Zone Type:</strong> Core Protected Zone<br/>
-                    <strong>Annual Loss (2025):</strong> ${zone.loss.toFixed(2)} ha<br/>
-                    <strong>Status:</strong> Primary protection
-                </div>
-            `);
-            
-            marker.addTo(map);
-        });
-        
-        // Add 5 sample agricultural zones
-        const agZones = [
-            {name: 'Uekomba', lat: -0.7, lng: 27.2, loss: 34.45},
-            {name: 'Bongupanda', lat: -1.0, lng: 27.5, loss: 102.50},
-            {name: 'Badengaido', lat: -1.3, lng: 27.8, loss: 3022.14},
-            {name: 'Molokay', lat: -1.6, lng: 28.1, loss: 338.47},
-            {name: 'Bandisende', lat: -0.9, lng: 28.3, loss: 2410.70}
-        ];
-        
-        agZones.forEach(zone => {
-            const marker = L.circleMarker([zone.lat, zone.lng], {
-                radius: Math.min(zone.loss / 200 + 4, 15),
-                fillColor: '#7cb342',
-                color: '#558b2f',
-                weight: 2,
-                opacity: 0.8,
-                fillOpacity: 0.6
-            });
-            
-            marker.bindPopup(`
-                <div class="popup-title">${zone.name}</div>
-                <div class="popup-content">
-                    <strong>Zone Type:</strong> Agricultural Zone (ZAD)<br/>
-                    <strong>Annual Loss (2025):</strong> ${zone.loss.toFixed(2)} ha<br/>
-                    <strong>Status:</strong> Sustainable management
-                </div>
-            `);
-            
-            marker.addTo(map);
-        });
-        
-        // Add 5 sample hunting zones
-        const huntingZones = [
-            {name: 'Babama', lat: -0.6, lng: 27.9, loss: 299.98},
-            {name: 'Molokay-Hunt', lat: -1.1, lng: 27.6, loss: 459.75},
-            {name: 'Salate', lat: -1.4, lng: 28.2, loss: 501.73},
-            {name: 'Ebiane', lat: -1.2, lng: 27.3, loss: 160.23},
-            {name: 'Mamopi', lat: -1.5, lng: 28.0, loss: 83.34}
-        ];
-        
-        huntingZones.forEach(zone => {
-            const marker = L.circleMarker([zone.lat, zone.lng], {
-                radius: Math.min(zone.loss / 150 + 4, 14),
-                fillColor: '#f57c00',
-                color: '#e65100',
-                weight: 2,
-                opacity: 0.8,
-                fillOpacity: 0.6
-            });
-            
-            marker.bindPopup(`
-                <div class="popup-title">${zone.name}</div>
-                <div class="popup-content">
-                    <strong>Zone Type:</strong> Hunting Zone (ZChasse)<br/>
-                    <strong>Annual Loss (2025):</strong> ${zone.loss.toFixed(2)} ha<br/>
-                    <strong>Status:</strong> Controlled hunting
-                </div>
-            `);
-            
-            marker.addTo(map);
-        });
-        
-        // Add a high-loss alert marker
-        const alertMarker = L.circleMarker([-1.3, 27.8], {
-            radius: 25,
-            fillColor: '#d32f2f',
-            color: '#9a0007',
-            weight: 3,
-            opacity: 1,
-            fillOpacity: 0.3,
-            dashArray: '5, 5'
-        });
-        
-        alertMarker.bindPopup(`
-            <div class="popup-title">⚠️ High Loss Alert</div>
-            <div class="popup-content">
-                <strong>Area:</strong> Badengaido Zone<br/>
-                <strong>2025 Loss:</strong> 3,022.14 ha<br/>
-                <strong>Status:</strong> Requires intervention
-            </div>
-        `);
-        
-        alertMarker.addTo(map);
-        
-        // Layer control
-        const baseLayers = {
-            'OpenStreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }),
-            'Satellite': satelliteLayer
-        };
-        
-        L.control.layers(baseLayers).addTo(map);
-        
-        // Add scale
-        L.control.scale().addTo(map);
 
         const yearlyData = {
-            2000: {loss: 0, cover: 2890891.5, cumulative: 0},
-            2001: {loss: 4831.4, cover: 2886060.1, cumulative: 4831.4},
-            2002: {loss: 8866.6, cover: 2877193.5, cumulative: 13698.0},
-            2003: {loss: 2860.6, cover: 2874332.9, cumulative: 16558.6},
-            2004: {loss: 4945.1, cover: 2869387.8, cumulative: 21503.7},
-            2005: {loss: 6204.8, cover: 2863183.0, cumulative: 27708.5},
-            2006: {loss: 3387.8, cover: 2859795.2, cumulative: 31096.3},
-            2007: {loss: 14742.2, cover: 2845053.0, cumulative: 45838.5},
-            2008: {loss: 2357.0, cover: 2842696.0, cumulative: 48195.5},
-            2009: {loss: 8857.2, cover: 2833838.8, cumulative: 57052.7},
-            2010: {loss: 4629.2, cover: 2829209.6, cumulative: 61681.9},
-            2011: {loss: 10817.0, cover: 2818392.6, cumulative: 72498.9},
-            2012: {loss: 4755.1, cover: 2813637.5, cumulative: 77254.0},
-            2013: {loss: 9403.7, cover: 2804233.8, cumulative: 86657.7},
-            2014: {loss: 18345.2, cover: 2785888.6, cumulative: 105002.9},
-            2015: {loss: 14138.8, cover: 2771749.8, cumulative: 119141.7},
-            2016: {loss: 22422.5, cover: 2749327.3, cumulative: 141564.2},
-            2017: {loss: 26417.9, cover: 2722909.4, cumulative: 167982.1},
-            2018: {loss: 24351.8, cover: 2698557.6, cumulative: 192333.9},
-            2019: {loss: 25262.3, cover: 2673295.3, cumulative: 217596.2},
-            2020: {loss: 30312.2, cover: 2642983.1, cumulative: 247908.4},
-            2021: {loss: 26770.0, cover: 2616213.1, cumulative: 274678.4},
-            2022: {loss: 40363.9, cover: 2575849.2, cumulative: 315042.3},
-            2023: {loss: 32438.9, cover: 2543410.3, cumulative: 347481.2},
-            2024: {loss: 40074.4, cover: 2503335.9, cumulative: 387555.6},
-            2025: {loss: 45843.4, cover: 2457492.5, cumulative: 433399.0}
+            2001: {loss: 465.61, cover: 1372134.39, cumulative: 465.61, rate: 0.034},
+            2002: {loss: 589.10, cover: 1372010.90, cumulative: 1054.71, rate: 0.043},
+            2003: {loss: 141.21, cover: 1372458.79, cumulative: 1195.92, rate: 0.010},
+            2004: {loss: 353.86, cover: 1372246.14, cumulative: 1549.78, rate: 0.026},
+            2005: {loss: 604.96, cover: 1371995.04, cumulative: 2154.74, rate: 0.044},
+            2006: {loss: 356.42, cover: 1372243.58, cumulative: 2511.15, rate: 0.026},
+            2007: {loss: 1240.54, cover: 1371359.46, cumulative: 3751.69, rate: 0.090},
+            2008: {loss: 265.24, cover: 1372334.76, cumulative: 4016.93, rate: 0.019},
+            2009: {loss: 759.31, cover: 1371840.69, cumulative: 4776.24, rate: 0.055},
+            2010: {loss: 344.20, cover: 1372255.80, cumulative: 5120.44, rate: 0.025},
+            2011: {loss: 809.96, cover: 1371790.04, cumulative: 5930.40, rate: 0.059},
+            2012: {loss: 293.93, cover: 1372306.07, cumulative: 6224.33, rate: 0.021},
+            2013: {loss: 443.34, cover: 1372156.66, cumulative: 6667.67, rate: 0.032},
+            2014: {loss: 853.03, cover: 1371746.97, cumulative: 7520.70, rate: 0.062},
+            2015: {loss: 738.58, cover: 1371861.42, cumulative: 8259.29, rate: 0.054},
+            2016: {loss: 992.31, cover: 1371607.69, cumulative: 9251.59, rate: 0.072},
+            2017: {loss: 1070.95, cover: 1371529.05, cumulative: 10322.54, rate: 0.078},
+            2018: {loss: 1069.17, cover: 1371530.83, cumulative: 11391.71, rate: 0.078},
+            2019: {loss: 1166.53, cover: 1371433.47, cumulative: 12558.25, rate: 0.085},
+            2020: {loss: 1326.37, cover: 1371273.63, cumulative: 13884.62, rate: 0.097},
+            2021: {loss: 1445.38, cover: 1371154.62, cumulative: 15330.00, rate: 0.105},
+            2022: {loss: 1964.81, cover: 1370635.19, cumulative: 17294.82, rate: 0.143},
+            2023: {loss: 1904.42, cover: 1370695.58, cumulative: 19199.23, rate: 0.139},
+            2024: {loss: 1818.04, cover: 1370781.96, cumulative: 21017.27, rate: 0.133},
+            2025: {loss: 903.45, cover: 1371696.55, cumulative: 21920.73, rate: 0.066}
         };
 
-        function updateStats(year) {
+        fetch('OWR_Limit_OWR_2024.json')
+            .then(res => res.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: { color: '#2d5016', weight: 3, opacity: 0.8, fillOpacity: 0.05 }
+                }).addTo(map);
+                map.fitBounds(L.geoJSON(data).getBounds(), {padding: [50, 50]});
+            });
+        
+        function updateUI(year) {
             const data = yearlyData[year];
             if (!data) return;
             
-            const stats = document.querySelectorAll('.stat-value');
-            stats[0].textContent = data.loss.toLocaleString() + ' ha';
-            stats[1].textContent = data.cover.toLocaleString() + ' ha';
-            stats[2].textContent = ((data.loss / data.cover) * 100).toFixed(3) + '%';
-            stats[3].textContent = data.cumulative.toLocaleString() + ' ha';
-            
-            document.querySelector('.control-panel h2').textContent = `Reserve Summary (${year})`;
+            document.getElementById('summaryTitle').textContent = `Reserve Summary (${year})`;
+            document.getElementById('statLoss').textContent = data.loss.toLocaleString() + ' ha';
+            document.getElementById('statCover').textContent = Math.round(data.cover).toLocaleString() + ' ha';
+            document.getElementById('statRate').textContent = data.rate.toFixed(3) + '%';
+            document.getElementById('statCumulative').textContent = data.cumulative.toLocaleString() + ' ha';
         }
         
-        // Timeline/year selector (simple version)
         const timelineControl = L.Control.extend({
-            options: {
-                position: 'topleft'
-            },
-            onAdd: function(map) {
+            options: { position: 'bottomleft' },
+            onAdd: function() {
                 const div = L.DomUtil.create('div', 'timeline-control');
-                div.style.background = 'white';
-                div.style.padding = '10px';
-                div.style.borderRadius = '5px';
-                div.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
                 div.innerHTML = `
-                    <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px;">Data Year</div>
-                    <input type="range" min="2001" max="2025" value="2025" style="width: 150px;" id="yearSlider">
-                    <div id="yearDisplay" style="margin-top: 5px; text-align: center; font-weight: bold;">2025</div>
+                    <div style="font-size: 0.75rem; font-weight: 800; margin-bottom: 8px; color: #2d5016;">FILTER BY YEAR</div>
+                    <input type="range" min="2001" max="2025" value="2025" style="width: 200px;" id="mapSlider">
+                    <div id="yearValue" style="margin-top: 5px; text-align: center; font-weight: 900; color: #d9534f; font-size: 1.2rem;">2025</div>
                 `;
                 
-                // Add event listener after the element is added to the DOM
                 setTimeout(() => {
-                    const slider = document.getElementById('yearSlider');
-                    const display = document.getElementById('yearDisplay');
+                    const slider = document.getElementById('mapSlider');
+                    const display = document.getElementById('yearValue');
                     slider.addEventListener('input', function(e) {
-                        const year = e.target.value;
-                        display.textContent = year;
-                        updateStats(year);
+                        display.textContent = e.target.value;
+                        updateUI(e.target.value);
                     });
                 }, 0);
-                
                 return div;
             }
         });
