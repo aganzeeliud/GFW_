@@ -80,7 +80,7 @@
             font-size: 0.9rem;
         }
 
-        nav a:hover {
+        nav a:hover, nav a.active {
             color: var(--accent);
         }
 
@@ -496,12 +496,11 @@
     <!-- Navigation -->
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="logo">🌳 OWR Dashboard</a>
+            <a href="index.html" class="logo">🌳 OWR Dashboard</a>
             <ul>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#insights">Insights</a></li>
-                <li><a href="#maps">Maps</a></li>
-                <li><a href="#data">Data</a></li>
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="forest_map.html">2025 Map</a></li>
+                <li><a href="forest_map_evolution.html">Evolution Map</a></li>
             </ul>
         </div>
     </nav>
@@ -510,23 +509,23 @@
     <section class="hero">
         <div class="hero-content">
             <h1>Okapi Wildlife Reserve</h1>
-            <p class="hero-subtitle">Forest Cover & Deforestation Analysis 2001-2025</p>
+            <p class="hero-subtitle">Forest Cover & Deforestation Analysis 2001-2025 (RFO + 50km Buffer)</p>
             <div class="hero-stats">
                 <div>
-                    <span class="hero-stat-value">13,726</span>
-                    <span class="hero-stat-label">km² Area</span>
+                    <span class="hero-stat-value">2.89M</span>
+                    <span class="hero-stat-label">ha Total Area</span>
                 </div>
                 <div>
-                    <span class="hero-stat-value">24,925</span>
+                    <span class="hero-stat-value">433,399</span>
                     <span class="hero-stat-label">ha Total Loss</span>
                 </div>
                 <div>
-                    <span class="hero-stat-value">1.37M</span>
+                    <span class="hero-stat-value">2.46M</span>
                     <span class="hero-stat-label">ha Current Cover</span>
                 </div>
                 <div>
-                    <span class="hero-stat-value">1.82%</span>
-                    <span class="hero-stat-label">Loss Rate</span>
+                    <span class="hero-stat-value">14.99%</span>
+                    <span class="hero-stat-label">Total Loss Rate</span>
                 </div>
             </div>
         </div>
@@ -563,7 +562,7 @@
 
             <div class="highlight-box">
                 <h4>⚡ Recent Trend</h4>
-                <p>Forest loss peaked in 2017 at 2,012 hectares annually but has improved significantly since then. The 2025 loss of 1,742 hectares represents a 13.4% reduction from peak levels, indicating positive impacts from conservation efforts.</p>
+                <p>Forest loss has shown a significant upward trend in the RFO buffer area, reaching a record high of 45,843 hectares in 2025. This acceleration in deforestation highlights the urgent need for enhanced monitoring and conservation interventions in the expanded buffer zones.</p>
             </div>
         </section>
 
@@ -718,7 +717,7 @@
                     labels: ['2001', '2003', '2005', '2007', '2009', '2011', '2013', '2015', '2017', '2019', '2021', '2023', '2025'],
                     datasets: [{
                         label: 'Annual Forest Loss (ha)',
-                        data: [465.9, 142.1, 603.1, 1241.1, 760.9, 345.0, 402.5, 892.3, 2012.4, 1234.5, 987.3, 1512.3, 1742.1],
+                        data: [4831.4, 2860.6, 6204.8, 14742.2, 8857.2, 10817.0, 9403.7, 14138.8, 26417.9, 25262.3, 26770.0, 32438.9, 45843.4],
                         borderColor: '#d9534f',
                         backgroundColor: 'rgba(217, 83, 79, 0.1)',
                         borderWidth: 3,

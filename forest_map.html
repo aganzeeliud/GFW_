@@ -126,9 +126,61 @@
             font-size: 11px;
             color: #666;
         }
+
+        /* Navigation */
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 2000;
+        }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2d5016;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #d9534f;
+        }
+
+        /* Adjust other elements to account for nav */
+        .control-panel {
+            top: 70px;
+        }
     </style>
 </head>
 <body>
+    <nav class="main-nav">
+        <a href="index.html" class="nav-logo">🌳 OWR Dashboard</a>
+        <div class="nav-links">
+            <a href="index.html">Dashboard</a>
+            <a href="forest_map.html" class="active">2025 Map</a>
+            <a href="forest_map_evolution.html">Evolution Map</a>
+        </div>
+    </nav>
     <div id="map"></div>
     
     <div class="control-panel">
@@ -138,21 +190,21 @@
         <h2>Reserve Summary (2025)</h2>
         <div class="stat">
             <div class="stat-label">Annual Forest Loss</div>
-            <div class="stat-value">1,742.13 ha</div>
+            <div class="stat-value">45,843.4 ha</div>
         </div>
         <div class="stat">
             <div class="stat-label">Total Forest Cover</div>
-            <div class="stat-value">1,370,857.87 ha</div>
+            <div class="stat-value">2,457,492.5 ha</div>
         </div>
         <div class="stat">
             <div class="stat-label">Loss Rate</div>
-            <div class="stat-value">0.127%</div>
+            <div class="stat-value">1.83%</div>
         </div>
         
         <h2>Cumulative Loss (2001-2025)</h2>
         <div class="stat">
             <div class="stat-label">Total Loss</div>
-            <div class="stat-value">24,925.38 ha</div>
+            <div class="stat-value">433,399.0 ha</div>
         </div>
         
         <h2>Zone Categories</h2>
@@ -362,6 +414,48 @@
         
         // Add scale
         L.control.scale().addTo(map);
+
+        const yearlyData = {
+            2000: {loss: 0, cover: 2890891.5, cumulative: 0},
+            2001: {loss: 4831.4, cover: 2886060.1, cumulative: 4831.4},
+            2002: {loss: 8866.6, cover: 2877193.5, cumulative: 13698.0},
+            2003: {loss: 2860.6, cover: 2874332.9, cumulative: 16558.6},
+            2004: {loss: 4945.1, cover: 2869387.8, cumulative: 21503.7},
+            2005: {loss: 6204.8, cover: 2863183.0, cumulative: 27708.5},
+            2006: {loss: 3387.8, cover: 2859795.2, cumulative: 31096.3},
+            2007: {loss: 14742.2, cover: 2845053.0, cumulative: 45838.5},
+            2008: {loss: 2357.0, cover: 2842696.0, cumulative: 48195.5},
+            2009: {loss: 8857.2, cover: 2833838.8, cumulative: 57052.7},
+            2010: {loss: 4629.2, cover: 2829209.6, cumulative: 61681.9},
+            2011: {loss: 10817.0, cover: 2818392.6, cumulative: 72498.9},
+            2012: {loss: 4755.1, cover: 2813637.5, cumulative: 77254.0},
+            2013: {loss: 9403.7, cover: 2804233.8, cumulative: 86657.7},
+            2014: {loss: 18345.2, cover: 2785888.6, cumulative: 105002.9},
+            2015: {loss: 14138.8, cover: 2771749.8, cumulative: 119141.7},
+            2016: {loss: 22422.5, cover: 2749327.3, cumulative: 141564.2},
+            2017: {loss: 26417.9, cover: 2722909.4, cumulative: 167982.1},
+            2018: {loss: 24351.8, cover: 2698557.6, cumulative: 192333.9},
+            2019: {loss: 25262.3, cover: 2673295.3, cumulative: 217596.2},
+            2020: {loss: 30312.2, cover: 2642983.1, cumulative: 247908.4},
+            2021: {loss: 26770.0, cover: 2616213.1, cumulative: 274678.4},
+            2022: {loss: 40363.9, cover: 2575849.2, cumulative: 315042.3},
+            2023: {loss: 32438.9, cover: 2543410.3, cumulative: 347481.2},
+            2024: {loss: 40074.4, cover: 2503335.9, cumulative: 387555.6},
+            2025: {loss: 45843.4, cover: 2457492.5, cumulative: 433399.0}
+        };
+
+        function updateStats(year) {
+            const data = yearlyData[year];
+            if (!data) return;
+            
+            const stats = document.querySelectorAll('.stat-value');
+            stats[0].textContent = data.loss.toLocaleString() + ' ha';
+            stats[1].textContent = data.cover.toLocaleString() + ' ha';
+            stats[2].textContent = ((data.loss / data.cover) * 100).toFixed(3) + '%';
+            stats[3].textContent = data.cumulative.toLocaleString() + ' ha';
+            
+            document.querySelector('.control-panel h2').textContent = `Reserve Summary (${year})`;
+        }
         
         // Timeline/year selector (simple version)
         const timelineControl = L.Control.extend({
@@ -380,9 +474,16 @@
                     <div id="yearDisplay" style="margin-top: 5px; text-align: center; font-weight: bold;">2025</div>
                 `;
                 
-                document.getElementById('yearSlider').addEventListener('change', function(e) {
-                    document.getElementById('yearDisplay').textContent = e.target.value;
-                });
+                // Add event listener after the element is added to the DOM
+                setTimeout(() => {
+                    const slider = document.getElementById('yearSlider');
+                    const display = document.getElementById('yearDisplay');
+                    slider.addEventListener('input', function(e) {
+                        const year = e.target.value;
+                        display.textContent = year;
+                        updateStats(year);
+                    });
+                }, 0);
                 
                 return div;
             }
