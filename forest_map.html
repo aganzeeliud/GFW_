@@ -211,22 +211,28 @@
             maxZoom: 18
         });
         
-        // Approximate boundaries of Okapi Wildlife Reserve (simplified polygon)
-        const reservePolygon = [
-            [-0.5, 27.0],
-            [-0.5, 28.7],
-            [-2.0, 28.7],
-            [-2.0, 27.0]
-        ];
-        
-        // Draw reserve boundary
-        L.polygon(reservePolygon, {
-            color: '#2d5016',
-            weight: 3,
-            opacity: 0.7,
-            fillColor: '#90ee90',
-            fillOpacity: 0.1
-        }).bindPopup('<div class="popup-title">Okapi Wildlife Reserve</div><div class="popup-content">Area: 13,726 km²<br/>Location: Northeastern DRC<br/>Established: 1992</div>').addTo(map);
+        // Fetch and draw OWR boundary from GeoJSON
+        fetch('OWR_Limit_OWR_2024.json')
+            .then(response => response.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: {
+                        color: '#2d5016',
+                        weight: 3,
+                        opacity: 0.8,
+                        fillColor: '#90ee90',
+                        fillOpacity: 0.1
+                    },
+                    onEachFeature: function(feature, layer) {
+                        layer.bindPopup('<div class="popup-title">Okapi Wildlife Reserve</div><div class="popup-content">Area: 13,726 km²<br/>Location: Northeastern DRC<br/>Established: 1992</div>');
+                    }
+                }).addTo(map);
+                
+                // Fit map to bounds
+                const bounds = L.geoJSON(data).getBounds();
+                map.fitBounds(bounds, {padding: [50, 50]});
+            })
+            .catch(error => console.error('Error loading OWR boundary:', error));
         
         // Core zones (example locations - these are approximate)
         const coreZones = [
