@@ -714,39 +714,106 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['2001', '2003', '2005', '2007', '2009', '2011', '2013', '2015', '2017', '2019', '2021', '2023', '2025'],
-                    datasets: [{
-                        label: 'Annual Forest Loss (ha)',
-                        data: [4831.4, 2860.6, 6204.8, 14742.2, 8857.2, 10817.0, 9403.7, 14138.8, 26417.9, 25262.3, 26770.0, 32438.9, 45843.4],
-                        borderColor: '#d9534f',
-                        backgroundColor: 'rgba(217, 83, 79, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#d9534f',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2
-                    }]
+                    labels: ['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+                    datasets: [
+                        {
+                            label: 'Annual Forest Loss (ha)',
+                            data: [0, 4831.4, 8866.6, 2860.6, 4945.1, 6204.8, 3387.8, 14742.2, 2357.0, 8857.2, 4629.2, 10817.0, 4755.1, 9403.7, 18345.2, 14138.8, 22422.5, 26417.9, 24351.8, 25262.3, 30312.2, 26770.0, 40363.9, 32438.9, 40074.4, 45843.4],
+                            borderColor: '#d9534f',
+                            backgroundColor: 'rgba(217, 83, 79, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            yAxisID: 'y',
+                        },
+                        {
+                            label: 'Cumulative Loss (ha)',
+                            data: [0, 4831.4, 13698.0, 16558.6, 21503.7, 27708.5, 31096.3, 45838.5, 48195.5, 57052.7, 61681.9, 72498.9, 77254.0, 86657.7, 105002.9, 119141.7, 141564.2, 167982.1, 192333.9, 217596.2, 247908.4, 274678.4, 315042.3, 347481.2, 387555.6, 433399.0],
+                            borderColor: '#2d5016',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            yAxisID: 'y1',
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     plugins: {
                         legend: {
                             display: true,
-                            labels: { font: { size: 12 }, color: '#666' }
+                            position: 'top',
+                            labels: {
+                                font: { size: 12, weight: '600' },
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#333',
+                            bodyColor: '#666',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US').format(context.parsed.y) + ' ha';
+                                    }
+                                    return label;
+                                }
+                            }
                         }
                     },
                     scales: {
                         y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Annual Loss (ha)',
+                                color: '#d9534f',
+                                font: { weight: 'bold' }
+                            },
                             beginAtZero: true,
-                            ticks: { color: '#999' },
                             grid: { color: '#f0f0f0' }
                         },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Cumulative Loss (ha)',
+                                color: '#2d5016',
+                                font: { weight: 'bold' }
+                            },
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                        },
                         x: {
-                            ticks: { color: '#999' },
-                            grid: { color: '#f0f0f0' }
+                            grid: { display: false },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
                         }
                     }
                 }
