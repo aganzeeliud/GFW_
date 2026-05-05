@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Okapi Wildlife Reserve - Forest Cover Analysis 2000-2025</title>
+    <title>Okapi Wildlife Reserve - Forest Analysis Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,846 +13,746 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #2d5016;
+            --primary-dark: #1f3a10;
+            --accent: #d9534f;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8fafb;
+            --bg-white: #fff;
+            --border: #e0e0e0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
+            color: var(--text-dark);
+            background: var(--bg-light);
         }
 
-        header {
-            background: linear-gradient(135deg, #2d5016 0%, #1f3a10 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
-
-        .header-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-            margin-top: 30px;
-        }
-
-        .header-stat {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 8px;
+        /* Navigation */
+        nav {
+            background: var(--bg-white);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
             backdrop-filter: blur(10px);
         }
 
-        .header-stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .nav-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header-stat-label {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-
-        nav {
-            background: white;
-            padding: 15px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         nav ul {
             list-style: none;
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            gap: 2rem;
             flex-wrap: wrap;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         nav a {
             text-decoration: none;
-            color: #2d5016;
-            font-weight: 600;
+            color: var(--text-light);
+            font-weight: 500;
             transition: color 0.3s;
+            font-size: 0.9rem;
         }
 
         nav a:hover {
-            color: #d9534f;
+            color: var(--accent);
         }
 
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 7rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            opacity: 0.95;
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 2rem;
         }
 
+        /* Sections */
         section {
-            background: white;
-            margin: 30px 0;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 4rem 0;
         }
 
-        section h2 {
-            color: #2d5016;
-            font-size: 2em;
-            margin-bottom: 25px;
-            border-bottom: 3px solid #d9534f;
-            padding-bottom: 15px;
-        }
-
-        section h3 {
-            color: #3d6b1f;
-            font-size: 1.3em;
-            margin: 20px 0 15px 0;
-        }
-
-        .chart-container {
+        section > h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--primary);
+            margin-bottom: 1rem;
             position: relative;
-            height: 400px;
-            margin: 30px 0;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            border-left: 5px solid #2d5016;
+            padding-bottom: 1rem;
         }
 
-        .facts-grid {
+        section > h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        section > p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
+            gap: 2rem;
+            margin: 2rem 0;
         }
 
-        .fact-card {
-            background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e9 100%);
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 5px solid #2d5016;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
+        .card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
         }
 
-        .fact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
         }
 
-        .fact-icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .fact-number {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #d9534f;
-            margin-bottom: 5px;
-        }
-
-        .fact-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #2d5016;
-            margin-bottom: 8px;
-        }
-
-        .fact-description {
-            font-size: 0.95em;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .dataset-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            overflow-x: auto;
-        }
-
-        .dataset-table thead {
-            background: #2d5016;
-            color: white;
-        }
-
-        .dataset-table th,
-        .dataset-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .dataset-table tbody tr:hover {
-            background: #f5f5f5;
-        }
-
-        .dataset-table tbody tr:nth-child(even) {
-            background: #fafafa;
-        }
-
-        .dataset-section {
-            margin: 30px 0;
-        }
-
-        .download-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .download-btn {
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
             display: inline-block;
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #2d5016 0%, #1f3a10 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Stats Display */
+        .stats-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        .stat-item {
             text-align: center;
-            border: none;
-            cursor: pointer;
         }
 
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
-        }
-
-        .download-btn.secondary {
-            background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%);
-        }
-
-        .map-button {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #d9534f 0%, #c9302c 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin: 10px 10px 10px 0;
-        }
-
-        .map-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(217, 83, 79, 0.3);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .stat-box {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 5px solid #d9534f;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #d9534f;
-            margin-bottom: 8px;
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: #666;
-            font-size: 0.95em;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .timeline {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .timeline-item {
-            background: white;
-            padding: 15px;
-            border: 2px solid #2d5016;
-            border-radius: 5px;
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
             text-align: center;
         }
 
-        .timeline-item.highlight {
-            background: #f0f8f0;
-            border-color: #d9534f;
-        }
-
-        .timeline-year {
-            font-weight: bold;
-            color: #2d5016;
-            font-size: 1.2em;
-        }
-
-        .timeline-loss {
-            color: #d9534f;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
-        footer {
-            background: #2d5016;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(45, 80, 22, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(217, 83, 79, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(217, 83, 79, 0.4);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+
+        /* Map Section */
+        .map-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .map-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .map-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .map-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #3d6b1f 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .map-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .map-description {
+            padding: 1.5rem;
+        }
+
+        .map-description p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Chart Wrapper */
+        .chart-wrapper {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+            height: 400px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: 2rem;
+            padding-top: 2rem;
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 50px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
         }
 
-        footer p {
-            margin: 5px 0;
-            opacity: 0.9;
-        }
-
+        /* Highlight Box */
         .highlight-box {
-            background: linear-gradient(135deg, #fffacd 0%, #fff8dc 100%);
-            padding: 20px;
-            border-left: 5px solid #ffa500;
-            border-radius: 5px;
-            margin: 20px 0;
+            background: linear-gradient(135deg, rgba(217, 83, 79, 0.1) 0%, rgba(217, 83, 79, 0.05) 100%);
+            padding: 2rem;
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            margin: 2rem 0;
         }
 
         .highlight-box h4 {
-            color: #ff8c00;
-            margin-bottom: 10px;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
         }
 
+        .highlight-box p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 2em;
+            nav {
+                padding: 0.8rem 1rem;
             }
 
-            header p {
-                font-size: 1em;
-            }
-
-            section {
-                padding: 20px;
-            }
-
-            section h2 {
-                font-size: 1.5em;
+            .nav-wrapper {
+                flex-direction: column;
+                gap: 1rem;
             }
 
             nav ul {
-                gap: 15px;
+                width: 100%;
+                justify-content: center;
+                gap: 1rem;
             }
+
+            .hero {
+                padding: 5rem 1.5rem 3rem;
+                margin-top: 80px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            section {
+                margin: 2rem 0;
+            }
+
+            section > h2 {
+                font-size: 1.5rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .map-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeInUp 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <h1>🌳 Okapi Wildlife Reserve</h1>
-        <p>Forest Cover Analysis & Evolution (2000-2025)</p>
-        <div class="header-stats">
-            <div class="header-stat">
-                <div class="header-stat-value">13,726 km²</div>
-                <div class="header-stat-label">Protected Area</div>
-            </div>
-            <div class="header-stat">
-                <div class="header-stat-value">1.81M ha</div>
-                <div class="header-stat-label">Starting Forest Cover</div>
-            </div>
-            <div class="header-stat">
-                <div class="header-stat-value">1.37M ha</div>
-                <div class="header-stat-label">Current Forest Cover</div>
-            </div>
-            <div class="header-stat">
-                <div class="header-stat-value">24,925 ha</div>
-                <div class="header-stat-label">Total Loss (2000-2025)</div>
-            </div>
-        </div>
-    </header>
-
     <!-- Navigation -->
     <nav>
-        <ul>
-            <li><a href="#evolution">Evolution Chart</a></li>
-            <li><a href="#facts">Key Facts</a></li>
-            <li><a href="#dataset">Dataset Explorer</a></li>
-            <li><a href="#maps">Interactive Maps</a></li>
-            <li><a href="#download">Downloads</a></li>
-        </ul>
+        <div class="nav-wrapper">
+            <a href="#" class="logo">🌳 OWR Dashboard</a>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#insights">Insights</a></li>
+                <li><a href="#maps">Maps</a></li>
+                <li><a href="#data">Data</a></li>
+            </ul>
+        </div>
     </nav>
 
-    <!-- Main Container -->
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Okapi Wildlife Reserve</h1>
+            <p class="hero-subtitle">Forest Cover & Deforestation Analysis 2001-2025</p>
+            <div class="hero-stats">
+                <div>
+                    <span class="hero-stat-value">13,726</span>
+                    <span class="hero-stat-label">km² Area</span>
+                </div>
+                <div>
+                    <span class="hero-stat-value">24,925</span>
+                    <span class="hero-stat-label">ha Total Loss</span>
+                </div>
+                <div>
+                    <span class="hero-stat-value">1.37M</span>
+                    <span class="hero-stat-label">ha Current Cover</span>
+                </div>
+                <div>
+                    <span class="hero-stat-value">1.82%</span>
+                    <span class="hero-stat-label">Loss Rate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
     <div class="container">
-        <!-- Evolution Chart Section -->
-        <section id="evolution">
-            <h2>📈 Forest Loss Evolution (2000-2025)</h2>
-            <p>This chart shows the annual forest loss trend over 25 years. Notice the significant spike in 2017 and the gradual stabilization in recent years.</p>
+        <section id="overview">
+            <h2>📊 Key Overview</h2>
+            <p>The Okapi Wildlife Reserve, located in northeastern DRC, is monitored for forest cover changes across 25 years of satellite data. Our analysis tracks deforestation patterns across three management zones.</p>
             
-            <div class="chart-container">
-                <canvas id="evolutionChart"></canvas>
+            <div class="stats-display">
+                <div class="stat-item">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Years of Data</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">68</div>
+                    <div class="stat-label">Management Zones</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1,742</div>
+                    <div class="stat-label">2025 Loss (ha)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">-13.4%</div>
+                    <div class="stat-label">vs Peak Year</div>
+                </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div class="stat-value">2,012 ha</div>
-                    <div class="stat-label">Peak Annual Loss (2017)</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value">1,742 ha</div>
-                    <div class="stat-label">2025 Annual Loss</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value">-13.4%</div>
-                    <div class="stat-label">Reduction from Peak</div>
-                </div>
+            <div class="chart-wrapper">
+                <canvas id="mainChart"></canvas>
             </div>
 
             <div class="highlight-box">
-                <h4>⚠️ Key Observation</h4>
-                <p>The forest loss reached its peak in 2017 (2,012 ha), but has been on a declining trend since then. The 2025 figure of 1,742 ha represents a 13.4% improvement compared to the peak, indicating positive conservation efforts.</p>
+                <h4>⚡ Recent Trend</h4>
+                <p>Forest loss peaked in 2017 at 2,012 hectares annually but has improved significantly since then. The 2025 loss of 1,742 hectares represents a 13.4% reduction from peak levels, indicating positive impacts from conservation efforts.</p>
             </div>
         </section>
 
-        <!-- Key Facts Section -->
-        <section id="facts">
-            <h2>💡 Key Facts & Insights</h2>
+        <!-- Insights Section -->
+        <section id="insights">
+            <h2>💡 Key Insights</h2>
+            <p>Detailed analysis of forest cover trends across different management zones and time periods.</p>
             
-            <div class="facts-grid">
-                <div class="fact-card">
-                    <div class="fact-icon">🌍</div>
-                    <div class="fact-number">2000</div>
-                    <div class="fact-title">Start Year</div>
-                    <div class="fact-description">Data collection began in 2000 with an estimated 1.81 million hectares of forest cover.</div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">🌲</div>
+                    <h3>Core Protected Zones</h3>
+                    <p>5 primary zones with strict protection protocols show relative stability with minimal deforestation affecting Enjewe as the primary concern.</p>
                 </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">📊</div>
-                    <div class="fact-number">25 years</div>
-                    <div class="fact-title">Monitoring Period</div>
-                    <div class="fact-description">Continuous tracking through 2025 provides comprehensive understanding of deforestation patterns.</div>
+                <div class="card">
+                    <div class="card-icon">🌾</div>
+                    <h3>Agricultural Zones (ZAD)</h3>
+                    <p>31 zones designated for sustainable use. Badengaido and Bandisende zones experience highest pressure with targeted intervention needed.</p>
                 </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">🚨</div>
-                    <div class="fact-number">1.4%</div>
-                    <div class="fact-title">Total Loss Rate</div>
-                    <div class="fact-description">Total forest loss of 1.4% over 25 years, translating to approximately 57 hectares per month on average.</div>
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Hunting Zones (ZChasse)</h3>
+                    <p>32 controlled hunting areas show varied deforestation rates. Better management practices needed in high-loss zones.</p>
                 </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">📍</div>
-                    <div class="fact-number">68 zones</div>
-                    <div class="fact-title">Management Areas</div>
-                    <div class="fact-description">Reserve divided into 68 zones: 5 core zones, 31 agricultural zones (ZAD), and 32 hunting zones (ZChasse).</div>
+                <div class="card">
+                    <div class="card-icon">📈</div>
+                    <h3>Positive Trajectory</h3>
+                    <p>Conservation efforts since 2017 have resulted in measurable improvements, though continued monitoring and intervention remain critical.</p>
                 </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">🏆</div>
-                    <div class="fact-number">2017</div>
-                    <div class="fact-title">Critical Year</div>
-                    <div class="fact-description">Peak deforestation reached 2,012 ha in 2017, marking the highest annual loss in the monitoring period.</div>
+                <div class="card">
+                    <div class="card-icon">🗺️</div>
+                    <h3>Spatial Analysis</h3>
+                    <p>Loss concentrates in specific hotspot zones. Targeted interventions in these areas could significantly improve overall reserve health.</p>
                 </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">📈</div>
-                    <div class="fact-number">Improving</div>
-                    <div class="fact-title">Recent Trend</div>
-                    <div class="fact-description">Since 2017, forest loss has decreased by 13.4%, suggesting effective conservation interventions.</div>
-                </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">🌲</div>
-                    <div class="fact-number">Badengaido</div>
-                    <div class="fact-title">High-Risk Zone</div>
-                    <div class="fact-description">The Badengaido agricultural zone shows the highest loss (3,022 ha in 2025), requiring targeted intervention.</div>
-                </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">💼</div>
-                    <div class="fact-number">DRC</div>
-                    <div class="fact-title">Location</div>
-                    <div class="fact-description">Okapi Wildlife Reserve is located in northeastern Democratic Republic of Congo, a global biodiversity hotspot.</div>
-                </div>
-
-                <div class="fact-card">
-                    <div class="fact-icon">🎯</div>
-                    <div class="fact-number">UNESCO</div>
-                    <div class="fact-title">Recognition</div>
-                    <div class="fact-description">The reserve is a UNESCO World Heritage Site, recognized for its ecological and cultural importance.</div>
+                <div class="card">
+                    <div class="card-icon">🌍</div>
+                    <h3>Global Context</h3>
+                    <p>UNESCO World Heritage Site recognized for exceptional biodiversity. Forest protection directly supports conservation of endangered species.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Interactive Maps Section -->
+        <!-- Maps Section -->
         <section id="maps">
-            <h2>🗺️ Interactive Maps</h2>
-            <p>Explore the forest cover evolution with our interactive Leaflet maps featuring real-time visualizations and year-by-year analysis.</p>
+            <h2>🗺️ Interactive Visualizations</h2>
+            <p>Explore detailed maps with real-time boundary data and historical evolution patterns.</p>
             
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
-                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #1a5490;">
-                    <h3 style="color: #1a5490;">Forest Cover Map 2025</h3>
-                    <p>Static map showing core zones, agricultural zones, and hunting zones with current forest loss data.</p>
-                    <a href="https://aganzeeliud.github.io/GFW_/forest_map.html" class="map-button" target="_blank">View Map →</a>
+            <div class="map-showcase">
+                <div class="map-card">
+                    <div class="map-header">
+                        <h3>📍 Current Forest Cover</h3>
+                        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">2025 Status Map</p>
+                    </div>
+                    <div class="map-description">
+                        <p>Interactive map showing current forest cover status with precise OWR boundary, all 68 management zones marked, and annual loss data for 2025.</p>
+                        <a href="forest_map.html" class="btn btn-primary">View Map</a>
+                    </div>
                 </div>
-
-                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #d9534f;">
-                    <h3 style="color: #d9534f;">Evolution Map (2000-2025)</h3>
-                    <p>Dynamic map with time slider, play animation, and year-by-year forest loss progression visualization.</p>
-                    <a href="https://aganzeeliud.github.io/GFW_/forest_map_evolution.html" class="map-button" target="_blank">View Evolution →</a>
+                <div class="map-card">
+                    <div class="map-header">
+                        <h3>📊 Historical Evolution</h3>
+                        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">2001-2025 Timeline</p>
+                    </div>
+                    <div class="map-description">
+                        <p>Time-series map with year slider showing 25 years of deforestation patterns. Animate through time to see trends and changes over decades.</p>
+                        <a href="forest_map_evolution.html" class="btn btn-secondary">View Evolution</a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Dataset Explorer Section -->
-        <section id="dataset">
-            <h2>📊 Dataset Explorer</h2>
-            <p>Comprehensive forest cover and loss data organized by zone type and year. Explore detailed statistics for core zones, agricultural zones, and hunting zones.</p>
-
-            <h3>Annual Summary (Selected Years)</h3>
-            <table class="dataset-table">
-                <thead>
-                    <tr>
-                        <th>Year</th>
-                        <th>Annual Loss (ha)</th>
-                        <th>Forest Cover (ha)</th>
-                        <th>Loss Rate (%)</th>
-                        <th>Change from Previous</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2000</td>
-                        <td>450.00</td>
-                        <td>1,371,600</td>
-                        <td>0.03%</td>
-                        <td>—</td>
-                    </tr>
-                    <tr>
-                        <td>2005</td>
-                        <td>603.06</td>
-                        <td>1,369,449</td>
-                        <td>0.04%</td>
-                        <td>+34%</td>
-                    </tr>
-                    <tr>
-                        <td>2010</td>
-                        <td>1,456.72</td>
-                        <td>1,364,147</td>
-                        <td>0.11%</td>
-                        <td>+141%</td>
-                    </tr>
-                    <tr>
-                        <td>2015</td>
-                        <td>1,876.34</td>
-                        <td>1,355,561</td>
-                        <td>0.14%</td>
-                        <td>+29%</td>
-                    </tr>
-                    <tr>
-                        <td>2017</td>
-                        <td>2,012.16</td>
-                        <td>1,351,603</td>
-                        <td>0.15%</td>
-                        <td>+7% (PEAK)</td>
-                    </tr>
-                    <tr>
-                        <td>2020</td>
-                        <td>1,856.72</td>
-                        <td>1,345,921</td>
-                        <td>0.14%</td>
-                        <td>-8%</td>
-                    </tr>
-                    <tr>
-                        <td>2025</td>
-                        <td>1,742.13</td>
-                        <td>1,336,698</td>
-                        <td>0.13%</td>
-                        <td>-13.4%</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>Zone-Level Statistics (2025)</h3>
-            <table class="dataset-table">
-                <thead>
-                    <tr>
-                        <th>Zone Type</th>
-                        <th>Number of Zones</th>
-                        <th>Total Loss (ha)</th>
-                        <th>Average Loss/Zone</th>
-                        <th>Highest Risk Zone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Core Protected Zones</td>
-                        <td>5</td>
-                        <td>1,195.70</td>
-                        <td>239.14</td>
-                        <td>Enjewe (1,049 ha)</td>
-                    </tr>
-                    <tr>
-                        <td>Agricultural Zones (ZAD)</td>
-                        <td>31</td>
-                        <td>6,904.43</td>
-                        <td>222.72</td>
-                        <td>Badengaido (3,022 ha)</td>
-                    </tr>
-                    <tr>
-                        <td>Hunting Zones (ZChasse)</td>
-                        <td>32</td>
-                        <td>16,825.25</td>
-                        <td>525.79</td>
-                        <td>Salate (502 ha)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="highlight-box">
-                <h4>📌 Important Note</h4>
-                <p>These figures represent estimated forest loss based on available data sources and trend analysis. Actual values may vary depending on measurement methodology and satellite imagery resolution. The data is provided for analysis and conservation planning purposes.</p>
-            </div>
-        </section>
-
-        <!-- Dataset Download Section -->
-        <section id="download">
-            <h2>📥 Download Datasets</h2>
-            <p>All forest cover and loss data is available for download in CSV format. These files contain detailed zone-level information and can be imported into GIS software or analytical tools.</p>
-
-            <div class="dataset-section">
-                <h3>CSV Files</h3>
-                <div class="download-buttons">
-                    <a href="https://github.com/aganzeeliud/GFW_/raw/main/couver_forest_complete_2025.csv" class="download-btn" download>
-                        📊 Combined Data (2000-2025)
-                    </a>
-                    <a href="https://github.com/aganzeeliud/GFW_/raw/main/couver_forest_2025.csv" class="download-btn secondary" download>
-                        📈 Forest Cover Summary
-                    </a>
-                    <a href="https://github.com/aganzeeliud/GFW_/raw/main/couver_forest_ZAD_2025.csv" class="download-btn secondary" download>
-                        🌾 Agricultural Zones (ZAD)
-                    </a>
-                    <a href="https://github.com/aganzeeliud/GFW_/raw/main/couver_forest_CoreZone_2025.csv" class="download-btn secondary" download>
-                        🏰 Core Zones
-                    </a>
-                    <a href="https://github.com/aganzeeliud/GFW_/raw/main/couver_forest_ZChasse_2025.csv" class="download-btn secondary" download>
-                        🎯 Hunting Zones (ZChasse)
-                    </a>
-                    <a href="https://github.com/aganzeeliud/GFW_/raw/main/Couverture%20_db%20.xlsx" class="download-btn secondary" download>
-                        📑 Excel Database
-                    </a>
-                </div>
-            </div>
-
-            <div class="dataset-section">
-                <h3>GitHub Repository</h3>
-                <p>All source files, maps, and data are available on GitHub:</p>
-                <a href="https://github.com/aganzeeliud/GFW_" class="download-btn" target="_blank" style="display: inline-block; margin-top: 15px;">
-                    🔗 View Repository on GitHub
-                </a>
-            </div>
-        </section>
-
-        <!-- Timeline Section -->
-        <section>
-            <h2>📅 Historical Milestones</h2>
-            <p>Key events and trends in the Okapi Wildlife Reserve forest cover history:</p>
+        <!-- Data Section -->
+        <section id="data">
+            <h2>📂 Data & Downloads</h2>
+            <p>Access our comprehensive dataset organized for research and analysis.</p>
             
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-year">2000</div>
-                    <div class="timeline-loss">Base Year: 1.81M ha</div>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>Overall Forest Loss</h3>
+                    <p>Annual forest loss data for the entire reserve spanning 25 years with loss percentages and trends.</p>
+                    <a href="data/processed/forest_cover_overall.csv" class="btn btn-primary" style="margin-top: 1rem;">Download CSV</a>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">2008</div>
-                    <div class="timeline-loss">Loss: 1,050 ha</div>
+                <div class="card">
+                    <div class="card-icon">🏔️</div>
+                    <h3>Core Zones Data</h3>
+                    <p>Detailed loss metrics for 5 core protected zones: Mont Mbia, Enjewe, Forêt de Zoo, Lenda, Afarama.</p>
+                    <a href="data/processed/core_zones_data.csv" class="btn btn-primary" style="margin-top: 1rem;">Download CSV</a>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">2010</div>
-                    <div class="timeline-loss">Loss: 1,457 ha</div>
+                <div class="card">
+                    <div class="card-icon">🌾</div>
+                    <h3>Agricultural Zones (ZAD)</h3>
+                    <p>Forest loss data for 31 sustainable use zones with annual breakdown and zone-specific trends.</p>
+                    <a href="data/processed/agricultural_zones_summary.csv" class="btn btn-primary" style="margin-top: 1rem;">Download CSV</a>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">2015</div>
-                    <div class="timeline-loss">Loss: 1,876 ha</div>
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Hunting Zones (ZChasse)</h3>
+                    <p>Comprehensive loss metrics for 32 hunting zones with management recommendations.</p>
+                    <a href="data/processed/hunting_zones_summary.csv" class="btn btn-primary" style="margin-top: 1rem;">Download CSV</a>
                 </div>
-                <div class="timeline-item highlight">
-                    <div class="timeline-year">2017</div>
-                    <div class="timeline-loss">⚠️ PEAK: 2,012 ha</div>
+                <div class="card">
+                    <div class="card-icon">🗺️</div>
+                    <h3>GeoJSON Boundary</h3>
+                    <p>Official OWR boundary in GeoJSON format for mapping applications and spatial analysis.</p>
+                    <a href="OWR_Limit_OWR_2024.json" class="btn btn-primary" style="margin-top: 1rem;">Download GeoJSON</a>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">2020</div>
-                    <div class="timeline-loss">Loss: 1,857 ha</div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">2025</div>
-                    <div class="timeline-loss">Loss: 1,742 ha ✓</div>
+                <div class="card">
+                    <div class="card-icon">📁</div>
+                    <h3>Complete Dataset</h3>
+                    <p>Original Excel databases with all sheets, analysis, and historical data from 2001-2025.</p>
+                    <a href="data/raw/Couverture_db_original.xlsx" class="btn btn-primary" style="margin-top: 1rem;">Download Excel</a>
                 </div>
             </div>
-        </section>
 
-        <!-- Summary Section -->
-        <section>
-            <h2>🎯 Summary & Recommendations</h2>
-            
-            <h3>Key Findings</h3>
-            <ul style="margin-left: 20px; line-height: 2;">
-                <li><strong>Total Loss (2000-2025):</strong> 24,925 hectares (1.4% of original forest)</li>
-                <li><strong>Peak Year:</strong> 2017 with 2,012 hectares of annual loss</li>
-                <li><strong>Recent Improvement:</strong> 13.4% reduction in forest loss from peak to 2025</li>
-                <li><strong>Highest Risk Zone:</strong> Badengaido (3,022 ha in 2025)</li>
-                <li><strong>Conservation Status:</strong> UNESCO World Heritage Site with active management</li>
-            </ul>
-
-            <h3>Recommendations</h3>
-            <ul style="margin-left: 20px; line-height: 2;">
-                <li>Intensify conservation efforts in high-risk zones (Badengaido, Enjewe)</li>
-                <li>Expand core zone protection given lower loss rates</li>
-                <li>Implement sustainable practices in agricultural zones (ZAD)</li>
-                <li>Maintain monitoring systems and data collection beyond 2025</li>
-                <li>Engage local communities in forest protection initiatives</li>
-                <li>Scale up the positive trends observed post-2017</li>
-            </ul>
+            <div class="highlight-box" style="margin-top: 2rem;">
+                <h4>📖 Documentation</h4>
+                <p>For complete information about data structure, methodology, and analysis details, see our <a href="README.md" style="color: var(--accent); font-weight: 600;">comprehensive README</a> and explore the <a href="https://github.com/aganzeeliud/GFW_" style="color: var(--accent); font-weight: 600;">GitHub repository</a>.</p>
+            </div>
         </section>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p><strong>Okapi Wildlife Reserve - Forest Cover Analysis</strong></p>
-        <p>Data Period: 2000-2025 | Last Updated: May 2026</p>
-        <p>Location: Northeastern Democratic Republic of Congo | UNESCO World Heritage Site</p>
-        <p style="margin-top: 20px; opacity: 0.7; font-size: 0.9em;">
-            Data compiled from Global Forest Watch, Copernicus Climate Data, and NASA Earth Observatory
-        </p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>🌳 About OWR</h4>
+                <p>The Okapi Wildlife Reserve protects over 13,700 km² of pristine rainforest in northeastern DRC, home to the endangered okapi and countless other species.</p>
+            </div>
+            <div class="footer-section">
+                <h4>📊 Data Source</h4>
+                <p><strong>Global Forest Watch (GFW)</strong> provides satellite-based forest monitoring data. Analysis covers 2001-2025 with annual updates.</p>
+            </div>
+            <div class="footer-section">
+                <h4>🔗 Resources</h4>
+                <p><a href="README.md">Documentation</a> • <a href="https://github.com/aganzeeliud/GFW_">GitHub</a> • <a href="https://www.globalforestwatch.org/">Global Forest Watch</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Okapi Wildlife Reserve Forest Analysis • Last Updated: May 2026 • Data Period: 2001-2025</p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Data from Global Forest Watch • Analysis & Visualization by Community Team</p>
+        </div>
     </footer>
 
     <script>
-        // Evolution Chart
-        const yearlyData = [
-            {year: 2000, loss: 450},
-            {year: 2001, loss: 465.88},
-            {year: 2002, loss: 586.46},
-            {year: 2003, loss: 142.08},
-            {year: 2004, loss: 353.68},
-            {year: 2005, loss: 603.06},
-            {year: 2006, loss: 748.52},
-            {year: 2007, loss: 812.44},
-            {year: 2008, loss: 1050.32},
-            {year: 2009, loss: 1234.18},
-            {year: 2010, loss: 1456.72},
-            {year: 2011, loss: 1523.44},
-            {year: 2012, loss: 1645.58},
-            {year: 2013, loss: 1738.92},
-            {year: 2014, loss: 1801.26},
-            {year: 2015, loss: 1876.34},
-            {year: 2016, loss: 1945.82},
-            {year: 2017, loss: 2012.16},
-            {year: 2018, loss: 1934.58},
-            {year: 2019, loss: 1890.44},
-            {year: 2020, loss: 1856.72},
-            {year: 2021, loss: 1901.14},
-            {year: 2022, loss: 1859.38},
-            {year: 2023, loss: 1901.14},
-            {year: 2024, loss: 1819.90},
-            {year: 2025, loss: 1742.13}
-        ];
-
-        const ctx = document.getElementById('evolutionChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: yearlyData.map(d => d.year),
-                datasets: [{
-                    label: 'Annual Forest Loss (hectares)',
-                    data: yearlyData.map(d => d.loss),
-                    borderColor: '#d9534f',
-                    backgroundColor: 'rgba(217, 83, 79, 0.1)',
-                    borderWidth: 3,
-                    pointRadius: 5,
-                    pointBackgroundColor: '#d9534f',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    fill: true,
-                    tension: 0.3,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            font: {size: 12},
-                            padding: 20
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        padding: 12,
-                        titleFont: {size: 13},
-                        bodyFont: {size: 12},
-                        callbacks: {
-                            label: function(context) {
-                                return 'Loss: ' + context.parsed.y.toFixed(2) + ' ha';
-                            }
-                        }
-                    }
+        // Chart.js Configuration
+        const ctx = document.getElementById('mainChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2001', '2003', '2005', '2007', '2009', '2011', '2013', '2015', '2017', '2019', '2021', '2023', '2025'],
+                    datasets: [{
+                        label: 'Annual Forest Loss (ha)',
+                        data: [465.9, 142.1, 603.1, 1241.1, 760.9, 345.0, 402.5, 892.3, 2012.4, 1234.5, 987.3, 1512.3, 1742.1],
+                        borderColor: '#d9534f',
+                        backgroundColor: 'rgba(217, 83, 79, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#d9534f',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
                             display: true,
-                            text: 'Forest Loss (hectares)'
-                        },
-                        ticks: {
-                            font: {size: 11}
+                            labels: { font: { size: 12 }, color: '#666' }
                         }
                     },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Year'
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#999' },
+                            grid: { color: '#f0f0f0' }
                         },
-                        ticks: {
-                            font: {size: 11}
+                        x: {
+                            ticks: { color: '#999' },
+                            grid: { color: '#f0f0f0' }
                         }
                     }
                 }
-            }
-        });
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
             });
-        });
+        }
     </script>
 </body>
 </html>
