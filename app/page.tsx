@@ -1,6 +1,7 @@
 import { Hero } from "@/components/hero"
 import { StatsOverview } from "@/components/stats-overview"
 import { YearlyCards } from "@/components/yearly-cards"
+import { ForestMap } from "@/components/forest-map"
 import { ComparisonSection } from "@/components/comparison-section"
 import { EcologicalSection } from "@/components/ecological-section"
 import { DataDeepDive } from "@/components/data-deep-dive"
@@ -19,6 +20,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <StatsOverview />
         <YearlyCards />
+        <ForestMap />
         <MiningMap />
         <ComparisonSection />
         <EcologicalSection />
