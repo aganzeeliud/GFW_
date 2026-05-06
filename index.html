@@ -3,246 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Okapi Wildlife Reserve - Infographic Dashboard</title>
+    <title>Okapi Wildlife Reserve | Conservation Intelligence</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #2d5a27;
+            --primary-light: #4c8c4a;
+            --primary-dark: #1a3517;
+            --secondary: #b08d57;
+            --accent: #d9534f;
+            --bg-base: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-main: #1a1c1e;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme='dark'] {
+            --bg-base: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --primary: #4ade80;
+            --primary-light: #86efac;
+            --primary-dark: #166534;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #2d5016;
-            --primary-dark: #1f3a10;
-            --accent: #d9534f;
-            --text-dark: #1a1a1a;
-            --text-light: #666;
-            --bg-light: #f4f7f6;
-            --bg-white: #fff;
-            --border: #e0e0e0;
-            --secondary: #7cb342;
-        }
-
-        html {
-            scroll-behavior: smooth;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
             line-height: 1.6;
-            color: var(--text-dark);
-            background: var(--bg-light);
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Navigation */
+        /* Modern Navigation */
         nav {
-            background: var(--bg-white);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: fixed;
-            width: 100%;
             top: 0;
+            width: 100%;
+            background: rgba(var(--bg-card), 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
             z-index: 1000;
+            height: 64px;
+            display: flex;
+            align-items: center;
         }
 
-        .nav-wrapper {
-            max-width: 1200px;
+        .nav-content {
+            max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.4rem;
             font-weight: 800;
+            font-size: 1.25rem;
             color: var(--primary);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
         }
 
-        nav ul {
-            list-style: none;
+        .nav-links {
             display: flex;
             gap: 2rem;
         }
 
-        nav a {
+        .nav-links a {
             text-decoration: none;
-            color: var(--text-light);
-            font-weight: 600;
-            transition: color 0.3s;
-            font-size: 0.95rem;
-        }
-
-        nav a:hover, nav a.active {
-            color: var(--primary);
-        }
-
-        /* Hero Infographic */
-        .hero {
-            background: linear-gradient(rgba(45, 80, 22, 0.9), rgba(31, 58, 16, 0.95)), url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 8rem 2rem 5rem;
-            text-align: center;
-            margin-top: 60px;
-        }
-
-        .hero-content {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            margin-bottom: 1rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 3rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .infographic-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .info-card-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-card-label {
+            color: var(--text-muted);
+            font-weight: 500;
             font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
+            transition: color 0.2s;
         }
 
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Informative Sections */
-        .content-section {
-            background: var(--bg-white);
-            border-radius: 20px;
-            padding: 3rem;
-            margin: 4rem 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        }
-
-        .section-header {
-            margin-bottom: 2.5rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.2rem;
+        .nav-links a:hover, .nav-links a.active {
             color: var(--primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
         }
 
-        .section-header p {
-            color: var(--text-light);
-            font-size: 1.1rem;
-            max-width: 800px;
+        /* Layout */
+        main {
+            padding-top: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-bottom: 4rem;
         }
 
-        .grid-2 {
+        .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        /* Charts */
-        .chart-box {
-            background: #fff;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
             padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 2rem;
         }
 
-        .chart-container {
-            height: 350px;
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            overflow: hidden;
             position: relative;
         }
 
-        /* Infographic Elements */
-        .icon-stat {
+        .card-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Hero Stats */
+        .stat-group {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Specific Visuals */
+        .hero-banner {
+            grid-column: span 12;
+            height: 300px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            margin-bottom: 1rem;
         }
 
-        .icon-stat i {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            background: rgba(124, 179, 66, 0.1);
-            padding: 1rem;
+        .hero-banner h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        /* Charts & Maps */
+        .chart-large { grid-column: span 8; }
+        .chart-small { grid-column: span 4; }
+        .map-section { grid-column: span 12; }
+
+        .embed-container {
             border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #000;
         }
 
-        .icon-stat-text h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.2rem;
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
         }
 
-        .icon-stat-text p {
-            font-size: 0.95rem;
-            color: var(--text-light);
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
         }
 
         /* Buttons */
         .btn {
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 700;
             display: inline-flex;
             align-items: center;
-            gap: 0.8rem;
-            transition: all 0.3s ease;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+            border: none;
         }
 
         .btn-primary {
@@ -252,488 +249,230 @@
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: scale(1.02);
+            transform: translateY(-2px);
         }
 
-        /* Footer */
-        footer {
-            background: #1a2e0e;
-            color: #fff;
-            padding: 5rem 2rem 2rem;
-            margin-top: 6rem;
+        .btn-outline {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-main);
         }
 
-        .footer-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 4rem;
+        /* Badges */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
+        .badge-danger { background: rgba(217, 83, 79, 0.1); color: var(--accent); }
+        .badge-success { background: rgba(74, 222, 128, 0.1); color: #166534; }
 
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 3rem auto 0;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 992px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav ul {
-                display: none;
-            }
-            .hero {
-                padding: 6rem 1rem 4rem;
-            }
-            .content-section {
-                padding: 1.5rem;
-            }
+        @media (max-width: 1024px) {
+            .chart-large, .chart-small { grid-column: span 12; }
         }
     </style>
 </head>
 <body>
     <nav>
-        <div class="nav-wrapper">
-            <a href="index.html" class="logo">🌳 OWR RESERVE</a>
-            <ul>
-                <li><a href="index.html" class="active">Dashboard</a></li>
-                <li><a href="forest_map.html">Status Map</a></li>
-                <li><a href="mining_map.html">Mining Map</a></li>
-                <li><a href="forest_map_evolution.html">Evolution</a></li>
-            </ul>
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-tree"></i> OWR INTEL
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active">Dashboard</a>
+                <a href="forest_map.html">Forest Map</a>
+                <a href="mining_map.html">Mining Map</a>
+                <a href="mining_buffer_map.html">Buffer Zone</a>
+            </div>
         </div>
     </nav>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Okapi Wildlife Reserve</h1>
-            <p class="hero-subtitle">Monitoring 25 years of forest health and conservation efforts in the heart of the Ituri Forest, DRC.</p>
-            
-            <div class="infographic-cards">
-                <div class="info-card">
-                    <span class="info-card-value">1.37M</span>
-                    <span class="info-card-label">Reserve Hectares</span>
+    <main>
+        <div class="grid">
+            <!-- Hero Section -->
+            <div class="hero-banner">
+                <div>
+                    <h1>Okapi Wildlife Reserve</h1>
+                    <p>Advanced conservation monitoring for the heart of the Ituri Forest, DRC.</p>
                 </div>
-                <div class="info-card">
-                    <span class="info-card-value">21,921</span>
-                    <span class="info-card-label">Reserve Loss (ha)</span>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="stat-group">
+                <div class="stat-card">
+                    <span class="stat-label">Total Protected Area</span>
+                    <span class="stat-value">1.37M <small>ha</small></span>
                 </div>
-                <div class="info-card">
-                    <span class="info-card-value">433,399</span>
-                    <span class="info-card-label">Buffer Loss (ha)</span>
+                <div class="stat-card">
+                    <span class="stat-label">Forest Loss (Inside)</span>
+                    <span class="stat-value" style="color: var(--accent);">21,921 <small>ha</small></span>
                 </div>
-                <div class="info-card">
-                    <span class="info-card-value">83</span>
-                    <span class="info-card-label">Mining Concessions</span>
+                <div class="stat-card">
+                    <span class="stat-label">Industrial Concessions</span>
+                    <span class="stat-value" style="color: var(--secondary);">83</span>
                 </div>
-                <div class="info-card">
-                    <span class="info-card-value">50km</span>
-                    <span class="info-card-label">Monitoring Buffer</span>
+                <div class="stat-card">
+                    <span class="stat-label">Monitoring Radius</span>
+                    <span class="stat-value">50 <small>km</small></span>
+                </div>
+            </div>
+
+            <!-- Forest Loss Analytics -->
+            <div class="card chart-large">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-chart-line"></i> Annual Forest Loss (Reserve vs Buffer)</h2>
+                    <div class="badge badge-danger">Live Trend</div>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card chart-small">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-percentage"></i> Loss Rate (%)</h2>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="rateChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Mining Intelligence Section -->
+            <div class="card map-section">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-hammer"></i> Mining Concession Analysis</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="mining_map.html" class="btn btn-outline btn-sm">Inside Map</a>
+                        <a href="mining_buffer_map.html" class="btn btn-outline btn-sm">Buffer Map</a>
+                    </div>
+                </div>
+                
+                <div class="grid" style="padding: 0; gap: 2rem;">
+                    <div style="grid-column: span 4;">
+                        <div class="stat-card" style="margin-bottom: 1rem; padding: 1.5rem; border-color: rgba(217, 83, 79, 0.2);">
+                            <span class="stat-label">Inside Reserve</span>
+                            <span class="stat-value" style="font-size: 1.8rem;">83</span>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Industrial concessions directly overlapping protected areas.</p>
+                        </div>
+                        <div class="stat-card" style="padding: 1.5rem; border-color: rgba(121, 85, 72, 0.2);">
+                            <span class="stat-label">Buffer Zone (50km)</span>
+                            <span class="stat-value" style="font-size: 1.8rem;">185</span>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Mining activity exerting external pressure on boundaries.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="grid-column: span 8;">
+                        <div class="table-container">
+                            <h3 style="font-size: 1rem; margin-bottom: 1rem;">Primary Resource Interests</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Resource</th>
+                                        <th>Status</th>
+                                        <th>Risk Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Gold (Au)</strong></td>
+                                        <td><span class="badge badge-danger">High Activity</span></td>
+                                        <td>Extreme</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Diamond</strong></td>
+                                        <td><span class="badge badge-success">Regulated</span></td>
+                                        <td>Moderate</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nb-Ta / Rare Earths</strong></td>
+                                        <td><span class="badge badge-danger">Expanding</span></td>
+                                        <td>High</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                            <a href="data/processed/OWR_Mining.csv" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Download Full Mining Data
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GFW Live Monitoring -->
+            <div class="card map-section">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-satellite"></i> GFW Live Satellite Monitoring</h2>
+                </div>
+                <div class="embed-container">
+                    <iframe width="100%" height="600" frameborder="0" src="https://www.globalforestwatch.org/embed/map/aoi/680b6064bc87510015b9888d/?mainMap=eyJoaWRlTGVnZW5kIjp0cnVlLCJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjYW5Cb3VuZCI6ZmFsc2V9&mapMenu=eyJtZW51U2VjdGlvbiI6Im15LWdmdyJ9"></iframe>
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 
-    <div class="container">
-        <!-- Comparison Section -->
-        <section class="content-section">
-            <div class="section-header" style="text-align: center;">
-                <h2><i class="fas fa-balance-scale"></i> Comparison: Reserve vs. Buffer</h2>
-                <p style="margin: 0 auto;">Analyzing forest loss inside the Okapi Wildlife Reserve versus the surrounding 50km buffer zone.</p>
-            </div>
-            <div class="chart-box">
-                <div class="chart-container" style="height: 450px;">
-                    <canvas id="comparisonChart"></canvas>
-                </div>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
-                <div class="stat-card" style="padding: 1.5rem; background: #f8faf9; border-radius: 12px; border-left: 5px solid var(--primary);">
-                    <h4 style="color: var(--primary);">Inside Reserve</h4>
-                    <p style="font-size: 1.8rem; font-weight: 800;">21,921 ha</p>
-                    <p style="font-size: 0.85rem; color: var(--text-light);">Cumulative loss since 2001. Protected status significantly limits deforestation.</p>
-                </div>
-                <div class="stat-card" style="padding: 1.5rem; background: #fdf2f2; border-radius: 12px; border-left: 5px solid var(--accent);">
-                    <h4 style="color: var(--accent);">50km Buffer Zone</h4>
-                    <p style="font-size: 1.8rem; font-weight: 800;">433,399 ha</p>
-                    <p style="font-size: 0.85rem; color: var(--text-light);">Cumulative loss since 2001. Area under high human pressure and agricultural expansion.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Global Forest Watch Embed -->
-        <section class="content-section">
-            <div class="section-header" style="text-align: center;">
-                <h2><i class="fas fa-globe-africa"></i> GFW Live Monitoring</h2>
-                <p style="margin: 0 auto;">Interactive satellite monitoring of the Okapi Wildlife Reserve and its surrounding buffer zone via Global Forest Watch.</p>
-            </div>
-            <div style="display: flex; justify-content: center; background: #000; padding: 10px; border-radius: 12px; overflow: hidden;">
-                <iframe width="100%" height="600" frameborder="0" src="https://www.globalforestwatch.org/embed/map/aoi/680b6064bc87510015b9888d/?mainMap=eyJoaWRlTGVnZW5kIjp0cnVlLCJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjYW5Cb3VuZCI6ZmFsc2V9&mapMenu=eyJtZW51U2VjdGlvbiI6Im15LWdmdyJ9" style="min-height: 500px; border-radius: 8px;"></iframe>
-            </div>
-            <div style="margin-top: 1.5rem; text-align: center; color: var(--text-light); font-size: 0.9rem;">
-                <p><i class="fas fa-info-circle"></i> This map shows the real-time Area of Interest (AOI) including the 50km buffer zone data from <b>OWR GFW.csv</b>.</p>
-            </div>
-
-            <div style="margin-top: 3rem;">
-                <h3 style="color: var(--primary); margin-bottom: 2rem; text-align: center;"><i class="fas fa-table"></i> Recent Buffer Zone Forest Loss (2021-2025)</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
-                    <!-- 2025 Card -->
-                    <div class="e-card" style="border-top: 4px solid var(--accent);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2025</span>
-                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
-                        </div>
-                        <div style="margin-bottom: 0.5rem;">
-                            <span class="e-card-label">Loss Area</span>
-                            <span class="e-card-val" style="font-size: 1.4rem;">45,843.4 ha</span>
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">458,433,920.7 m²</div>
-                    </div>
-
-                    <!-- 2024 Card -->
-                    <div class="e-card" style="border-top: 4px solid var(--accent);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2024</span>
-                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
-                        </div>
-                        <div style="margin-bottom: 0.5rem;">
-                            <span class="e-card-label">Loss Area</span>
-                            <span class="e-card-val" style="font-size: 1.4rem;">40,074.4 ha</span>
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">400,743,806.5 m²</div>
-                    </div>
-
-                    <!-- 2023 Card -->
-                    <div class="e-card" style="border-top: 4px solid var(--accent);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2023</span>
-                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
-                        </div>
-                        <div style="margin-bottom: 0.5rem;">
-                            <span class="e-card-label">Loss Area</span>
-                            <span class="e-card-val" style="font-size: 1.4rem;">32,438.9 ha</span>
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">324,388,633.2 m²</div>
-                    </div>
-
-                    <!-- 2022 Card -->
-                    <div class="e-card" style="border-top: 4px solid var(--accent);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2022</span>
-                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
-                        </div>
-                        <div style="margin-bottom: 0.5rem;">
-                            <span class="e-card-label">Loss Area</span>
-                            <span class="e-card-val" style="font-size: 1.4rem;">40,363.9 ha</span>
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">403,638,851.9 m²</div>
-                    </div>
-
-                    <!-- 2021 Card -->
-                    <div class="e-card" style="border-top: 4px solid var(--accent);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2021</span>
-                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
-                        </div>
-                        <div style="margin-bottom: 0.5rem;">
-                            <span class="e-card-label">Loss Area</span>
-                            <span class="e-card-val" style="font-size: 1.4rem;">26,770.0 ha</span>
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">267,699,749.3 m²</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mining Concessions Section (Inside Reserve) -->
-        <section class="content-section">
-            <div class="section-header" style="text-align: center;">
-                <h2><i class="fas fa-hammer"></i> Mining Analysis: Inside OWR</h2>
-                <p style="margin: 0 auto;">Analyzing the overlap of industrial mining concessions within the Okapi Wildlife Reserve core boundaries.</p>
-            </div>
-            
-            <div class="grid-2">
-                <div class="chart-box">
-                    <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Permit Status (Inside)</h3>
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fdf2f2; border-radius: 8px;">
-                            <span style="font-weight: 700; color: #d9534f;">Direct Overlap Concessions</span>
-                            <span style="font-size: 1.2rem; font-weight: 800;">83</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fef9f3; border-radius: 8px;">
-                            <span style="font-weight: 700; color: #f57c00;">Active Permits</span>
-                            <span style="font-size: 1.2rem; font-weight: 800;">31</span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="icon-stat">
-                        <i class="fas fa-shield-alt" style="color: #2d5016; background: rgba(45, 80, 22, 0.1);"></i>
-                        <div class="icon-stat-text">
-                            <h4>Direct Impact</h4>
-                            <p>Mining within the reserve boundaries directly violates protected status and threatens endemic species.</p>
-                        </div>
-                    </div>
-                    <div style="margin-top: 2rem;">
-                        <a href="mining_map.html" class="btn btn-primary" style="background: #2d5016;">
-                            <i class="fas fa-map-marked"></i> View Reserve Mining Map
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-light);">
-                <a href="OWR_Mining_Inside.csv" style="color: var(--primary);">Download Inside Reserve Data (CSV)</a>
-            </p>
-        </section>
-
-        <!-- Mining Concessions Section (Buffer Zone) -->
-        <section class="content-section" style="background: #fdfaf5;">
-            <div class="section-header" style="text-align: center;">
-                <h2><i class="fas fa-truck-loading"></i> Mining Analysis: 50km Buffer Zone</h2>
-                <p style="margin: 0 auto;">Monitoring mining development in the surrounding 50km buffer to assess indirect threats and pressure.</p>
-            </div>
-            
-            <div class="grid-2">
-                <div>
-                    <div class="icon-stat">
-                        <i class="fas fa-road" style="color: #795548; background: rgba(121, 85, 72, 0.1);"></i>
-                        <div class="icon-stat-text">
-                            <h4>Buffer Pressure</h4>
-                            <p>Extensive mining in the buffer zone leads to increased infrastructure development and migration towards reserve borders.</p>
-                        </div>
-                    </div>
-                    <div style="margin-top: 2rem;">
-                        <a href="mining_buffer_map.html" class="btn btn-primary" style="background: #795548;">
-                            <i class="fas fa-globe"></i> View Buffer Mining Map
-                        </a>
-                    </div>
-                </div>
-                <div class="chart-box">
-                    <h3 style="color: #795548; margin-bottom: 1.5rem;">Permit Distribution (Buffer)</h3>
-                    <div style="display: flex; flex-direction: column; gap: 1rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fdf5f0; border-radius: 8px;">
-                            <span style="font-weight: 700; color: #795548;">Buffer Zone Concessions</span>
-                            <span style="font-size: 1.2rem; font-weight: 800;">185</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fef9f3; border-radius: 8px;">
-                            <span style="font-weight: 700; color: #f57c00;">Main Focus Areas</span>
-                            <span style="font-size: 0.9rem; font-weight: 600;">Mambasa, Nia-Nia, Wamba</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-light);">
-                <a href="OWR_Mining_Buffer.csv" style="color: #795548;">Download Buffer Zone Data (CSV)</a>
-            </p>
-        </section>
-
-        <!-- Importance Section -->
-        <section class="content-section">
-            <div class="grid-2">
-                <div>
-                    <div class="section-header">
-                        <h2><i class="fas fa-leaf"></i> Ecological Significance</h2>
-                        <p>The Okapi Wildlife Reserve (OWR) occupies about one-fifth of the Ituri Forest. It protects a rich diversity of wildlife and provides a crucial carbon sink for the planet.</p>
-                    </div>
-                    <div class="icon-stat">
-                        <i class="fas fa-paw"></i>
-                        <div class="icon-stat-text">
-                            <h4>Endemic Species</h4>
-                            <p>Home to one of the largest remaining populations of okapi, forest elephants, and chimpanzees.</p>
-                        </div>
-                    </div>
-                    <div class="icon-stat">
-                        <i class="fas fa-users"></i>
-                        <div class="icon-stat-text">
-                            <h4>Indigenous Culture</h4>
-                            <p>Supporting the traditional nomadic Mbuti and Efe hunters who have lived here for millennia.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart-box">
-                    <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Forest Cover Stability</h3>
-                    <div class="chart-container">
-                        <canvas id="coverChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Data Deep Dive -->
-        <section class="content-section">
-            <div class="section-header" style="text-align: center;">
-                <h2>📊 2001-2025 Data Deep Dive</h2>
-                <p style="margin: 0 auto;">Analysis of annual forest loss and deforestation rates within the reserve boundaries.</p>
-            </div>
-
-            <div class="grid-2">
-                <div class="chart-box">
-                    <h3 style="margin-bottom: 1rem; color: var(--accent);">Annual Forest Loss (ha)</h3>
-                    <div class="chart-container">
-                        <canvas id="lossChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-box">
-                    <h3 style="margin-bottom: 1rem; color: var(--secondary);">Deforestation Rate (%)</h3>
-                    <div class="chart-container">
-                        <canvas id="rateChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 3rem;">
-                <div class="btn-group" style="justify-content: center;">
-                    <a href="forest_map_evolution.html" class="btn btn-primary">
-                        <i class="fas fa-play"></i> Watch Historical Evolution
-                    </a>
-                    <a href="forest_map.html" class="btn" style="background: var(--bg-light); color: var(--primary);">
-                        <i class="fas fa-map-marker-alt"></i> View Status Map
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Methodology -->
-        <section class="content-section" style="background: var(--primary); color: white;">
-            <div class="section-header">
-                <h2 style="color: white;"><i class="fas fa-microscope"></i> Methodology</h2>
-                <p style="color: rgba(255,255,255,0.8);">Our analysis utilizes Global Forest Watch (GFW) satellite monitoring data. The statistics presented here are specific to the Okapi Wildlife Reserve (RFO) administrative boundaries and its surrounding 50km buffer zone (sourced from <b>OWR GFW.csv</b>).</p>
-            </div>
-            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 250px;">
-                    <h4 style="margin-bottom: 0.5rem;">Satellite Imagery</h4>
-                    <p style="font-size: 0.95rem; opacity: 0.8;">Using Landsat and Sentinel-2 data to track changes in tree cover canopy with 30m resolution.</p>
-                </div>
-                <div style="flex: 1; min-width: 250px;">
-                    <h4 style="margin-bottom: 0.5rem;">Annual Processing</h4>
-                    <p style="font-size: 0.95rem; opacity: 0.8;">Data is processed annually to identify deforestation hotspots and evaluate conservation impact.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Landsat Spectral Bands Visualization -->
-        <section class="content-section">
-            <div class="section-header" style="text-align: center;">
-                <h2><i class="fas fa-spectrum"></i> Landsat Spectral Analysis</h2>
-                <p>Analyzing forest cover through multispectral Landsat satellite bands to identify vegetation patterns and forest health indicators.</p>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                <div style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">508</div>
-                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Red Band</div>
-                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">0.66 micrometers - Visible vegetation absorption</div>
-                </div>
-                
-                <div style="background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">254</div>
-                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">NIR Band</div>
-                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">0.86 micrometers - Vegetation reflectance</div>
-                </div>
-                
-                <div style="background: linear-gradient(135deg, #f57c00 0%, #e65100 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">363</div>
-                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">SWIR1 Band</div>
-                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">1.6 micrometers - Moisture content detection</div>
-                </div>
-                
-                <div style="background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">423</div>
-                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">SWIR2 Band</div>
-                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">2.2 micrometers - Forest discrimination</div>
-                </div>
-            </div>
-
-            <div class="chart-box">
-                <div style="margin-bottom: 1rem;">
-                    <h3 style="color: var(--primary); font-size: 1.1rem; margin-bottom: 0.5rem;">Spectral Reflectance Pattern</h3>
-                    <p style="color: var(--text-light); font-size: 0.9rem;">Relative reflectance values across Landsat bands used for forest classification</p>
-                </div>
-                <div class="chart-container" style="height: 350px;">
-                    <canvas id="spectralChart"></canvas>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
-                <div style="background: #f0f8ff; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #1565c0;">
-                    <h4 style="color: #0d47a1; margin-bottom: 0.5rem;">NDVI Index</h4>
-                    <p style="font-size: 0.9rem; color: var(--text-light);">Normalized Difference Vegetation Index (NDVI) calculated from Red and NIR bands indicates vegetation greenness and health. Higher values = healthier vegetation.</p>
-                </div>
-                <div style="background: #f5fdf2; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #7cb342;">
-                    <h4 style="color: #558b2f; margin-bottom: 0.5rem;">Vegetation Classification</h4>
-                    <p style="font-size: 0.9rem; color: var(--text-light);">SWIR bands combined with visible wavelengths help distinguish forest types, degradation levels, and land cover changes with high precision.</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <footer>
-        <div class="footer-grid">
+    <footer style="background: var(--bg-card); border-top: 1px solid var(--border); padding: 4rem 2rem; margin-top: 4rem;">
+        <div style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 4rem;">
             <div>
-                <span class="footer-logo">🌳 OWR RESERVE</span>
-                <p style="opacity: 0.7;">Dedicated to the preservation of the Okapi Wildlife Reserve and its unique biological and cultural heritage.</p>
+                <h3 style="color: var(--primary); margin-bottom: 1.5rem;"><i class="fas fa-tree"></i> OWR INTEL</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Dedicated to the high-resolution monitoring and protection of the Okapi Wildlife Reserve using open-source geospatial intelligence.</p>
             </div>
             <div>
-                <h4>Explore</h4>
-                <ul style="list-style: none; margin-top: 1rem;">
-                    <li><a href="index.html" style="color: white; opacity: 0.7;">Dashboard</a></li>
-                    <li><a href="forest_map.html" style="color: white; opacity: 0.7;">Status Map</a></li>
-                    <li><a href="forest_map_evolution.html" style="color: white; opacity: 0.7;">Time-Series Map</a></li>
+                <h4 style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Data Resources</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+                    <li><a href="data/processed/OWR_COVER_RFO.csv" style="text-decoration: none; color: var(--text-muted);"><i class="fas fa-file-csv"></i> Reserve Forest Cover</a></li>
+                    <li><a href="data/processed/OWR GFW.csv" style="text-decoration: none; color: var(--text-muted);"><i class="fas fa-file-csv"></i> Buffer Zone Data</a></li>
+                    <li><a href="data/processed/OWR_Mining.csv" style="text-decoration: none; color: var(--text-muted);"><i class="fas fa-file-csv"></i> Mining Concessions</a></li>
                 </ul>
             </div>
             <div>
-                <h4>Resources</h4>
-                <ul style="list-style: none; margin-top: 1rem;">
-                    <li><a href="OWR_COVER_RFO.csv" style="color: white; opacity: 0.7;">Download Reserve Data</a></li>
-                    <li><a href="OWR GFW.csv" style="color: white; opacity: 0.7;">Download Buffer Data (GFW)</a></li>
-                    <li><a href="README.md" style="color: white; opacity: 0.7;">Documentation</a></li>
+                <h4 style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Documentation</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+                    <li><a href="README.md" style="text-decoration: none; color: var(--text-muted);"><i class="fas fa-book"></i> Methodology</a></li>
+                    <li><a href="https://github.com/aganzeeliud/GFW_" style="text-decoration: none; color: var(--text-muted);"><i class="fab fa-github"></i> Source Code</a></li>
                 </ul>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2026 Okapi Wildlife Reserve Analysis Project. Data powered by Global Forest Watch.</p>
+        <div style="max-width: 1400px; margin: 2rem auto 0; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.8rem;">
+            <p>© 2026 Okapi Wildlife Reserve Conservation Project. Powered by Global Forest Watch & IPIS Data.</p>
         </div>
     </footer>
 
     <script>
+        // Data derived from existing dashboard
         const years = ['2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'];
-        const lossData = [465.6, 589.1, 141.2, 353.9, 605.0, 356.4, 1240.5, 265.2, 759.3, 344.2, 810.0, 293.9, 443.3, 853.0, 738.6, 992.3, 1071.0, 1069.2, 1166.5, 1326.4, 1445.4, 1964.8, 1904.4, 1818.0, 903.5];
-        const bufferLossData = [4831.4, 8866.6, 2860.6, 4945.1, 6204.8, 3387.8, 14742.2, 2357.0, 8857.2, 4629.2, 10817.0, 4755.1, 9403.7, 18345.2, 14138.8, 22422.5, 26417.9, 24351.8, 25262.3, 30312.2, 26770.0, 40363.9, 32438.9, 40074.4, 45843.4];
-        const coverData = [1372134.4, 1372010.9, 1372458.8, 1372246.1, 1371995.0, 1372243.6, 1371359.5, 1372334.8, 1371840.7, 1372255.8, 1371790.0, 1372306.1, 1372156.7, 1371747.0, 1371861.4, 1371607.7, 1371529.1, 1371530.8, 1371433.5, 1371273.6, 1371154.6, 1370635.2, 1370695.6, 1370782.0, 1371696.6];
-        const rateData = [0.03, 0.04, 0.01, 0.03, 0.04, 0.03, 0.09, 0.02, 0.06, 0.03, 0.06, 0.02, 0.03, 0.06, 0.05, 0.07, 0.08, 0.08, 0.09, 0.10, 0.11, 0.14, 0.14, 0.13, 0.07];
+        const lossInside = [465.6, 589.1, 141.2, 353.9, 605.0, 356.4, 1240.5, 265.2, 759.3, 344.2, 810.0, 293.9, 443.3, 853.0, 738.6, 992.3, 1071.0, 1069.2, 1166.5, 1326.4, 1445.4, 1964.8, 1904.4, 1818.0, 903.5];
+        const lossBuffer = [4831.4, 8866.6, 2860.6, 4945.1, 6204.8, 3387.8, 14742.2, 2357.0, 8857.2, 4629.2, 10817.0, 4755.1, 9403.7, 18345.2, 14138.8, 22422.5, 26417.9, 24351.8, 25262.3, 30312.2, 26770.0, 40363.9, 32438.9, 40074.4, 45843.4];
+        const rates = [0.03, 0.04, 0.01, 0.03, 0.04, 0.03, 0.09, 0.02, 0.06, 0.03, 0.06, 0.02, 0.03, 0.06, 0.05, 0.07, 0.08, 0.08, 0.09, 0.10, 0.11, 0.14, 0.14, 0.13, 0.07];
 
-        // Comparison Chart
-        new Chart(document.getElementById('comparisonChart'), {
-            type: 'bar',
+        // Chart.js Configuration
+        const mainChartCtx = document.getElementById('mainChart').getContext('2d');
+        new Chart(mainChartCtx, {
+            type: 'line',
             data: {
                 labels: years,
                 datasets: [
                     {
-                        label: 'Inside Reserve Loss (ha)',
-                        data: lossData,
-                        backgroundColor: '#2d5016',
-                        borderRadius: 4
+                        label: 'Buffer Loss (ha)',
+                        data: lossBuffer,
+                        borderColor: '#795548',
+                        backgroundColor: 'rgba(121, 85, 72, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
                     },
                     {
-                        label: '50km Buffer Loss (ha)',
-                        data: bufferLossData,
-                        backgroundColor: '#d9534f',
-                        borderRadius: 4
+                        label: 'Reserve Loss (ha)',
+                        data: lossInside,
+                        borderColor: '#2d5a27',
+                        backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
                     }
                 ]
             },
@@ -741,186 +480,34 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: 'top' },
-                    tooltip: { mode: 'index', intersect: false }
+                    legend: { position: 'top', labels: { usePointStyle: true, padding: 20 } }
                 },
                 scales: {
-                    y: { 
-                        beginAtZero: true,
-                        title: { display: true, text: 'Hectares (ha)' }
-                    }
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
                 }
             }
         });
 
-        // Loss Chart
-        new Chart(document.getElementById('lossChart'), {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'Annual Loss (ha)',
-                    data: lossData,
-                    borderColor: '#d9534f',
-                    backgroundColor: 'rgba(217, 83, 79, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // Cover Chart
-        new Chart(document.getElementById('coverChart'), {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [{
-                    label: 'Forest Cover (ha)',
-                    data: coverData,
-                    borderColor: '#2d5016',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { min: 1365000, max: 1375000 } }
-            }
-        });
-
-        // Rate Chart
-        new Chart(document.getElementById('rateChart'), {
+        const rateChartCtx = document.getElementById('rateChart').getContext('2d');
+        new Chart(rateChartCtx, {
             type: 'bar',
             data: {
                 labels: years,
                 datasets: [{
-                    label: 'Deforestation Rate (%)',
-                    data: rateData,
-                    backgroundColor: 'rgba(124, 179, 66, 0.7)',
-                    borderRadius: 5
+                    label: 'Deforestation Rate %',
+                    data: rates,
+                    backgroundColor: 'rgba(45, 90, 39, 0.8)',
+                    borderRadius: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // Gauge Chart
-        const rateGauge = new Chart(document.getElementById('rateGauge'), {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [0.06, 1 - 0.06],
-                    backgroundColor: ['#d9534f', '#eee'],
-                    borderWidth: 0,
-                    circumference: 180,
-                    rotation: 270,
-                    cutout: '80%'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { tooltip: { enabled: false }, legend: { display: false } }
-            }
-        });
-
-        const explorerData = {
-            '2001': {loss: 465.6, buffer: 4831.4, cover: 1372134, rate: 0.034, cumul: 465.6},
-            '2002': {loss: 589.1, buffer: 8866.6, cover: 1372011, rate: 0.043, cumul: 1054.7},
-            '2003': {loss: 141.2, buffer: 2860.6, cover: 1372459, rate: 0.010, cumul: 1195.9},
-            '2004': {loss: 353.9, buffer: 4945.1, cover: 1372246, rate: 0.026, cumul: 1549.8},
-            '2005': {loss: 605.0, buffer: 6204.8, cover: 1371995, rate: 0.044, cumul: 2154.7},
-            '2006': {loss: 356.4, buffer: 3387.8, cover: 1372244, rate: 0.026, cumul: 2511.2},
-            '2007': {loss: 1240.5, buffer: 14742.2, cover: 1371359, rate: 0.090, cumul: 3751.7},
-            '2008': {loss: 265.2, buffer: 2357.0, cover: 1372335, rate: 0.019, cumul: 4016.9},
-            '2009': {loss: 759.3, buffer: 8857.2, cover: 1371841, rate: 0.055, cumul: 4776.2},
-            '2010': {loss: 344.2, buffer: 4629.2, cover: 1372256, rate: 0.025, cumul: 5120.4},
-            '2011': {loss: 810.0, buffer: 10817.0, cover: 1371790, rate: 0.059, cumul: 5930.4},
-            '2012': {loss: 293.9, buffer: 4755.1, cover: 1372306, rate: 0.021, cumul: 6224.3},
-            '2013': {loss: 443.3, buffer: 9403.7, cover: 1372157, rate: 0.032, cumul: 6667.7},
-            '2014': {loss: 853.0, buffer: 18345.2, cover: 1371747, rate: 0.062, cumul: 7520.7},
-            '2015': {loss: 738.6, buffer: 14138.8, cover: 1371861, rate: 0.054, cumul: 8259.3},
-            '2016': {loss: 992.3, buffer: 22422.5, cover: 1371608, rate: 0.072, cumul: 9251.6},
-            '2017': {loss: 1071.0, buffer: 26417.9, cover: 1371529, rate: 0.078, cumul: 10322.5},
-            '2018': {loss: 1069.2, buffer: 24351.8, cover: 1371531, rate: 0.078, cumul: 11391.7},
-            '2019': {loss: 1166.5, buffer: 25262.3, cover: 1371433, rate: 0.085, cumul: 12558.2},
-            '2020': {loss: 1326.4, buffer: 30312.2, cover: 1371274, rate: 0.097, cumul: 13884.6},
-            '2021': {loss: 1445.4, buffer: 26770.0, cover: 1371155, rate: 0.105, cumul: 15330.0},
-            '2022': {loss: 1964.8, buffer: 40363.9, cover: 1370635, rate: 0.143, cumul: 17294.8},
-            '2023': {loss: 1904.4, buffer: 32438.9, cover: 1370696, rate: 0.139, cumul: 19199.2},
-            '2024': {loss: 1818.0, buffer: 40074.4, cover: 1370782, rate: 0.133, cumul: 21017.3},
-            '2025': {loss: 903.5, buffer: 45843.4, cover: 1371697, rate: 0.067, cumul: 21920.7}
-        };
-
-        const slider = document.getElementById('yearSlider');
-        const yearDisplay = document.getElementById('explorerYear');
-        const eCover = document.getElementById('eCover');
-        const eLoss = document.getElementById('eLoss');
-        const eBuffer = document.getElementById('eBuffer');
-        const eCumul = document.getElementById('eCumul');
-        const gaugeVal = document.getElementById('gaugeVal');
-
-        slider.addEventListener('input', function(e) {
-            const year = e.target.value;
-            const data = explorerData[year];
-            
-            yearDisplay.textContent = year;
-            eCover.textContent = (data.cover / 1000000).toFixed(2) + 'M ha';
-            eLoss.textContent = data.loss.toLocaleString() + ' ha';
-            eBuffer.textContent = data.buffer.toLocaleString() + ' ha';
-            eCumul.textContent = data.cumul.toLocaleString() + ' ha';
-            gaugeVal.textContent = data.rate.toFixed(3) + '%';
-            
-            rateGauge.data.datasets[0].data = [data.rate, 0.2 - data.rate]; // Max scale 0.2%
-            rateGauge.update();
-        });
-    </script>
-</body>
-</html>
- (0.86μm)', 'SWIR1 (1.6μm)', 'SWIR2 (2.2μm)'],
-                datasets: [
-                    {
-                        label: 'Spectral Reflectance Values',
-                        data: [508, 254, 363, 423],
-                        borderColor: '#2d5016',
-                        backgroundColor: 'rgba(45, 80, 22, 0.25)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#2d5016',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
-                        pointHoverRadius: 7
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: false }
-                },
                 scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 600,
-                        ticks: { stepSize: 100 },
-                        grid: { color: 'rgba(0,0,0,0.05)' }
-                    }
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
                 }
             }
         });

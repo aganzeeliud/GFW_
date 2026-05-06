@@ -285,14 +285,17 @@
 </head>
 <body>
     <nav class="main-nav">
-        <a href="index.html" class="nav-logo">🌳 OWR DASHBOARD</a>
-        <div class="nav-links">
-            <a href="index.html">Dashboard</a>
-            <a href="forest_map.html">2025 Map</a>
-            <a href="mining_map.html">Mining Map</a>
-            <a href="forest_map_evolution.html" class="active">Evolution Map</a>
+        <div style="max-width: 1400px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="nav-logo" style="color: #2d5016; font-weight: 800; font-size: 1.25rem; text-decoration: none;">
+                <i class="fas fa-tree"></i> OWR INTEL
+            </a>
+            <div class="nav-links" style="display: flex; gap: 2rem;">
+                <a href="index.html" style="text-decoration: none; color: #666; font-weight: 600; font-size: 0.9rem;">Dashboard</a>
+                <a href="forest_map.html" style="text-decoration: none; color: #666; font-weight: 600; font-size: 0.9rem;">Forest Map</a>
+                <a href="mining_map.html" style="text-decoration: none; color: #666; font-weight: 600; font-size: 0.9rem;">Mining Map</a>
+                <a href="forest_map_evolution.html" class="active" style="text-decoration: none; color: #d9534f; font-weight: 600; font-size: 0.9rem;">Evolution</a>
+            </div>
         </div>
-
     </nav>
 
     <div id="map"></div>
@@ -426,7 +429,7 @@
         }
 
         // Fetch OWR Boundary
-        fetch('OWR_Limit_OWR_2024.json')
+        fetch('data/processed/OWR_Limit_OWR_2024.json')
             .then(res => res.json())
             .then(data => {
                 // Reserve Boundary

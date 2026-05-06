@@ -43,11 +43,16 @@
 </head>
 <body>
     <nav class="main-nav">
-        <a href="index.html" class="nav-logo">🌳 OWR RESERVE</a>
-        <div class="nav-links">
-            <a href="index.html">Dashboard</a>
-            <a href="forest_map.html">2025 Map</a>
-            <a href="mining_map.html" class="active">Mining Map</a>
+        <div style="max-width: 1400px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="nav-logo" style="color: #2d5016; font-weight: 800; font-size: 1.25rem; text-decoration: none;">
+                <i class="fas fa-tree"></i> OWR INTEL
+            </a>
+            <div class="nav-links" style="display: flex; gap: 2rem;">
+                <a href="index.html" style="text-decoration: none; color: #666; font-weight: 600; font-size: 0.9rem;">Dashboard</a>
+                <a href="forest_map.html" style="text-decoration: none; color: #666; font-weight: 600; font-size: 0.9rem;">Forest Map</a>
+                <a href="mining_map.html" class="active" style="text-decoration: none; color: #d9534f; font-weight: 600; font-size: 0.9rem;">Mining Map</a>
+                <a href="mining_buffer_map.html" style="text-decoration: none; color: #666; font-weight: 600; font-size: 0.9rem;">Buffer Zone</a>
+            </div>
         </div>
     </nav>
 
@@ -94,7 +99,7 @@
         }).addTo(map);
 
         // Load OWR Boundary
-        fetch('OWR_WGS84.json')
+        fetch('data/processed/OWR_WGS84.json')
             .then(res => res.json())
             .then(data => {
                 L.geoJSON(data, {
@@ -104,7 +109,7 @@
             });
 
         // Load Mining Concessions
-        fetch('mambasa_mining_concessions.geojson')
+        fetch('data/processed/OWR_Mining_Inside.geojson')
             .then(res => res.json())
             .then(data => {
                 L.geoJSON(data, {
