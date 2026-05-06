@@ -365,25 +365,17 @@
             <!-- Mining Intelligence Section -->
             <div class="card map-section">
                 <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-hammer"></i> Mining Concession Analysis</h2>
+                    <h2 class="card-title"><i class="fas fa-hammer"></i> Mining Concession Intelligence</h2>
                     <div style="display: flex; gap: 0.5rem;">
-                        <a href="mining_map.html" class="btn btn-outline btn-sm">Full Inside Map</a>
-                        <a href="mining_buffer_map.html" class="btn btn-outline btn-sm">Full Buffer Map</a>
+                        <a href="mining_map.html" class="btn btn-outline btn-sm">Interactive Full View</a>
                     </div>
                 </div>
                 
                 <div class="grid" style="padding: 0; gap: 1.5rem;">
-                    <!-- Embedded Maps -->
-                    <div style="grid-column: span 6;">
-                        <h3 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted);">Interactive: Inside Reserve</h3>
-                        <div class="embed-container" style="height: 400px;">
+                    <!-- Embedded Mining Map -->
+                    <div style="grid-column: span 12;">
+                        <div class="embed-container" style="height: 500px;">
                             <iframe src="mining_map.html" width="100%" height="100%" frameborder="0"></iframe>
-                        </div>
-                    </div>
-                    <div style="grid-column: span 6;">
-                        <h3 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted);">Interactive: Buffer Zone</h3>
-                        <div class="embed-container" style="height: 400px;">
-                            <iframe src="mining_buffer_map.html" width="100%" height="100%" frameborder="0"></iframe>
                         </div>
                     </div>
 
@@ -394,9 +386,9 @@
                             <p style="font-size: 0.8rem; color: var(--text-muted);">Overlapping 813,652 ha of protected primary forest.</p>
                         </div>
                         <div class="stat-card" style="padding: 1.5rem; border-color: rgba(121, 85, 72, 0.2);">
-                            <span class="stat-label">Concessions (Buffer)</span>
-                            <span class="stat-value" style="font-size: 1.8rem;">185</span>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">External pressure across 2.43M ha in the 50km zone.</p>
+                            <span class="stat-label">Main Resources</span>
+                            <span class="stat-value" style="font-size: 1.5rem;">Au, Diamond, Nb-Ta</span>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Primary mineral targets within the reserve boundaries.</p>
                         </div>
                     </div>
                     
@@ -449,9 +441,6 @@
                             <a href="data/processed/OWR_Mining.csv" class="btn btn-primary">
                                 <i class="fas fa-download"></i> Full Dataset
                             </a>
-                            <button class="btn btn-outline" onclick="alert('Filtering feature coming soon with full database integration.')">
-                                <i class="fas fa-search"></i> Advanced Search
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -504,16 +493,6 @@
                             <li><strong>Validation:</strong> Results are cross-referenced with Landsat 8/9 spectral imagery for hotspot verification.</li>
                         </ol>
                     </div>
-                </div>
-            </div>
-
-            <!-- GFW Live Monitoring -->
-            <div class="card map-section">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-satellite"></i> GFW Live Satellite Monitoring</h2>
-                </div>
-                <div class="embed-container">
-                    <iframe width="100%" height="600" frameborder="0" src="https://www.globalforestwatch.org/embed/map/aoi/680b6064bc87510015b9888d/?mainMap=eyJoaWRlTGVnZW5kIjp0cnVlLCJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjYW5Cb3VuZCI6ZmFsc2V9&mapMenu=eyJtZW51U2VjdGlvbiI6Im15LWdmdyJ9"></iframe>
                 </div>
             </div>
         </div>

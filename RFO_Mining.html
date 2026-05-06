@@ -88,10 +88,14 @@
     </div>
 
     <div class="legend">
-        <div style="font-weight: 800; margin-bottom: 0.8rem; text-transform: uppercase; font-size: 0.75rem;">Map Key</div>
+        <div style="font-weight: 800; margin-bottom: 0.8rem; text-transform: uppercase; font-size: 0.75rem;">Resources Map Key</div>
         <div class="legend-item"><div class="legend-color" style="background: #2d5016; opacity: 0.2; border: 2px solid #2d5016;"></div> OWR Boundary</div>
-        <div class="legend-item"><div class="legend-color" style="background: #d9534f; opacity: 0.6;"></div> Active Concession</div>
-        <div class="legend-item"><div class="legend-color" style="background: #b08d57; opacity: 0.4;"></div> Pending/Other</div>
+        <div class="legend-item"><div class="legend-color" style="background: #ffd700; opacity: 0.8;"></div> Gold (Au)</div>
+        <div class="legend-item"><div class="legend-color" style="background: #00bcd4; opacity: 0.8;"></div> Diamond</div>
+        <div class="legend-item"><div class="legend-color" style="background: #9c27b0; opacity: 0.8;"></div> Nb-Ta / Rare Earths</div>
+        <div class="legend-item"><div class="legend-color" style="background: #ff5722; opacity: 0.8;"></div> Iron (Fe)</div>
+        <div class="legend-item"><div class="legend-color" style="background: #795548; opacity: 0.8;"></div> Tin (Sn)</div>
+        <div class="legend-item"><div class="legend-color" style="background: #b08d57; opacity: 0.8;"></div> Other Minerals</div>
     </div>
 
     <script>
@@ -101,6 +105,18 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
+
+        // Color mapping by resource/activity type
+        function getResourceColor(resource) {
+            if (!resource) return '#9e9e9e';
+            const res = resource.toLowerCase();
+            if (res.includes('au') || res.includes('gold')) return '#ffd700'; // Gold
+            if (res.includes('diamant') || res.includes('diamond')) return '#00bcd4'; // Diamond
+            if (res.includes('nb-ta') || res.includes('tantale')) return '#9c27b0'; // Nb-Ta
+            if (res.includes('fe') || res.includes('fer')) return '#ff5722'; // Iron
+            if (res.includes('sn') || res.includes('etain')) return '#795548'; // Tin
+            return '#b08d57'; // Default
+        }
 
         // Load OWR Boundary
         fetch('data/processed/OWR_WGS84.json')
@@ -118,24 +134,35 @@
             .then(data => {
                 L.geoJSON(data, {
                     style: function(feature) {
-                        const status = feature.properties.statut;
                         return {
-                            color: status === 'Actif' ? '#d9534f' : '#b08d57',
+                            color: getResourceColor(feature.properties.resource),
                             weight: 1,
-                            opacity: 0.8,
-                            fillOpacity: 0.5
+                            opacity: 0.9,
+                            fillOpacity: 0.6
                         };
                     },
                     onEachFeature: function(feature, layer) {
                         const props = feature.properties;
+                        const grantDate = props.date_do ? props.date_do.split('T')[0] : 'N/A';
+                        const expiryDate = props.date_de1 ? props.date_de1.split('T')[0] : 'N/A';
+                        const appDate = 'N/A'; // Application date not clearly in source
+                        
                         layer.bindPopup(`
-                            <div style="font-family: sans-serif;">
-                                <h4 style="margin: 0 0 5px 0;">Concession: ${props.code}</h4>
-                                <p><b>Company:</b> ${props.parties}</p>
-                                <p><b>Type:</b> ${props.type}</p>
-                                <p><b>Resource:</b> ${props.resource}</p>
-                                <p><b>Status:</b> ${props.statut}</p>
-                                <p><b>Area:</b> ${props.sup_sig_ha} ha</p>
+                            <div style="font-family: 'Inter', sans-serif; min-width: 200px; padding: 5px;">
+                                <h4 style="margin: 0 0 10px 0; color: #2d5016; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+                                    Permit: ${props.code}
+                                </h4>
+                                <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse;">
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Company:</b></td><td>${props.parties}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Resource:</b></td><td>${props.resource}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Type:</b></td><td>${props.type}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Status:</b></td><td>${props.statut}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>App. Date:</b></td><td>${appDate}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Grant Date:</b></td><td>${grantDate}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Expiry Date:</b></td><td>${expiryDate}</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Zone:</b></td><td>Okapi Reserve</td></tr>
+                                    <tr><td style="padding: 3px 0; color: #666;"><b>Area:</b></td><td>${props.sup_sig_ha} ha</td></tr>
+                                </table>
                             </div>
                         `);
                     }
