@@ -314,6 +314,7 @@
             <ul>
                 <li><a href="index.html" class="active">Dashboard</a></li>
                 <li><a href="forest_map.html">Status Map</a></li>
+                <li><a href="mining_map.html">Mining Map</a></li>
                 <li><a href="forest_map_evolution.html">Evolution</a></li>
             </ul>
         </div>
@@ -336,6 +337,10 @@
                 <div class="info-card">
                     <span class="info-card-value">433,399</span>
                     <span class="info-card-label">Buffer Loss (ha)</span>
+                </div>
+                <div class="info-card">
+                    <span class="info-card-value">83</span>
+                    <span class="info-card-label">Mining Concessions</span>
                 </div>
                 <div class="info-card">
                     <span class="info-card-value">50km</span>
@@ -453,6 +458,88 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Mining Concessions Section (Inside Reserve) -->
+        <section class="content-section">
+            <div class="section-header" style="text-align: center;">
+                <h2><i class="fas fa-hammer"></i> Mining Analysis: Inside OWR</h2>
+                <p style="margin: 0 auto;">Analyzing the overlap of industrial mining concessions within the Okapi Wildlife Reserve core boundaries.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div class="chart-box">
+                    <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Permit Status (Inside)</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fdf2f2; border-radius: 8px;">
+                            <span style="font-weight: 700; color: #d9534f;">Direct Overlap Concessions</span>
+                            <span style="font-size: 1.2rem; font-weight: 800;">83</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fef9f3; border-radius: 8px;">
+                            <span style="font-weight: 700; color: #f57c00;">Active Permits</span>
+                            <span style="font-size: 1.2rem; font-weight: 800;">31</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="icon-stat">
+                        <i class="fas fa-shield-alt" style="color: #2d5016; background: rgba(45, 80, 22, 0.1);"></i>
+                        <div class="icon-stat-text">
+                            <h4>Direct Impact</h4>
+                            <p>Mining within the reserve boundaries directly violates protected status and threatens endemic species.</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <a href="mining_map.html" class="btn btn-primary" style="background: #2d5016;">
+                            <i class="fas fa-map-marked"></i> View Reserve Mining Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-light);">
+                <a href="OWR_Mining_Inside.csv" style="color: var(--primary);">Download Inside Reserve Data (CSV)</a>
+            </p>
+        </section>
+
+        <!-- Mining Concessions Section (Buffer Zone) -->
+        <section class="content-section" style="background: #fdfaf5;">
+            <div class="section-header" style="text-align: center;">
+                <h2><i class="fas fa-truck-loading"></i> Mining Analysis: 50km Buffer Zone</h2>
+                <p style="margin: 0 auto;">Monitoring mining development in the surrounding 50km buffer to assess indirect threats and pressure.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="icon-stat">
+                        <i class="fas fa-road" style="color: #795548; background: rgba(121, 85, 72, 0.1);"></i>
+                        <div class="icon-stat-text">
+                            <h4>Buffer Pressure</h4>
+                            <p>Extensive mining in the buffer zone leads to increased infrastructure development and migration towards reserve borders.</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <a href="mining_buffer_map.html" class="btn btn-primary" style="background: #795548;">
+                            <i class="fas fa-globe"></i> View Buffer Mining Map
+                        </a>
+                    </div>
+                </div>
+                <div class="chart-box">
+                    <h3 style="color: #795548; margin-bottom: 1.5rem;">Permit Distribution (Buffer)</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fdf5f0; border-radius: 8px;">
+                            <span style="font-weight: 700; color: #795548;">Buffer Zone Concessions</span>
+                            <span style="font-size: 1.2rem; font-weight: 800;">185</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8rem; background: #fef9f3; border-radius: 8px;">
+                            <span style="font-weight: 700; color: #f57c00;">Main Focus Areas</span>
+                            <span style="font-size: 0.9rem; font-weight: 600;">Mambasa, Nia-Nia, Wamba</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: var(--text-light);">
+                <a href="OWR_Mining_Buffer.csv" style="color: #795548;">Download Buffer Zone Data (CSV)</a>
+            </p>
         </section>
 
         <!-- Importance Section -->

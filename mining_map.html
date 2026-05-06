@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OWR - Mining Concessions Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f5f5; }
+        #map { height: 100vh; width: 100%; }
+        .main-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: white; display: flex; justify-content: space-between;
+            align-items: center; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 2000;
+        }
+        .nav-logo { font-size: 1.2rem; font-weight: 800; color: #2d5016; text-decoration: none; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #666; font-weight: 600; }
+        .nav-links a.active { color: #d9534f; }
+        
+        .control-panel {
+            position: fixed; top: 75px; left: 15px; background: white;
+            padding: 1.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 1000; max-width: 350px; max-height: calc(100vh - 100px); overflow-y: auto;
+        }
+        .control-panel h1 { font-size: 1.2rem; color: #b08d57; margin-bottom: 0.5rem; font-weight: 800; }
+        .stat { margin: 10px 0; padding: 1rem; background-color: #fcfaf5; border-left: 4px solid #b08d57; border-radius: 4px; }
+        .stat-value { font-weight: 800; color: #b08d57; font-size: 1.4rem; display: block; }
+        .stat-label { color: #888; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
+        
+        .legend {
+            position: fixed; bottom: 25px; right: 15px; background: white;
+            padding: 1rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000; font-size: 0.85rem;
+        }
+        .legend-item { margin: 6px 0; display: flex; align-items: center; gap: 8px; }
+        .legend-color { width: 14px; height: 14px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="index.html" class="nav-logo">🌳 OWR RESERVE</a>
+        <div class="nav-links">
+            <a href="index.html">Dashboard</a>
+            <a href="forest_map.html">2025 Map</a>
+            <a href="mining_map.html" class="active">Mining Map</a>
+        </div>
+    </nav>
+
+    <div id="map"></div>
+    
+    <div class="control-panel">
+        <h1>🏗️ Mining Concessions</h1>
+        <p style="font-size: 0.8rem; color: #888;">Overlapping Okapi Wildlife Reserve</p>
+        
+        <div class="stat">
+            <div class="stat-label">Total Concessions</div>
+            <div class="stat-value">83</div>
+        </div>
+        <div class="stat" style="border-left-color: #d9534f;">
+            <div class="stat-label">Active Permits</div>
+            <div class="stat-value" style="color: #d9534f;">31</div>
+        </div>
+        <div class="stat" style="border-left-color: #f57c00;">
+            <div class="stat-label">Main Resources</div>
+            <div class="stat-value" style="font-size: 1rem; color: #f57c00;">Gold, Diamond, Nb-Ta</div>
+        </div>
+
+        <div style="margin-top: 1rem; font-size: 0.85rem; line-height: 1.4; color: #555;">
+            <p>Monitoring mining activity is crucial for the preservation of the OWR. These concessions represent potential threats to the ecosystem's integrity.</p>
+        </div>
+
+        <h2 style="font-size: 0.9rem; margin-top: 1.5rem; color: #2d5016;">Source Data</h2>
+        <p style="font-size: 0.75rem; color: #888;">Data sourced from DRC Mining Cadastre (CAMI) via GFW Open Data Portal.</p>
+    </div>
+
+    <div class="legend">
+        <div style="font-weight: 800; margin-bottom: 0.8rem; text-transform: uppercase; font-size: 0.75rem;">Map Key</div>
+        <div class="legend-item"><div class="legend-color" style="background: #2d5016; opacity: 0.2; border: 2px solid #2d5016;"></div> OWR Boundary</div>
+        <div class="legend-item"><div class="legend-color" style="background: #d9534f; opacity: 0.6;"></div> Active Concession</div>
+        <div class="legend-item"><div class="legend-color" style="background: #b08d57; opacity: 0.4;"></div> Pending/Other</div>
+    </div>
+
+    <script>
+        const map = L.map('map', {zoomControl: false}).setView([1.75, 28.5], 9);
+        L.control.zoom({position: 'topright'}).addTo(map);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Load OWR Boundary
+        fetch('OWR_WGS84.json')
+            .then(res => res.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: { color: '#2d5016', weight: 3, opacity: 0.8, fillOpacity: 0.05 }
+                }).addTo(map);
+                map.fitBounds(L.geoJSON(data).getBounds());
+            });
+
+        // Load Mining Concessions
+        fetch('mambasa_mining_concessions.geojson')
+            .then(res => res.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: function(feature) {
+                        const status = feature.properties.statut;
+                        return {
+                            color: status === 'Actif' ? '#d9534f' : '#b08d57',
+                            weight: 1,
+                            opacity: 0.8,
+                            fillOpacity: 0.5
+                        };
+                    },
+                    onEachFeature: function(feature, layer) {
+                        const props = feature.properties;
+                        layer.bindPopup(`
+                            <div style="font-family: sans-serif;">
+                                <h4 style="margin: 0 0 5px 0;">Concession: ${props.code}</h4>
+                                <p><b>Company:</b> ${props.parties}</p>
+                                <p><b>Type:</b> ${props.type}</p>
+                                <p><b>Resource:</b> ${props.resource}</p>
+                                <p><b>Status:</b> ${props.statut}</p>
+                                <p><b>Area:</b> ${props.sup_sig_ha} ha</p>
+                            </div>
+                        `);
+                    }
+                }).addTo(map);
+            });
+    </script>
+</body>
+</html>
