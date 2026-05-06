@@ -2,6 +2,16 @@
 
 A comprehensive geospatial and statistical analysis of forest cover and deforestation patterns within the Okapi Wildlife Reserve in the Democratic Republic of the Congo (DRC).
 
+## 🚀 Quick Links
+
+**Live Dashboard & Maps:**
+- 🌐 **[Landing Page Dashboard](https://aganzeeliud.github.io/GFW_/)** - Main dashboard with spectral analysis
+- 🗺️ **[Forest Cover Map 2025](https://aganzeeliud.github.io/GFW_/forest_map.html)** - Interactive map with buffer zone & spectral overlay
+- 📊 **[Evolution Map (2001-2025)](https://aganzeeliud.github.io/GFW_/forest_map_evolution.html)** - Time-series visualization with slider
+
+**Repository:**
+- 📦 **[GitHub Repository](https://github.com/aganzeeliud/GFW_)** - Source code and data files
+
 ## 📋 Project Overview
 
 This project analyzes forest loss trends and vegetation cover dynamics across the Okapi Wildlife Reserve using Global Forest Watch (GFW) data from 2001 to 2025. The reserve is divided into three management zones:
@@ -93,11 +103,13 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 ## 🌐 Interactive Maps
 
 ### forest_map.html
-**Static map displaying 2025 forest cover data**
+**Static map displaying 2025 forest cover data with Landsat Spectral Analysis**
 - Shows all three zone types with color-coded markers
 - Circle size represents relative forest loss magnitude
 - Interactive popups with zone details
 - Layer toggle between OpenStreetMap and satellite imagery
+- **NEW: 🎨 Interactive spectral overlay button** - Toggle Landsat band visualization
+- **NEW: 50km Buffer Zone statistics** - Monitor surrounding area forest loss
 - Located at: https://aganzeeliud.github.io/GFW_/forest_map.html
 
 **Features:**
@@ -105,6 +117,8 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 - Agricultural zones (green) - Sustainable management areas
 - Hunting zones (orange) - Controlled hunting areas
 - High-loss alert markers (red) - Areas requiring intervention
+- Landsat spectral bands (Red/NIR/SWIR1/SWIR2) visualization
+- Buffer zone loss tracking (2001-2025)
 
 ### forest_map_evolution.html
 **Dynamic time-series map with year slider (2001-2025)**
@@ -112,6 +126,7 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 - Year-by-year visualization of deforestation patterns
 - Time slider for manual year navigation
 - Statistical panel showing metrics for selected year
+- **NEW: Buffer zone data timeline** - Track surrounding area changes over 25 years
 - Located at: https://aganzeeliud.github.io/GFW_/forest_map_evolution.html
 
 ### index.html
@@ -120,6 +135,13 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 - Links to interactive maps
 - Chart visualizations of forest loss trends
 - Zone-specific analysis and breakdown
+- **NEW: Landsat Spectral Bands Analysis section**
+  - Red Band (508, 0.66 µm): Vegetation absorption
+  - NIR Band (254, 0.86 µm): Vegetation reflectance
+  - SWIR1 Band (363, 1.6 µm): Moisture content detection
+  - SWIR2 Band (423, 2.2 µm): Forest discrimination
+  - Interactive radar chart for spectral reflectance patterns
+- **NEW: Comparison chart** - Reserve vs. 50km Buffer Zone loss analysis
 - Located at: https://aganzeeliud.github.io/GFW_/index.html
 
 ## 📈 Key Findings
@@ -130,6 +152,25 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 - **Peak Loss Year:** 2003 (Badengaido Zone)
 - **Reserve Area:** 13,726 km² (1,372,600 ha)
 - **Cumulative Loss Rate:** ~1.82% of reserve area
+
+### Buffer Zone Analysis (50km)
+- **Total Buffer Loss (2001-2025):** ~407,600 hectares
+- **2025 Buffer Loss:** 45,843.4 hectares
+- **Average Annual Buffer Loss:** 16,384.5 ha/year
+- **Impact:** Buffer zone experiences 16x higher deforestation than reserve
+- **Concern:** Increased pressure from surrounding agricultural expansion
+
+### Landsat Spectral Bands Data
+**Reflectance values used for vegetation classification:**
+- **Red Band (508, 0.66 µm):** Vegetation absorption - indicates healthy vs stressed vegetation
+- **NIR Band (254, 0.86 µm):** Vegetation reflectance - key for calculating NDVI index
+- **SWIR1 Band (363, 1.6 µm):** Moisture content - detects water stress in vegetation
+- **SWIR2 Band (423, 2.2 µm):** Forest discrimination - distinguishes forest from non-forest
+
+**Applications:**
+- NDVI Index: Normalized Difference Vegetation Index calculated from Red and NIR
+- Forest health monitoring through spectral signatures
+- Degradation detection through moisture stress indicators
 
 ### Zone-Specific Insights
 
