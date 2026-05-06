@@ -359,15 +359,11 @@
             }
         });
         
-        const spectralControl = L.Control.extend({
-            options: { position: 'topright' },
-            onAdd: function() {
-                const div = L.DomUtil.create('div', 'leaflet-control leaflet-bar');
-                div.style.backgroundColor = 'white';
-                div.style.borderRadius = '5px';
-                div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-                
-                const btn = L.DomUtil.create('button', '', div);
+        new timelineControl().addTo(map);
+    </script>
+</body>
+</html>
+iv);
                 btn.title = 'Toggle Spectral Overlay';
                 btn.textContent = '🎨';
                 btn.style.width = '36px';

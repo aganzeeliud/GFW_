@@ -135,12 +135,6 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 - Links to interactive maps
 - Chart visualizations of forest loss trends
 - Zone-specific analysis and breakdown
-- **NEW: Landsat Spectral Bands Analysis section**
-  - Red Band (508, 0.66 µm): Vegetation absorption
-  - NIR Band (254, 0.86 µm): Vegetation reflectance
-  - SWIR1 Band (363, 1.6 µm): Moisture content detection
-  - SWIR2 Band (423, 2.2 µm): Forest discrimination
-  - Interactive radar chart for spectral reflectance patterns
 - **NEW: Comparison chart** - Reserve vs. 50km Buffer Zone loss analysis
 - Located at: https://aganzeeliud.github.io/GFW_/index.html
 
@@ -159,18 +153,6 @@ GeoJSON file containing the precise boundary polygon of the Okapi Wildlife Reser
 - **Average Annual Buffer Loss:** 16,384.5 ha/year
 - **Impact:** Buffer zone experiences 16x higher deforestation than reserve
 - **Concern:** Increased pressure from surrounding agricultural expansion
-
-### Landsat Spectral Bands Data
-**Reflectance values used for vegetation classification:**
-- **Red Band (508, 0.66 µm):** Vegetation absorption - indicates healthy vs stressed vegetation
-- **NIR Band (254, 0.86 µm):** Vegetation reflectance - key for calculating NDVI index
-- **SWIR1 Band (363, 1.6 µm):** Moisture content - detects water stress in vegetation
-- **SWIR2 Band (423, 2.2 µm):** Forest discrimination - distinguishes forest from non-forest
-
-**Applications:**
-- NDVI Index: Normalized Difference Vegetation Index calculated from Red and NIR
-- Forest health monitoring through spectral signatures
-- Degradation detection through moisture stress indicators
 
 ### Zone-Specific Insights
 
@@ -244,6 +226,31 @@ For questions about this dataset or analysis, please refer to the repository iss
 ## ⚖️ License
 
 This project uses public data from Global Forest Watch. Please refer to GFW's data use policy for publication and redistribution guidelines.
+
+---
+
+**Last Updated:** May 2026
+**Data Period:** 2001-2025
+**Status:** Active Monitoring
+ use policy for publication and redistribution guidelines.
+
+---
+
+**Last Updated:** May 2026
+**Data Period:** 2001-2025
+**Status:** Active Monitoring
+taset or analysis, please refer to the repository issues or contact the project maintainer.
+
+## ⚖️ License
+
+This project uses public data from Global Forest Watch. Please refer to GFW's data use policy for publication and redistribution guidelines.
+
+---
+
+**Last Updated:** May 2026
+**Data Period:** 2001-2025
+**Status:** Active Monitoring
+ use policy for publication and redistribution guidelines.
 
 ---
 

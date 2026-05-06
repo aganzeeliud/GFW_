@@ -731,44 +731,6 @@
             }
         });
 
-        // Spectral Chart
-        new Chart(document.getElementById('spectralChart'), {
-            type: 'radar',
-            data: {
-                labels: ['Red (0.66μm)', 'NIR (0.86μm)', 'SWIR1 (1.6μm)', 'SWIR2 (2.2μm)'],
-                datasets: [
-                    {
-                        label: 'Spectral Reflectance Values',
-                        data: [508, 254, 363, 423],
-                        borderColor: '#2d5016',
-                        backgroundColor: 'rgba(45, 80, 22, 0.25)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#2d5016',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
-                        pointHoverRadius: 7
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: false }
-                },
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 600,
-                        ticks: { stepSize: 100 },
-                        grid: { color: 'rgba(0,0,0,0.05)' }
-                    }
-                }
-            }
-        });
-
         // Gauge Chart
         const rateGauge = new Chart(document.getElementById('rateGauge'), {
             type: 'doughnut',
