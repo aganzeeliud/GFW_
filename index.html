@@ -384,44 +384,74 @@
                 <p><i class="fas fa-info-circle"></i> This map shows the real-time Area of Interest (AOI) including the 50km buffer zone data from <b>OWR GFW.csv</b>.</p>
             </div>
 
-            <div style="margin-top: 2rem; overflow-x: auto;">
-                <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: center;">Recent Buffer Zone Forest Loss (2021-2025)</h3>
-                <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    <thead style="background: var(--primary); color: white;">
-                        <tr>
-                            <th style="padding: 12px; text-align: left;">Year</th>
-                            <th style="padding: 12px; text-align: left;">Buffer Loss (m²)</th>
-                            <th style="padding: 12px; text-align: left;">Buffer Loss (ha)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">2025</td>
-                            <td style="padding: 12px;">458,433,920.7</td>
-                            <td style="padding: 12px; font-weight: 700;">45,843.4</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">2024</td>
-                            <td style="padding: 12px;">400,743,806.5</td>
-                            <td style="padding: 12px; font-weight: 700;">40,074.4</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">2023</td>
-                            <td style="padding: 12px;">324,388,633.2</td>
-                            <td style="padding: 12px; font-weight: 700;">32,438.9</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">2022</td>
-                            <td style="padding: 12px;">403,638,851.9</td>
-                            <td style="padding: 12px; font-weight: 700;">40,363.9</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">2021</td>
-                            <td style="padding: 12px;">267,699,749.3</td>
-                            <td style="padding: 12px; font-weight: 700;">26,770.0</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div style="margin-top: 3rem;">
+                <h3 style="color: var(--primary); margin-bottom: 2rem; text-align: center;"><i class="fas fa-table"></i> Recent Buffer Zone Forest Loss (2021-2025)</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                    <!-- 2025 Card -->
+                    <div class="e-card" style="border-top: 4px solid var(--accent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2025</span>
+                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span class="e-card-label">Loss Area</span>
+                            <span class="e-card-val" style="font-size: 1.4rem;">45,843.4 ha</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">458,433,920.7 m²</div>
+                    </div>
+
+                    <!-- 2024 Card -->
+                    <div class="e-card" style="border-top: 4px solid var(--accent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2024</span>
+                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span class="e-card-label">Loss Area</span>
+                            <span class="e-card-val" style="font-size: 1.4rem;">40,074.4 ha</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">400,743,806.5 m²</div>
+                    </div>
+
+                    <!-- 2023 Card -->
+                    <div class="e-card" style="border-top: 4px solid var(--accent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2023</span>
+                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span class="e-card-label">Loss Area</span>
+                            <span class="e-card-val" style="font-size: 1.4rem;">32,438.9 ha</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">324,388,633.2 m²</div>
+                    </div>
+
+                    <!-- 2022 Card -->
+                    <div class="e-card" style="border-top: 4px solid var(--accent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2022</span>
+                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span class="e-card-label">Loss Area</span>
+                            <span class="e-card-val" style="font-size: 1.4rem;">40,363.9 ha</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">403,638,851.9 m²</div>
+                    </div>
+
+                    <!-- 2021 Card -->
+                    <div class="e-card" style="border-top: 4px solid var(--accent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">2021</span>
+                            <i class="fas fa-calendar-alt" style="color: var(--accent);"></i>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span class="e-card-label">Loss Area</span>
+                            <span class="e-card-val" style="font-size: 1.4rem;">26,770.0 ha</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">267,699,749.3 m²</div>
+                    </div>
+                </div>
             </div>
         </section>
 
