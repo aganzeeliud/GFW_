@@ -315,23 +315,33 @@
 
         <div class="stat-group">
             <div class="stat-card">
-                <h3>Annual Loss</h3>
+                <h3><i class="fas fa-fire-alt"></i> Annual Loss</h3>
                 <div class="stat-value loss" id="annualLoss">903.45</div>
             </div>
             <div class="stat-card">
-                <h3>Forest Cover</h3>
-                <div class="stat-value" id="forestCover">1.37M</div>
+                <h3><i class="fas fa-shield-alt"></i> Buffer Loss</h3>
+                <div class="stat-value loss" id="bufferLoss">45,843.4</div>
             </div>
         </div>
 
         <div class="stat-card" style="margin-bottom: 1.5rem;">
-            <h3>Cumulative Forest Loss</h3>
+            <h3><i class="fas fa-tree"></i> Forest Cover</h3>
+            <div class="stat-value" id="forestCover">1.37M</div>
+        </div>
+
+        <div class="stat-card" style="margin-bottom: 1.5rem;">
+            <h3><i class="fas fa-history"></i> Cumulative Forest Loss</h3>
             <div class="stat-value loss" id="cumulativeLoss">22,236.14</div>
             <p style="font-size: 0.7rem; color: #999; margin-top: 0.4rem;">HECTARES SINCE 2001</p>
         </div>
 
         <div class="chart-box">
             <canvas id="evolutionChart"></canvas>
+        </div>
+
+        <h2 style="color: #004d40; margin-top: 1.5rem; font-size: 1rem;"><i class="fas fa-satellite"></i> GFW Live Monitor</h2>
+        <div style="margin-top: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #eee;">
+            <iframe width="100%" height="250" frameborder="0" src="https://www.globalforestwatch.org/embed/map/aoi/680b6064bc87510015b9888d/?mainMap=eyJoaWRlTGVnZW5kIjp0cnVlLCJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjYW5Cb3VuZCI6ZmFsc2V9&mapMenu=eyJtZW51U2VjdGlvbiI6Im15LWdmdyJ9"></iframe>
         </div>
     </div>
 
@@ -482,6 +492,7 @@
             document.getElementById('yearFilter').value = currentYear;
             
             document.getElementById('annualLoss').textContent = data.loss.toLocaleString();
+            document.getElementById('bufferLoss').textContent = data.bufferLoss.toLocaleString();
             document.getElementById('forestCover').textContent = (data.cover / 1000000).toFixed(2) + 'M';
             
             let cumulative = 0;

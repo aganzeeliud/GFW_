@@ -371,6 +371,60 @@
             </div>
         </section>
 
+        <!-- Global Forest Watch Embed -->
+        <section class="content-section">
+            <div class="section-header" style="text-align: center;">
+                <h2><i class="fas fa-globe-africa"></i> GFW Live Monitoring</h2>
+                <p style="margin: 0 auto;">Interactive satellite monitoring of the Okapi Wildlife Reserve and its surrounding buffer zone via Global Forest Watch.</p>
+            </div>
+            <div style="display: flex; justify-content: center; background: #000; padding: 10px; border-radius: 12px; overflow: hidden;">
+                <iframe width="100%" height="600" frameborder="0" src="https://www.globalforestwatch.org/embed/map/aoi/680b6064bc87510015b9888d/?mainMap=eyJoaWRlTGVnZW5kIjp0cnVlLCJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjYW5Cb3VuZCI6ZmFsc2V9&mapMenu=eyJtZW51U2VjdGlvbiI6Im15LWdmdyJ9" style="min-height: 500px; border-radius: 8px;"></iframe>
+            </div>
+            <div style="margin-top: 1.5rem; text-align: center; color: var(--text-light); font-size: 0.9rem;">
+                <p><i class="fas fa-info-circle"></i> This map shows the real-time Area of Interest (AOI) including the 50km buffer zone data from <b>OWR GFW.csv</b>.</p>
+            </div>
+
+            <div style="margin-top: 2rem; overflow-x: auto;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem; text-align: center;">Recent Buffer Zone Forest Loss (2021-2025)</h3>
+                <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <thead style="background: var(--primary); color: white;">
+                        <tr>
+                            <th style="padding: 12px; text-align: left;">Year</th>
+                            <th style="padding: 12px; text-align: left;">Buffer Loss (m²)</th>
+                            <th style="padding: 12px; text-align: left;">Buffer Loss (ha)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;">2025</td>
+                            <td style="padding: 12px;">458,433,920.7</td>
+                            <td style="padding: 12px; font-weight: 700;">45,843.4</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;">2024</td>
+                            <td style="padding: 12px;">400,743,806.5</td>
+                            <td style="padding: 12px; font-weight: 700;">40,074.4</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;">2023</td>
+                            <td style="padding: 12px;">324,388,633.2</td>
+                            <td style="padding: 12px; font-weight: 700;">32,438.9</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;">2022</td>
+                            <td style="padding: 12px;">403,638,851.9</td>
+                            <td style="padding: 12px; font-weight: 700;">40,363.9</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;">2021</td>
+                            <td style="padding: 12px;">267,699,749.3</td>
+                            <td style="padding: 12px; font-weight: 700;">26,770.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Importance Section -->
         <section class="content-section">
             <div class="grid-2">
@@ -441,7 +495,7 @@
         <section class="content-section" style="background: var(--primary); color: white;">
             <div class="section-header">
                 <h2 style="color: white;"><i class="fas fa-microscope"></i> Methodology</h2>
-                <p style="color: rgba(255,255,255,0.8);">Our analysis utilizes Global Forest Watch (GFW) satellite monitoring data. The statistics presented here are specific to the Okapi Wildlife Reserve (RFO) administrative boundaries, excluding the 50km buffer for high-precision reserve management insights.</p>
+                <p style="color: rgba(255,255,255,0.8);">Our analysis utilizes Global Forest Watch (GFW) satellite monitoring data. The statistics presented here are specific to the Okapi Wildlife Reserve (RFO) administrative boundaries and its surrounding 50km buffer zone (sourced from <b>OWR GFW.csv</b>).</p>
             </div>
             <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
                 <div style="flex: 1; min-width: 250px;">
@@ -528,7 +582,8 @@
             <div>
                 <h4>Resources</h4>
                 <ul style="list-style: none; margin-top: 1rem;">
-                    <li><a href="OWR_COVER_RFO.csv" style="color: white; opacity: 0.7;">Download CSV Data</a></li>
+                    <li><a href="OWR_COVER_RFO.csv" style="color: white; opacity: 0.7;">Download Reserve Data</a></li>
+                    <li><a href="OWR GFW.csv" style="color: white; opacity: 0.7;">Download Buffer Data (GFW)</a></li>
                     <li><a href="README.md" style="color: white; opacity: 0.7;">Documentation</a></li>
                 </ul>
             </div>
@@ -651,6 +706,113 @@
             type: 'radar',
             data: {
                 labels: ['Red (0.66μm)', 'NIR (0.86μm)', 'SWIR1 (1.6μm)', 'SWIR2 (2.2μm)'],
+                datasets: [
+                    {
+                        label: 'Spectral Reflectance Values',
+                        data: [508, 254, 363, 423],
+                        borderColor: '#2d5016',
+                        backgroundColor: 'rgba(45, 80, 22, 0.25)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#2d5016',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: false }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 600,
+                        ticks: { stepSize: 100 },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
+            }
+        });
+
+        // Gauge Chart
+        const rateGauge = new Chart(document.getElementById('rateGauge'), {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [0.06, 1 - 0.06],
+                    backgroundColor: ['#d9534f', '#eee'],
+                    borderWidth: 0,
+                    circumference: 180,
+                    rotation: 270,
+                    cutout: '80%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { tooltip: { enabled: false }, legend: { display: false } }
+            }
+        });
+
+        const explorerData = {
+            '2001': {loss: 465.6, buffer: 4831.4, cover: 1372134, rate: 0.034, cumul: 465.6},
+            '2002': {loss: 589.1, buffer: 8866.6, cover: 1372011, rate: 0.043, cumul: 1054.7},
+            '2003': {loss: 141.2, buffer: 2860.6, cover: 1372459, rate: 0.010, cumul: 1195.9},
+            '2004': {loss: 353.9, buffer: 4945.1, cover: 1372246, rate: 0.026, cumul: 1549.8},
+            '2005': {loss: 605.0, buffer: 6204.8, cover: 1371995, rate: 0.044, cumul: 2154.7},
+            '2006': {loss: 356.4, buffer: 3387.8, cover: 1372244, rate: 0.026, cumul: 2511.2},
+            '2007': {loss: 1240.5, buffer: 14742.2, cover: 1371359, rate: 0.090, cumul: 3751.7},
+            '2008': {loss: 265.2, buffer: 2357.0, cover: 1372335, rate: 0.019, cumul: 4016.9},
+            '2009': {loss: 759.3, buffer: 8857.2, cover: 1371841, rate: 0.055, cumul: 4776.2},
+            '2010': {loss: 344.2, buffer: 4629.2, cover: 1372256, rate: 0.025, cumul: 5120.4},
+            '2011': {loss: 810.0, buffer: 10817.0, cover: 1371790, rate: 0.059, cumul: 5930.4},
+            '2012': {loss: 293.9, buffer: 4755.1, cover: 1372306, rate: 0.021, cumul: 6224.3},
+            '2013': {loss: 443.3, buffer: 9403.7, cover: 1372157, rate: 0.032, cumul: 6667.7},
+            '2014': {loss: 853.0, buffer: 18345.2, cover: 1371747, rate: 0.062, cumul: 7520.7},
+            '2015': {loss: 738.6, buffer: 14138.8, cover: 1371861, rate: 0.054, cumul: 8259.3},
+            '2016': {loss: 992.3, buffer: 22422.5, cover: 1371608, rate: 0.072, cumul: 9251.6},
+            '2017': {loss: 1071.0, buffer: 26417.9, cover: 1371529, rate: 0.078, cumul: 10322.5},
+            '2018': {loss: 1069.2, buffer: 24351.8, cover: 1371531, rate: 0.078, cumul: 11391.7},
+            '2019': {loss: 1166.5, buffer: 25262.3, cover: 1371433, rate: 0.085, cumul: 12558.2},
+            '2020': {loss: 1326.4, buffer: 30312.2, cover: 1371274, rate: 0.097, cumul: 13884.6},
+            '2021': {loss: 1445.4, buffer: 26770.0, cover: 1371155, rate: 0.105, cumul: 15330.0},
+            '2022': {loss: 1964.8, buffer: 40363.9, cover: 1370635, rate: 0.143, cumul: 17294.8},
+            '2023': {loss: 1904.4, buffer: 32438.9, cover: 1370696, rate: 0.139, cumul: 19199.2},
+            '2024': {loss: 1818.0, buffer: 40074.4, cover: 1370782, rate: 0.133, cumul: 21017.3},
+            '2025': {loss: 903.5, buffer: 45843.4, cover: 1371697, rate: 0.067, cumul: 21920.7}
+        };
+
+        const slider = document.getElementById('yearSlider');
+        const yearDisplay = document.getElementById('explorerYear');
+        const eCover = document.getElementById('eCover');
+        const eLoss = document.getElementById('eLoss');
+        const eBuffer = document.getElementById('eBuffer');
+        const eCumul = document.getElementById('eCumul');
+        const gaugeVal = document.getElementById('gaugeVal');
+
+        slider.addEventListener('input', function(e) {
+            const year = e.target.value;
+            const data = explorerData[year];
+            
+            yearDisplay.textContent = year;
+            eCover.textContent = (data.cover / 1000000).toFixed(2) + 'M ha';
+            eLoss.textContent = data.loss.toLocaleString() + ' ha';
+            eBuffer.textContent = data.buffer.toLocaleString() + ' ha';
+            eCumul.textContent = data.cumul.toLocaleString() + ' ha';
+            gaugeVal.textContent = data.rate.toFixed(3) + '%';
+            
+            rateGauge.data.datasets[0].data = [data.rate, 0.2 - data.rate]; // Max scale 0.2%
+            rateGauge.update();
+        });
+    </script>
+</body>
+</html>
+ (0.86μm)', 'SWIR1 (1.6μm)', 'SWIR2 (2.2μm)'],
                 datasets: [
                     {
                         label: 'Spectral Reflectance Values',
