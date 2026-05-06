@@ -185,7 +185,14 @@
         <h1>🌳 Okapi Wildlife Reserve</h1>
         <p style="font-size: 0.8rem; color: #888;">Forest Cover Analysis 2001-2025</p>
         
-        <h2 id="summaryTitle"><i class="fas fa-chart-pie"></i> Reserve Summary (2025)</h2>
+        <div class="filter-bar" style="margin-top: 1.5rem; background: #f8faf9; padding: 1rem; border-radius: 8px;">
+            <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #666; margin-bottom: 0.5rem;">SELECT YEAR</label>
+            <select id="yearSelectFilter" onchange="updateUI(this.value)" style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #ddd; font-weight: 600;">
+                <!-- populated by JS -->
+            </select>
+        </div>
+
+        <h2 id="summaryTitle" style="margin-top: 1.5rem;"><i class="fas fa-chart-pie"></i> Reserve Summary</h2>
         <div class="stat">
             <div class="stat-label"><i class="fas fa-fire-alt"></i> Annual Forest Loss</div>
             <div class="stat-value loss" id="statLoss">903.45 ha</div>
@@ -194,70 +201,26 @@
             <div class="stat-label"><i class="fas fa-tree"></i> Total Forest Cover</div>
             <div class="stat-value" id="statCover">1,371,697 ha</div>
         </div>
-        <div class="stat">
-            <div class="stat-label"><i class="fas fa-percentage"></i> Annual Loss Rate</div>
-            <div class="stat-value" id="statRate">0.067%</div>
-        </div>
-        
         <div class="stat" style="border-left-color: #d9534f;">
-            <div class="stat-label"><i class="fas fa-history"></i> Cumulative Loss (since 2001)</div>
+            <div class="stat-label"><i class="fas fa-history"></i> Cumulative Forest Loss</div>
             <div class="stat-value loss" id="statCumulative">21,920.7 ha</div>
         </div>
 
-        <h2 style="color: #f57c00;"><i class="fas fa-shield-virus"></i> 50km Buffer Zone</h2>
+        <h2 style="color: #f57c00; margin-top: 1.5rem;"><i class="fas fa-shield-virus"></i> 50km Buffer Zone</h2>
         <div class="stat" style="border-left-color: #f57c00;">
             <div class="stat-label"><i class="fas fa-exclamation-triangle"></i> Buffer Annual Loss</div>
             <div class="stat-value loss" id="bufferLoss">45,843.4 ha</div>
         </div>
-        
-        <h2><i class="fas fa-map-marked-alt"></i> Management Zones</h2>
-        <div class="zone-info">
-            <div style="font-weight: 800; color: #1a5490;"><i class="fas fa-lock"></i> Core Protected Zones</div>
-            <div style="margin-top: 4px; opacity: 0.8;">Primary protection areas with restricted access.</div>
-        </div>
-        <div class="zone-info" style="background-color: #f8faf0;">
-            <div style="font-weight: 800; color: #7cb342;"><i class="fas fa-tractor"></i> Agricultural Zones (ZAD)</div>
-            <div style="margin-top: 4px; opacity: 0.8;">Areas designated for sustainable human use.</div>
-        </div>
-        <div class="zone-info" style="background-color: #fffaf0;">
-            <div style="font-weight: 800; color: #f57c00;"><i class="fas fa-bow-arrow"></i> Hunting Zones</div>
-            <div style="margin-top: 4px; opacity: 0.8;">Controlled hunting areas for local communities.</div>
-        </div>
-
-        <h2 style="color: #2d5016;">Landsat Spectral Bands</h2>
-        <div class="zone-info" style="background-color: #fff3e0;">
-            <div style="font-weight: 600; font-size: 0.9rem;">🔴 Red: 508</div>
-            <div style="font-size: 0.75rem; opacity: 0.8;">0.66 micrometers</div>
-        </div>
-        <div class="zone-info" style="background-color: #e8f5e9;">
-            <div style="font-weight: 600; font-size: 0.9rem;">🟢 NIR: 254</div>
-            <div style="font-size: 0.75rem; opacity: 0.8;">0.86 micrometers</div>
-        </div>
-        <div class="zone-info" style="background-color: #fff9c4;">
-            <div style="font-weight: 600; font-size: 0.9rem;">🟠 SWIR1: 363</div>
-            <div style="font-size: 0.75rem; opacity: 0.8;">1.6 micrometers</div>
-        </div>
-        <div class="zone-info" style="background-color: #e3f2fd;">
-            <div style="font-weight: 600; font-size: 0.9rem;">🔵 SWIR2: 423</div>
-            <div style="font-size: 0.75rem; opacity: 0.8;">2.2 micrometers</div>
-        </div>
-
-        <h2 style="color: #004d40;">Global Forest Watch Live</h2>
-        <div style="margin-top: 10px; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
-            <iframe width="100%" height="300" frameborder="0" src="https://www.globalforestwatch.org/embed/map/aoi/680b6064bc87510015b9888d/?mainMap=eyJoaWRlTGVnZW5kIjp0cnVlLCJzaG93QW5hbHlzaXMiOnRydWV9&map=eyJjYW5Cb3VuZCI6ZmFsc2V9&mapMenu=eyJtZW51U2VjdGlvbiI6Im15LWdmdyJ9"></iframe>
-        </div>
-        <p style="font-size: 0.7rem; color: #888; margin-top: 5px; text-align: center;">Live AOI monitoring with 50km buffer data.</p>
     </div>
     
     <div class="legend">
         <div style="font-weight: 800; margin-bottom: 0.8rem; text-transform: uppercase; font-size: 0.75rem;">Map Key</div>
+        <div class="legend-item"><div class="legend-color" style="background: #2d5016; opacity: 0.2; border: 2px solid #2d5016;"></div> OWR Boundary</div>
         <div class="legend-item"><div class="legend-color" style="background: #1a5490;"></div> Core Zones</div>
         <div class="legend-item"><div class="legend-color" style="background: #7cb342;"></div> Agricultural</div>
         <div class="legend-item"><div class="legend-color" style="background: #f57c00;"></div> Hunting</div>
-        <div class="legend-item"><div class="legend-color" style="background: #d32f2f;"></div> High Loss Alert</div>
+        <div class="legend-item"><div class="legend-color" style="background: #d32f2f;"></div> Deforestation Alert</div>
         <div class="legend-item"><div class="legend-color" style="background: rgba(217, 83, 79, 0.1); border: 1px solid #d9534f; border-style: dashed;"></div> 50km Buffer Zone</div>
-        <div style="border-top: 1px solid #ddd; margin-top: 0.8rem; padding-top: 0.8rem; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #2d5016;">Spectral Bands</div>
-        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(90deg, #d32f2f, #f57c00, #7cb342, #1565c0);"></div> Landsat Reflectance</div>
     </div>
 
     <script>
@@ -303,6 +266,15 @@
             SWIR2: 423
         };
 
+        // Populate Year Filter
+        const filterSelect = document.getElementById('yearSelectFilter');
+        for (let y = 2025; y >= 2001; y--) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            filterSelect.appendChild(opt);
+        }
+
         fetch('data/processed/OWR_Limit_OWR_2024.json')
             .then(res => res.json())
             .then(data => {
@@ -330,10 +302,14 @@
             const data = yearlyData[year];
             if (!data) return;
             
-            document.getElementById('summaryTitle').textContent = `Reserve Summary (${year})`;
+            currentYear = year;
+            document.getElementById('yearSelectFilter').value = year;
+            if(document.getElementById('mapSlider')) document.getElementById('mapSlider').value = year;
+            if(document.getElementById('yearValue')) document.getElementById('yearValue').textContent = year;
+
+            document.getElementById('summaryTitle').innerHTML = `<i class="fas fa-chart-pie"></i> Reserve Summary (${year})`;
             document.getElementById('statLoss').textContent = data.loss.toLocaleString() + ' ha';
             document.getElementById('statCover').textContent = Math.round(data.cover).toLocaleString() + ' ha';
-            document.getElementById('statRate').textContent = data.rate.toFixed(3) + '%';
             document.getElementById('statCumulative').textContent = data.cumulative.toLocaleString() + ' ha';
             
             const bufferLossElem = document.getElementById('bufferLoss');
