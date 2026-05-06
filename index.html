@@ -454,6 +454,61 @@
                 </div>
             </div>
         </section>
+
+        <!-- Landsat Spectral Bands Visualization -->
+        <section class="content-section">
+            <div class="section-header" style="text-align: center;">
+                <h2><i class="fas fa-spectrum"></i> Landsat Spectral Analysis</h2>
+                <p>Analyzing forest cover through multispectral Landsat satellite bands to identify vegetation patterns and forest health indicators.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <div style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">508</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Red Band</div>
+                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">0.66 micrometers - Visible vegetation absorption</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">254</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">NIR Band</div>
+                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">0.86 micrometers - Vegetation reflectance</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f57c00 0%, #e65100 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">363</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">SWIR1 Band</div>
+                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">1.6 micrometers - Moisture content detection</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); padding: 2rem; border-radius: 12px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">423</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">SWIR2 Band</div>
+                    <div style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">2.2 micrometers - Forest discrimination</div>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div style="margin-bottom: 1rem;">
+                    <h3 style="color: var(--primary); font-size: 1.1rem; margin-bottom: 0.5rem;">Spectral Reflectance Pattern</h3>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">Relative reflectance values across Landsat bands used for forest classification</p>
+                </div>
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="spectralChart"></canvas>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                <div style="background: #f0f8ff; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #1565c0;">
+                    <h4 style="color: #0d47a1; margin-bottom: 0.5rem;">NDVI Index</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">Normalized Difference Vegetation Index (NDVI) calculated from Red and NIR bands indicates vegetation greenness and health. Higher values = healthier vegetation.</p>
+                </div>
+                <div style="background: #f5fdf2; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #7cb342;">
+                    <h4 style="color: #558b2f; margin-bottom: 0.5rem;">Vegetation Classification</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-light);">SWIR bands combined with visible wavelengths help distinguish forest types, degradation levels, and land cover changes with high precision.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
     <footer>
@@ -588,6 +643,44 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Spectral Chart
+        new Chart(document.getElementById('spectralChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Red (0.66μm)', 'NIR (0.86μm)', 'SWIR1 (1.6μm)', 'SWIR2 (2.2μm)'],
+                datasets: [
+                    {
+                        label: 'Spectral Reflectance Values',
+                        data: [508, 254, 363, 423],
+                        borderColor: '#2d5016',
+                        backgroundColor: 'rgba(45, 80, 22, 0.25)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#2d5016',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: false }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 600,
+                        ticks: { stepSize: 100 },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                }
             }
         });
     </script>

@@ -198,6 +198,12 @@
             <div class="stat-label">Cumulative Loss (since 2001)</div>
             <div class="stat-value loss" id="statCumulative">21,920.7 ha</div>
         </div>
+
+        <h2 style="color: #f57c00;">50km Buffer Zone</h2>
+        <div class="stat" style="border-left-color: #f57c00;">
+            <div class="stat-label">Buffer Annual Loss</div>
+            <div class="stat-value loss" id="bufferLoss">45,843.4 ha</div>
+        </div>
         
         <h2>Management Zones</h2>
         <div class="zone-info">
@@ -212,6 +218,24 @@
             <div style="font-weight: 800; color: #f57c00;">🟠 Hunting Zones</div>
             <div style="margin-top: 4px; opacity: 0.8;">Controlled hunting areas for local communities.</div>
         </div>
+
+        <h2 style="color: #2d5016;">Landsat Spectral Bands</h2>
+        <div class="zone-info" style="background-color: #fff3e0;">
+            <div style="font-weight: 600; font-size: 0.9rem;">🔴 Red: 508</div>
+            <div style="font-size: 0.75rem; opacity: 0.8;">0.66 micrometers</div>
+        </div>
+        <div class="zone-info" style="background-color: #e8f5e9;">
+            <div style="font-weight: 600; font-size: 0.9rem;">🟢 NIR: 254</div>
+            <div style="font-size: 0.75rem; opacity: 0.8;">0.86 micrometers</div>
+        </div>
+        <div class="zone-info" style="background-color: #fff9c4;">
+            <div style="font-weight: 600; font-size: 0.9rem;">🟠 SWIR1: 363</div>
+            <div style="font-size: 0.75rem; opacity: 0.8;">1.6 micrometers</div>
+        </div>
+        <div class="zone-info" style="background-color: #e3f2fd;">
+            <div style="font-weight: 600; font-size: 0.9rem;">🔵 SWIR2: 423</div>
+            <div style="font-size: 0.75rem; opacity: 0.8;">2.2 micrometers</div>
+        </div>
     </div>
     
     <div class="legend">
@@ -221,6 +245,8 @@
         <div class="legend-item"><div class="legend-color" style="background: #f57c00;"></div> Hunting</div>
         <div class="legend-item"><div class="legend-color" style="background: #d32f2f;"></div> High Loss Alert</div>
         <div class="legend-item"><div class="legend-color" style="background: rgba(217, 83, 79, 0.1); border: 1px solid #d9534f; border-style: dashed;"></div> 50km Buffer Zone</div>
+        <div style="border-top: 1px solid #ddd; margin-top: 0.8rem; padding-top: 0.8rem; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #2d5016;">Spectral Bands</div>
+        <div class="legend-item"><div class="legend-color" style="background: linear-gradient(90deg, #d32f2f, #f57c00, #7cb342, #1565c0);"></div> Landsat Reflectance</div>
     </div>
 
     <script>
@@ -232,31 +258,38 @@
         }).addTo(map);
 
         const yearlyData = {
-            2001: {loss: 465.61, cover: 1372134.39, cumulative: 465.61, rate: 0.034},
-            2002: {loss: 589.10, cover: 1372010.90, cumulative: 1054.71, rate: 0.043},
-            2003: {loss: 141.21, cover: 1372458.79, cumulative: 1195.92, rate: 0.010},
-            2004: {loss: 353.86, cover: 1372246.14, cumulative: 1549.78, rate: 0.026},
-            2005: {loss: 604.96, cover: 1371995.04, cumulative: 2154.74, rate: 0.044},
-            2006: {loss: 356.42, cover: 1372243.58, cumulative: 2511.15, rate: 0.026},
-            2007: {loss: 1240.54, cover: 1371359.46, cumulative: 3751.69, rate: 0.090},
-            2008: {loss: 265.24, cover: 1372334.76, cumulative: 4016.93, rate: 0.019},
-            2009: {loss: 759.31, cover: 1371840.69, cumulative: 4776.24, rate: 0.055},
-            2010: {loss: 344.20, cover: 1372255.80, cumulative: 5120.44, rate: 0.025},
-            2011: {loss: 809.96, cover: 1371790.04, cumulative: 5930.40, rate: 0.059},
-            2012: {loss: 293.93, cover: 1372306.07, cumulative: 6224.33, rate: 0.021},
-            2013: {loss: 443.34, cover: 1372156.66, cumulative: 6667.67, rate: 0.032},
-            2014: {loss: 853.03, cover: 1371746.97, cumulative: 7520.70, rate: 0.062},
-            2015: {loss: 738.58, cover: 1371861.42, cumulative: 8259.29, rate: 0.054},
-            2016: {loss: 992.31, cover: 1371607.69, cumulative: 9251.59, rate: 0.072},
-            2017: {loss: 1070.95, cover: 1371529.05, cumulative: 10322.54, rate: 0.078},
-            2018: {loss: 1069.17, cover: 1371530.83, cumulative: 11391.71, rate: 0.078},
-            2019: {loss: 1166.53, cover: 1371433.47, cumulative: 12558.25, rate: 0.085},
-            2020: {loss: 1326.37, cover: 1371273.63, cumulative: 13884.62, rate: 0.097},
-            2021: {loss: 1445.38, cover: 1371154.62, cumulative: 15330.00, rate: 0.105},
-            2022: {loss: 1964.81, cover: 1370635.19, cumulative: 17294.82, rate: 0.143},
-            2023: {loss: 1904.42, cover: 1370695.58, cumulative: 19199.23, rate: 0.139},
-            2024: {loss: 1818.04, cover: 1370781.96, cumulative: 21017.27, rate: 0.133},
-            2025: {loss: 903.45, cover: 1371696.55, cumulative: 21920.73, rate: 0.066}
+            2001: {loss: 465.61, cover: 1372134.39, cumulative: 465.61, rate: 0.034, bufferLoss: 4831.4},
+            2002: {loss: 589.10, cover: 1372010.90, cumulative: 1054.71, rate: 0.043, bufferLoss: 8866.6},
+            2003: {loss: 141.21, cover: 1372458.79, cumulative: 1195.92, rate: 0.010, bufferLoss: 2860.6},
+            2004: {loss: 353.86, cover: 1372246.14, cumulative: 1549.78, rate: 0.026, bufferLoss: 4945.1},
+            2005: {loss: 604.96, cover: 1371995.04, cumulative: 2154.74, rate: 0.044, bufferLoss: 6204.8},
+            2006: {loss: 356.42, cover: 1372243.58, cumulative: 2511.15, rate: 0.026, bufferLoss: 3387.8},
+            2007: {loss: 1240.54, cover: 1371359.46, cumulative: 3751.69, rate: 0.090, bufferLoss: 14742.2},
+            2008: {loss: 265.24, cover: 1372334.76, cumulative: 4016.93, rate: 0.019, bufferLoss: 2357.0},
+            2009: {loss: 759.31, cover: 1371840.69, cumulative: 4776.24, rate: 0.055, bufferLoss: 8857.2},
+            2010: {loss: 344.20, cover: 1372255.80, cumulative: 5120.44, rate: 0.025, bufferLoss: 4629.2},
+            2011: {loss: 809.96, cover: 1371790.04, cumulative: 5930.40, rate: 0.059, bufferLoss: 10817.0},
+            2012: {loss: 293.93, cover: 1372306.07, cumulative: 6224.33, rate: 0.021, bufferLoss: 4755.1},
+            2013: {loss: 443.34, cover: 1372156.66, cumulative: 6667.67, rate: 0.032, bufferLoss: 9403.7},
+            2014: {loss: 853.03, cover: 1371746.97, cumulative: 7520.70, rate: 0.062, bufferLoss: 18345.2},
+            2015: {loss: 738.58, cover: 1371861.42, cumulative: 8259.29, rate: 0.054, bufferLoss: 14138.8},
+            2016: {loss: 992.31, cover: 1371607.69, cumulative: 9251.59, rate: 0.072, bufferLoss: 22422.5},
+            2017: {loss: 1070.95, cover: 1371529.05, cumulative: 10322.54, rate: 0.078, bufferLoss: 26417.9},
+            2018: {loss: 1069.17, cover: 1371530.83, cumulative: 11391.71, rate: 0.078, bufferLoss: 24351.8},
+            2019: {loss: 1166.53, cover: 1371433.47, cumulative: 12558.25, rate: 0.085, bufferLoss: 25262.3},
+            2020: {loss: 1326.37, cover: 1371273.63, cumulative: 13884.62, rate: 0.097, bufferLoss: 30312.2},
+            2021: {loss: 1445.38, cover: 1371154.62, cumulative: 15330.00, rate: 0.105, bufferLoss: 26770.0},
+            2022: {loss: 1964.81, cover: 1370635.19, cumulative: 17294.82, rate: 0.143, bufferLoss: 40363.9},
+            2023: {loss: 1904.42, cover: 1370695.58, cumulative: 19199.23, rate: 0.139, bufferLoss: 32438.9},
+            2024: {loss: 1818.04, cover: 1370781.96, cumulative: 21017.27, rate: 0.133, bufferLoss: 40074.4},
+            2025: {loss: 903.45, cover: 1371696.55, cumulative: 21920.73, rate: 0.066, bufferLoss: 45843.4}
+        };
+
+        const spectralData = {
+            Red: 508,
+            NIR: 254,
+            SWIR1: 363,
+            SWIR2: 423
         };
 
         fetch('OWR_Limit_OWR_2024.json')
@@ -291,6 +324,11 @@
             document.getElementById('statCover').textContent = Math.round(data.cover).toLocaleString() + ' ha';
             document.getElementById('statRate').textContent = data.rate.toFixed(3) + '%';
             document.getElementById('statCumulative').textContent = data.cumulative.toLocaleString() + ' ha';
+            
+            const bufferLossElem = document.getElementById('bufferLoss');
+            if (bufferLossElem) {
+                bufferLossElem.textContent = data.bufferLoss.toLocaleString() + ' ha';
+            }
         }
         
         const timelineControl = L.Control.extend({
@@ -315,6 +353,66 @@
             }
         });
         
+        const spectralControl = L.Control.extend({
+            options: { position: 'topright' },
+            onAdd: function() {
+                const div = L.DomUtil.create('div', 'leaflet-control leaflet-bar');
+                div.style.backgroundColor = 'white';
+                div.style.borderRadius = '5px';
+                div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                
+                const btn = L.DomUtil.create('button', '', div);
+                btn.title = 'Toggle Spectral Overlay';
+                btn.textContent = '🎨';
+                btn.style.width = '36px';
+                btn.style.height = '36px';
+                btn.style.border = 'none';
+                btn.style.backgroundColor = 'white';
+                btn.style.cursor = 'pointer';
+                btn.style.fontSize = '1.2rem';
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.justifyContent = 'center';
+                
+                let spectralVisible = false;
+                let spectralLayer = null;
+                
+                btn.addEventListener('click', function() {
+                    if (spectralVisible && spectralLayer) {
+                        map.removeLayer(spectralLayer);
+                        btn.style.backgroundColor = 'white';
+                        spectralVisible = false;
+                    } else {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 256;
+                        canvas.height = 256;
+                        const ctx = canvas.getContext('2d');
+                        
+                        const colors = ['#d32f2f', '#f57c00', '#7cb342', '#1565c0'];
+                        const bands = [508, 254, 363, 423];
+                        
+                        for (let i = 0; i < 256; i++) {
+                            const ratio = i / 256;
+                            const colorIndex = Math.floor(ratio * (colors.length - 1));
+                            ctx.fillStyle = colors[colorIndex];
+                            ctx.fillRect(i, 0, 1, 256);
+                        }
+                        
+                        spectralLayer = L.imageOverlay(canvas.toDataURL(), [
+                            [-1.5, 27.5],
+                            [-1.0, 28.2]
+                        ], { opacity: 0.15 }).addTo(map);
+                        
+                        btn.style.backgroundColor = '#e3f2fd';
+                        spectralVisible = true;
+                    }
+                });
+                
+                return div;
+            }
+        });
+        
+        new spectralControl().addTo(map);
         new timelineControl().addTo(map);
     </script>
 </body>
