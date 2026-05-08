@@ -2,7 +2,6 @@
 const nextConfig = {
   output: 'export',
   basePath: '/GFW_',
-  assetPrefix: '/GFW_/',
   typescript: {
     ignoreBuildErrors: true,
   },
