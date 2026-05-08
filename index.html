@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OWR Conservation Intelligence Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and Recharts Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script>
+        const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
+
+        const evolutionData = [
+            { year: '2006', inside: 7469, buffer: 283678 },
+            { year: '2007', inside: 206524, buffer: 304131 },
+            { year: '2008', inside: 11032, buffer: 159369 },
+            { year: '2009', inside: 4160, buffer: 265360 },
+            { year: '2010', inside: 0, buffer: 173545 },
+            { year: '2011', inside: 9589, buffer: 57782 },
+            { year: '2012', inside: 0, buffer: 221313 },
+        ];
+
+        const datasets = [
+            {
+                name: 'OWR Mining Inside',
+                source: 'DRC Mining Cadastre (CAMI) & IPIS',
+                format: 'CSV, GeoJSON',
+                dateRetrieved: 'May 2025',
+                description: 'Mining concessions located within the official boundaries of the Okapi Wildlife Reserve.'
+            },
+            {
+                name: 'OWR Mining Buffer',
+                source: 'DRC Mining Cadastre (CAMI) & IPIS',
+                format: 'CSV, GeoJSON',
+                dateRetrieved: 'May 2025',
+                description: 'Mining activity in the 50km buffer zone surrounding the reserve.'
+            },
+            {
+                name: 'Forest Cover (ZAD)',
+                source: 'Global Forest Watch (Hansen et al.)',
+                format: 'CSV',
+                dateRetrieved: 'May 2025',
+                description: 'Time-series forest loss and cover data for the Okapi Wildlife Reserve region.'
+            }
+        ];
+
+        function App() {
+            const totalInsideHa = 813652;
+            const totalBufferHa = 2435916;
+
+            React.useEffect(() => {
+                lucide.createIcons();
+            }, []);
+
+            return React.createElement('div', { className: "min-h-screen" },
+                // Hero Section
+                React.createElement('header', { className: "bg-white border-b border-slate-200" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-6 py-16 text-center" },
+                        React.createElement('div', { className: "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold mb-6" },
+                            React.createElement('i', { 'data-lucide': 'info', className: "w-4 h-4" }), " Monitoring Conservation Impact"
+                        ),
+                        React.createElement('h1', { className: "text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight" },
+                            "Okapi Wildlife Reserve ", React.createElement('br'),
+                            React.createElement('span', { className: "text-emerald-600" }, "Conservation Intelligence Portal")
+                        ),
+                        React.createElement('p', { className: "text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-10" },
+                            "A comprehensive data-driven platform for monitoring mining concessions and forest cover evolution within the Okapi Wildlife Reserve (OWR) and its surrounding buffer zones in the DRC."
+                        ),
+                        React.createElement('div', { className: "flex flex-col sm:flex-row gap-4 justify-center" },
+                            React.createElement('a', { href: "#", className: "px-8 py-4 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition shadow-lg flex items-center justify-center gap-2" },
+                                React.createElement('i', { 'data-lucide': 'map-pin', className: "w-5 h-5" }), " Explore Interactive Map"
+                            ),
+                            React.createElement('a', { href: "#", className: "px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition shadow-lg flex items-center justify-center gap-2" },
+                                React.createElement('i', { 'data-lucide': 'bar-chart-3', className: "w-5 h-5" }), " View Data Dashboard"
+                            )
+                        )
+                    )
+                ),
+
+                // Stats Section
+                React.createElement('section', { className: "max-w-7xl mx-auto px-6 -mt-8" },
+                    React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+                        React.createElement('div', { className: "bg-white rounded-2xl shadow-xl p-8 border border-emerald-100 flex items-center justify-between" },
+                            React.createElement('div', null,
+                                React.createElement('p', { className: "text-sm font-bold text-emerald-600 uppercase tracking-wider mb-1" }, "Inside Reserve"),
+                                React.createElement('h2', { className: "text-4xl font-black text-slate-900" }, totalInsideHa.toLocaleString(), " ", React.createElement('span', { className: "text-lg font-medium text-slate-500" }, "ha")),
+                                React.createElement('p', { className: "text-slate-500 mt-2" }, "Total area under mining concessions inside OWR")
+                            ),
+                            React.createElement('div', { className: "p-4 bg-emerald-50 rounded-full text-emerald-600" },
+                                React.createElement('i', { 'data-lucide': 'map-pin', className: "w-8 h-8" })
+                            )
+                        ),
+                        React.createElement('div', { className: "bg-white rounded-2xl shadow-xl p-8 border border-blue-100 flex items-center justify-between" },
+                            React.createElement('div', null,
+                                React.createElement('p', { className: "text-sm font-bold text-blue-600 uppercase tracking-wider mb-1" }, "Buffer Zone"),
+                                React.createElement('h2', { className: "text-4xl font-black text-slate-900" }, totalBufferHa.toLocaleString(), " ", React.createElement('span', { className: "text-lg font-medium text-slate-500" }, "ha")),
+                                React.createElement('p', { className: "text-slate-500 mt-2" }, "Concessions in the 50km surrounding buffer")
+                            ),
+                            React.createElement('div', { className: "p-4 bg-blue-50 rounded-full text-blue-600" },
+                                React.createElement('i', { 'data-lucide': 'trending-up', className: "w-8 h-8" })
+                            )
+                        )
+                    )
+                ),
+
+                // Chart Section
+                React.createElement('section', { className: "max-w-7xl mx-auto px-6 py-20" },
+                    React.createElement('div', { className: "bg-white rounded-2xl shadow-sm border border-slate-200 p-8" },
+                        React.createElement('div', { className: "mb-10" },
+                            React.createElement('h2', { className: "text-3xl font-bold text-slate-900 flex items-center gap-2" },
+                                React.createElement('i', { 'data-lucide': 'calendar', className: "w-8 h-8 text-emerald-600" }), " Mining Evolution Over Years"
+                            ),
+                            React.createElement('p', { className: "text-slate-600 mt-2" }, "Hectares granted per year within the Reserve vs the Buffer Zone")
+                        ),
+                        React.createElement('div', { className: "h-[400px] w-full" },
+                            React.createElement(ResponsiveContainer, { width: "100%", height: "100%" },
+                                React.createElement(BarChart, { data: evolutionData },
+                                    React.createElement(CartesianGrid, { strokeDasharray: "3 3", vertical: false, stroke: "#e2e8f0" }),
+                                    React.createElement(XAxis, { dataKey: "year" }),
+                                    React.createElement(YAxis, { tickFormatter: (value) => `${value / 1000}k` }),
+                                    React.createElement(Tooltip, { cursor: { fill: '#f1f5f9' } }),
+                                    React.createElement(Legend, null),
+                                    React.createElement(Bar, { dataKey: "inside", name: "Inside Reserve (ha)", fill: "#10b981", radius: [4, 4, 0, 0] }),
+                                    React.createElement(Bar, { dataKey: "buffer", name: "Buffer Zone (ha)", fill: "#3b82f6", radius: [4, 4, 0, 0] })
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // Datasets Section
+                React.createElement('section', { className: "bg-slate-900 py-20 text-white" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-6" },
+                        React.createElement('h2', { className: "text-3xl font-bold mb-12" }, "Data Transparency"),
+                        React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-6" },
+                            datasets.map((ds, idx) => 
+                                React.createElement('div', { key: idx, className: "bg-slate-800 rounded-2xl p-6 border border-slate-700" },
+                                    React.createElement('h3', { className: "text-xl font-bold mb-2" }, ds.name),
+                                    React.createElement('p', { className: "text-slate-400 text-sm mb-6" }, ds.description),
+                                    React.createElement('div', { className: "space-y-2 text-xs" },
+                                        React.createElement('div', { className: "flex justify-between" }, React.createElement('span', { className: "text-slate-500" }, "SOURCE"), React.createElement('span', null, ds.source)),
+                                        React.createElement('div', { className: "flex justify-between" }, React.createElement('span', { className: "text-slate-500" }, "FORMAT"), React.createElement('span', null, ds.format)),
+                                        React.createElement('div', { className: "flex justify-between" }, React.createElement('span', { className: "text-slate-500" }, "RETRIEVED"), React.createElement('span', null, ds.dateRetrieved))
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // Footer
+                React.createElement('footer', { className: "bg-white border-t border-slate-200 py-12" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-6 flex justify-between items-center" },
+                        React.createElement('div', { className: "text-xl font-bold" }, "OWR Portal"),
+                        React.createElement('div', { className: "text-right" },
+                            React.createElement('p', { className: "font-bold" }, "Conservation Data Science 2026"),
+                            React.createElement('p', { className: "text-slate-500 text-sm" }, "University of Applied Sciences")
+                        )
+                    )
+                )
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
