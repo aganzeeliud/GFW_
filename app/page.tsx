@@ -14,7 +14,8 @@ import {
   ChevronRight,
   Lock,
   Layers,
-  Activity
+  Activity,
+  Download
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -60,21 +61,48 @@ const datasets = [
     source: 'IPIS, GFW & UNESCO',
     format: 'CSV Time-Series',
     icon: <Database className="w-5 h-5" />,
-    description: 'Comprehensive tracking of artisanal and semi-industrial mining activities, deforestation, and workforce estimates.'
+    description: 'Comprehensive tracking of artisanal and semi-industrial mining activities, deforestation, and workforce estimates.',
+    downloadUrl: '/data/mining_activities_2017_2026.csv'
+  },
+  {
+    name: 'Industrial Mining Impact',
+    source: 'IPIS & Field Reports',
+    format: 'CSV Analysis',
+    icon: <Activity className="w-5 h-5" />,
+    description: 'Detailed site-specific metrics for major semi-industrial operations like Muchacha and Bandisende.',
+    downloadUrl: '/data/industrial_mining_impact_details.csv'
+  },
+  {
+    name: 'Concessions Evolution',
+    source: 'CAMI & IPIS',
+    format: 'CSV History',
+    icon: <Calendar className="w-5 h-5" />,
+    description: 'Historical timeline (2006-2012) of mining permit distribution inside and around the reserve.',
+    downloadUrl: '/data/mining_concessions_evolution_2006_2012.csv'
+  },
+  {
+    name: 'Mining Sites Summary',
+    source: 'IPIS Field Surveys',
+    format: 'CSV Summary',
+    icon: <MapPin className="w-5 h-5" />,
+    description: 'Qualitative results from thousands of geolocated site visits and illegal sourcing observations.',
+    downloadUrl: '/data/owr_mining_site_summaries_2018_2023.csv'
   },
   {
     name: 'Mining Concessions (Inside)',
     source: 'CAMI & IPIS',
     format: 'GeoJSON + CSV',
     icon: <Lock className="w-5 h-5" />,
-    description: 'High-precision spatial boundaries of mining activity within the OWR protection zones.'
+    description: 'High-precision spatial boundaries of mining activity within the OWR protection zones.',
+    downloadUrl: '/data/OWR_Mining_Inside.csv'
   },
   {
     name: 'Forest Cover (ZAD)',
     source: 'Global Forest Watch',
     format: 'CSV Time-Series',
-    icon: <Activity className="w-5 h-5" />,
-    description: '25-year annual satellite-derived forest loss analysis (2001-2025) for ecological impact.'
+    icon: <Layers className="w-5 h-5" />,
+    description: '25-year annual satellite-derived forest loss analysis (2001-2025) for ecological impact.',
+    downloadUrl: '/data/ZAD forest cover.csv'
   }
 ];
 
@@ -344,13 +372,24 @@ export default function Home() {
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {datasets.map((ds, idx) => (
-            <div key={idx} className="group bg-white rounded-[2.5rem] p-10 border border-slate-200 hover:border-emerald-500 transition-all duration-500 hover:shadow-2xl">
-              <div className="w-14 h-14 bg-slate-50 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 rounded-2xl flex items-center justify-center mb-8 transition-colors">
-                {ds.icon}
+            <div key={idx} className="group bg-white rounded-[2.5rem] p-10 border border-slate-200 hover:border-emerald-500 transition-all duration-500 hover:shadow-2xl flex flex-col">
+              <div className="flex justify-between items-start mb-8">
+                <div className="w-14 h-14 bg-slate-50 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 rounded-2xl flex items-center justify-center transition-colors">
+                  {ds.icon}
+                </div>
+                {ds.downloadUrl && (
+                  <a 
+                    href={ds.downloadUrl} 
+                    download 
+                    className="p-3 bg-slate-50 text-slate-400 hover:bg-emerald-600 hover:text-white rounded-xl transition-all duration-300 flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
+                  >
+                    <Download className="w-4 h-4" /> CSV
+                  </a>
+                )}
               </div>
               <h3 className="text-2xl font-black text-slate-900 mb-4">{ds.name}</h3>
-              <p className="text-slate-500 font-medium leading-relaxed mb-8">{ds.description}</p>
-              <div className="flex items-center justify-between text-xs font-black tracking-widest uppercase text-slate-400 pt-6 border-t border-slate-100">
+              <p className="text-slate-500 font-medium leading-relaxed mb-8 flex-grow">{ds.description}</p>
+              <div className="flex items-center justify-between text-xs font-black tracking-widest uppercase text-slate-400 pt-6 border-t border-slate-100 mt-auto">
                 <span>Source</span>
                 <span className="text-slate-900">{ds.source}</span>
               </div>
