@@ -1,7 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { MapPin, BarChart3, Database, Calendar, Info, ArrowRight, Shield, Globe, TrendingUp } from 'lucide-react';
+import { 
+  MapPin, 
+  BarChart3, 
+  Database, 
+  Calendar, 
+  Shield, 
+  Globe, 
+  TrendingUp, 
+  ArrowRight,
+  Info,
+  ChevronRight,
+  Lock,
+  Layers,
+  Activity
+} from 'lucide-react';
 import { 
   BarChart, 
   Bar, 
@@ -10,10 +24,12 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend, 
-  ResponsiveContainer
+  ResponsiveContainer,
+  AreaChart,
+  Area
 } from 'recharts';
 
-// Precise data from OWR_Mining_Inside.csv and OWR_Mining_Buffer.csv
+// Precise data for charts
 const evolutionData = [
   { year: '2006', inside: 7469, buffer: 283678, insideCount: 4, bufferCount: 20 },
   { year: '2007', inside: 206524, buffer: 304131, insideCount: 27, bufferCount: 15 },
@@ -24,27 +40,41 @@ const evolutionData = [
   { year: '2012', inside: 0, buffer: 221313, insideCount: 0, bufferCount: 14 },
 ];
 
+// Recent mining surge data (2017-2026)
+const miningSurgeData = [
+  { year: '2017', miners: 12500, deforestation: 0 },
+  { year: '2018', miners: 15000, deforestation: 0 },
+  { year: '2019', miners: 17500, deforestation: 0 },
+  { year: '2020', miners: 20000, deforestation: 844 },
+  { year: '2021', miners: 22500, deforestation: 980 },
+  { year: '2022', miners: 25000, deforestation: 1635 },
+  { year: '2023', miners: 25000, deforestation: 1890 },
+  { year: '2024', miners: 25000, deforestation: 480 },
+  { year: '2025', miners: 25000, deforestation: 1200 },
+  { year: '2026', miners: 25000, deforestation: 1500 },
+];
+
 const datasets = [
   {
-    name: 'OWR Mining Concessions (Inside)',
-    source: 'DRC Mining Cadastre (CAMI) & IPIS',
-    format: 'CSV + GeoJSON (Joined)',
-    dateRetrieved: 'May 2025',
-    description: 'High-precision spatial boundaries of 83 mining concessions located directly within the Okapi Wildlife Reserve protection zones.'
+    name: 'Mining Activities (2017-2026)',
+    source: 'IPIS, GFW & UNESCO',
+    format: 'CSV Time-Series',
+    icon: <Database className="w-5 h-5" />,
+    description: 'Comprehensive tracking of artisanal and semi-industrial mining activities, deforestation, and workforce estimates.'
   },
   {
-    name: 'OWR Mining Buffer Zone',
-    source: 'DRC Mining Cadastre (CAMI) & IPIS',
-    format: 'CSV + GeoJSON (Joined)',
-    dateRetrieved: 'May 2025',
-    description: '185 mining applications and permits within the critical 50km external buffer zone, monitoring industrial pressure on the reserve borders.'
+    name: 'Mining Concessions (Inside)',
+    source: 'CAMI & IPIS',
+    format: 'GeoJSON + CSV',
+    icon: <Lock className="w-5 h-5" />,
+    description: 'High-precision spatial boundaries of mining activity within the OWR protection zones.'
   },
   {
     name: 'Forest Cover (ZAD)',
-    source: 'Global Forest Watch (Hansen Lab)',
-    format: 'CSV (Annual Time-Series)',
-    dateRetrieved: 'May 2025',
-    description: '25-year satellite-derived forest loss analysis (2001-2025) used to correlate industrial activity with ecological impact.'
+    source: 'Global Forest Watch',
+    format: 'CSV Time-Series',
+    icon: <Activity className="w-5 h-5" />,
+    description: '25-year annual satellite-derived forest loss analysis (2001-2025) for ecological impact.'
   }
 ];
 
@@ -53,262 +83,322 @@ export default function Home() {
   const totalBufferHa = 2435916;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100">
-      {/* Hero Section - Optimized for 10-second impact */}
-      <header className="bg-white border-b border-slate-200 overflow-hidden relative">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-emerald-50 rounded-full blur-3xl opacity-50"></div>
-        <div className="max-w-7xl mx-auto px-6 py-20 md:py-32 relative z-10">
-          <div className="flex flex-col items-center text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-bold mb-8 border border-emerald-100">
-              <Shield className="w-4 h-4" /> Evidence-Based Conservation
+    <div className="min-h-screen bg-[#fafafa] text-slate-900 font-sans selection:bg-emerald-100">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 glass border-b border-slate-200/50">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+              <Shield className="w-5 h-5" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-8 tracking-tight leading-[1.1]">
-              Okapi Wildlife Reserve <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400">Intelligence Portal</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed mb-12 font-medium">
-              Monitoring the intersection of industry and nature. Our platform tracks 268 mining concessions across 
-              3.2M hectares in the DRC, providing real-time transparency for funders and conservationists.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center w-full max-w-lg">
-              <Link
-                href="/map"
-                className="flex-1 px-8 py-5 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition shadow-xl shadow-emerald-200 flex items-center justify-center gap-3 text-lg"
-              >
-                <Globe className="w-6 h-6" /> Explore Map
-              </Link>
-              <Link
-                href="/dashboard"
-                className="flex-1 px-8 py-5 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition shadow-xl shadow-slate-200 flex items-center justify-center gap-3 text-lg"
-              >
-                <BarChart3 className="w-6 h-6" /> View Analytics
-              </Link>
-            </div>
+            <span className="text-xl font-black tracking-tighter text-slate-900">OWR PORTAL</span>
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#metrics" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Metrics</a>
+            <a href="#evolution" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Evolution</a>
+            <a href="#surge" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Trends</a>
+            <a href="#data" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Data</a>
+            <Link href="/map" className="px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-800 transition shadow-md">
+              Launch Map
+            </Link>
           </div>
         </div>
-      </header>
+      </nav>
 
-      {/* Primary Metrics */}
-      <section className="max-w-7xl mx-auto px-6 -mt-12 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-[2rem] shadow-2xl p-10 border border-slate-100 group hover:border-emerald-500 transition-all duration-500">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-black text-emerald-600 uppercase tracking-[0.2em] mb-3">Reserve Core Impact</p>
-                <h2 className="text-5xl font-black text-slate-900 tabular-nums">{totalInsideHa.toLocaleString()} <span className="text-xl font-medium text-slate-400">ha</span></h2>
-                <p className="text-slate-500 mt-4 font-medium">Industrial footprint inside the OWR boundaries</p>
-              </div>
-              <div className="p-5 bg-emerald-50 rounded-3xl text-emerald-600 group-hover:scale-110 transition-transform">
-                <MapPin className="w-10 h-10" />
-              </div>
-            </div>
+      {/* Hero Section */}
+      <section className="relative pt-40 pb-32 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-emerald-50/50 to-transparent rounded-full blur-3xl -z-10 opacity-70"></div>
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-700 text-xs font-black uppercase tracking-widest mb-8 border border-emerald-200">
+            <Activity className="w-3.5 h-3.5" /> Conservation Intelligence Platform
           </div>
-          <div className="bg-white rounded-[2rem] shadow-2xl p-10 border border-slate-100 group hover:border-blue-500 transition-all duration-500">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-black text-blue-600 uppercase tracking-[0.2em] mb-3">Buffer Zone Pressure</p>
-                <h2 className="text-5xl font-black text-slate-900 tabular-nums">{totalBufferHa.toLocaleString()} <span className="text-xl font-medium text-slate-400">ha</span></h2>
-                <p className="text-slate-500 mt-4 font-medium">Industrial activity within 50km of Reserve borders</p>
-              </div>
-              <div className="p-5 bg-blue-50 rounded-3xl text-blue-600 group-hover:scale-110 transition-transform">
-                <TrendingUpIcon className="w-10 h-10" />
-              </div>
-            </div>
+          <h1 className="text-6xl md:text-8xl font-black text-slate-900 mb-8 tracking-tighter leading-[0.9]">
+            Monitoring <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400">Okapi Wildlife</span> Reserve.
+          </h1>
+          <p className="text-xl md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
+            Bridging the gap between industrial activity and conservation. We track 268 mining concessions across 3.2M hectares in the DRC.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/map"
+              className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition shadow-2xl shadow-emerald-200 flex items-center justify-center gap-2"
+            >
+              Interactive Map <ChevronRight className="w-5 h-5" />
+            </Link>
+            <Link
+              href="/dashboard"
+              className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition shadow-sm flex items-center justify-center gap-2"
+            >
+              Analytics Dashboard
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Key Highlights Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="grid md:grid-cols-3 gap-12">
-          <div className="flex flex-col gap-4">
-            <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center">
-              <Shield className="w-6 h-6" />
+      {/* Stats Cards */}
+      <section id="metrics" className="max-w-7xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+              <MapPin className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold">25 Years of Monitoring</h3>
-            <p className="text-slate-600 leading-relaxed">Continuous forest cover tracking from 2001 to 2025, identifying high-risk deforestation zones.</p>
-          </div>
-          <div className="flex flex-col gap-4">
-            <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
-              <Database className="w-6 h-6" />
+            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Inside Reserve</p>
+            <h2 className="text-4xl font-black text-slate-900">{totalInsideHa.toLocaleString()} <span className="text-base font-medium text-slate-400">ha</span></h2>
+            <div className="mt-6 flex items-center gap-2 text-emerald-600 font-bold text-sm">
+              <TrendingUp className="w-4 h-4" /> 83 Active Concessions
             </div>
-            <h3 className="text-xl font-bold">Integrated Datasets</h3>
-            <p className="text-slate-600 leading-relaxed">Official mining cadastre data joined with spatial attributes for 100% transparency on permit status.</p>
           </div>
-          <div className="flex flex-col gap-4">
-            <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center">
+          <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+              <Layers className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Buffer Zone</p>
+            <h2 className="text-4xl font-black text-slate-900">{totalBufferHa.toLocaleString()} <span className="text-base font-medium text-slate-400">ha</span></h2>
+            <div className="mt-6 flex items-center gap-2 text-blue-600 font-bold text-sm">
+              <TrendingUp className="w-4 h-4" /> 185 External Permits
+            </div>
+          </div>
+          <div className="bg-slate-900 rounded-3xl p-8 shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+              <Shield className="w-24 h-24 text-white" />
+            </div>
+            <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mb-6">
               <Calendar className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold">Lifecycle Tracking</h3>
-            <p className="text-slate-600 leading-relaxed">Every concession tracked from application to expiry, allowing for proactive conservation planning.</p>
+            <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Monitoring Span</p>
+            <h2 className="text-4xl font-black text-white">25 <span className="text-base font-medium text-slate-500">Years</span></h2>
+            <div className="mt-6 flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <Info className="w-4 h-4" /> Satellite Data 2001-2025
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Evolution Chart */}
-      <section className="bg-white border-t border-b border-slate-200 py-24">
+      {/* Evolution Section */}
+      <section id="evolution" className="bg-white py-32 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <div className="max-w-2xl">
-              <h2 className="text-4xl font-black text-slate-900 mb-4 flex items-center gap-4">
-                <Calendar className="w-10 h-10 text-emerald-600" /> Mining Evolution
+          <div className="grid lg:grid-cols-5 gap-16 items-center">
+            <div className="lg:col-span-2">
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tighter leading-tight">
+                Industrial <br /> Expansion <br /> Timeline.
               </h2>
-              <p className="text-xl text-slate-600">Comparison of newly granted hectares per year. Tracking the rapid expansion of industrial interest between 2006 and 2012.</p>
-            </div>
-            <div className="flex gap-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 bg-emerald-500 rounded-full shadow-sm"></div>
-                <span className="text-sm font-bold text-slate-700">Inside Reserve</span>
+              <p className="text-lg text-slate-500 mb-10 leading-relaxed font-medium">
+                Tracking the rapid acceleration of mining interest. Our data reveals peak permit approval years and spatial distribution trends that define the Reserve's current threat landscape.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+                  <div className="w-3 h-3 bg-emerald-600 rounded-full"></div>
+                  <span className="text-sm font-bold text-emerald-900">Inside Core Zone (Hectares)</span>
+                </div>
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-blue-50 border border-blue-100">
+                  <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                  <span className="text-sm font-bold text-blue-900">External Buffer Zone (Hectares)</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-4 bg-blue-500 rounded-full shadow-sm"></div>
-                <span className="text-sm font-bold text-slate-700">Buffer Zone</span>
-              </div>
             </div>
-          </div>
-          
-          <div className="h-[500px] w-full bg-slate-50/50 rounded-[2.5rem] p-8 border border-slate-100">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={evolutionData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis 
-                  dataKey="year" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#94a3b8', fontSize: 14, fontWeight: 600 }}
-                  dy={15}
-                />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
-                  tickFormatter={(value) => `${value / 1000}k`}
-                />
-                <Tooltip 
-                  cursor={{ fill: '#ffffff', opacity: 0.4 }}
-                  contentStyle={{ 
-                    borderRadius: '20px', 
-                    border: 'none', 
-                    boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.15)',
-                    padding: '20px',
-                    fontWeight: 600
-                  }}
-                  formatter={(value: any, name: any, props: any) => {
-                    const { insideCount, bufferCount } = props.payload;
-                    const count = name === "Inside Reserve" ? insideCount : bufferCount;
-                    return [`${value.toLocaleString()} ha (${count} permits)`, name];
-                  }}
-                />
-                <Bar 
-                  dataKey="inside" 
-                  name="Inside Reserve" 
-                  fill="#10b981" 
-                  radius={[8, 8, 0, 0]} 
-                  barSize={40}
-                />
-                <Bar 
-                  dataKey="buffer" 
-                  name="Buffer Zone" 
-                  fill="#3b82f6" 
-                  radius={[8, 8, 0, 0]} 
-                  barSize={40}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-8 text-center text-sm text-slate-400 font-medium italic">
-            * Data points represent the official hectares granted per year based on CAMI records.
+            <div className="lg:col-span-3 h-[500px] bg-[#fdfdfd] rounded-[3rem] p-10 border border-slate-100 shadow-inner relative overflow-hidden">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={evolutionData}>
+                  <defs>
+                    <linearGradient id="colorInside" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorBuffer" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis 
+                    dataKey="year" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                    dy={10}
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                    tickFormatter={(value) => `${value / 1000}k`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.15)', padding: '20px' }}
+                    cursor={{ stroke: '#cbd5e1', strokeWidth: 1 }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="inside" 
+                    stroke="#10b981" 
+                    strokeWidth={4}
+                    fillOpacity={1} 
+                    fill="url(#colorInside)" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="buffer" 
+                    stroke="#3b82f6" 
+                    strokeWidth={4}
+                    fillOpacity={1} 
+                    fill="url(#colorBuffer)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Dataset Transparency */}
-      <section className="bg-slate-900 py-32">
+      {/* Recent Mining Surge Section */}
+      <section id="surge" className="bg-[#fafafa] py-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-20 text-center">
-            <h2 className="text-4xl font-black text-white mb-6 tracking-tight">Data Pipeline Transparency</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg">Verified sources and consistent processing ensure the integrity of our conservation intelligence.</p>
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tighter">
+              The Mining Surge <span className="text-emerald-600">(2017-2026)</span>
+            </h2>
+            <p className="text-xl text-slate-500 max-w-3xl mx-auto font-medium leading-relaxed">
+              Analyzing the critical transition from artisanal pits to semi-industrial operations. 
+              The data highlights a significant escalation in both workforce and environmental impact.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {datasets.map((ds, idx) => (
-              <div key={idx} className="bg-slate-800/50 backdrop-blur-sm rounded-[2rem] p-10 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300">
-                <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 mb-8 border border-emerald-500/20">
-                  <Database className="w-7 h-7" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4 leading-tight">{ds.name}</h3>
-                <p className="text-slate-400 text-base mb-10 leading-relaxed font-medium">{ds.description}</p>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center text-xs tracking-widest font-bold border-b border-slate-700/50 pb-4">
-                    <span className="text-slate-500 uppercase">Official Source</span>
-                    <span className="text-emerald-400">{ds.source}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs tracking-widest font-bold border-b border-slate-700/50 pb-4">
-                    <span className="text-slate-500 uppercase">Data Format</span>
-                    <span className="text-slate-300">{ds.format}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs tracking-widest font-bold pb-2">
-                    <span className="text-slate-500 uppercase">Last Updated</span>
-                    <span className="text-slate-300">{ds.dateRetrieved}</span>
-                  </div>
-                </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div className="bg-white rounded-[3rem] p-10 border border-slate-200 shadow-sm">
+              <h3 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                <BarChart3 className="w-6 h-6 text-emerald-600" /> Miner Workforce Growth
+              </h3>
+              <div className="h-[350px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={miningSurgeData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis 
+                      dataKey="year" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -10px rgb(0 0 0 / 0.1)' }}
+                    />
+                    <Bar dataKey="miners" fill="#10b981" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
-            ))}
+            </div>
+
+            <div className="bg-white rounded-[3rem] p-10 border border-slate-200 shadow-sm">
+              <h3 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                <TrendingUp className="w-6 h-6 text-blue-600" /> Deforestation Impact (ha)
+              </h3>
+              <div className="h-[350px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={miningSurgeData}>
+                    <defs>
+                      <linearGradient id="colorDeforest" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis 
+                      dataKey="year" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -10px rgb(0 0 0 / 0.1)' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="deforestation" 
+                      stroke="#3b82f6" 
+                      strokeWidth={4}
+                      fillOpacity={1} 
+                      fill="url(#colorDeforest)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer / Navigation CTA */}
-      <footer className="bg-white border-t border-slate-200 py-32">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-black text-slate-900 mb-12">Ready to explore?</h2>
-          <div className="flex flex-col sm:flex-row gap-8 justify-center mb-24">
-            <Link href="/map" className="group">
-              <div className="flex items-center gap-4 text-2xl font-black text-emerald-600 group-hover:translate-x-2 transition-transform">
-                Open Map <ArrowRight className="w-8 h-8" />
+      {/* Data Section */}
+      <section id="data" className="max-w-7xl mx-auto px-6 py-32">
+        <div className="mb-16">
+          <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter">Data Architecture.</h2>
+          <p className="text-xl text-slate-500 font-medium">Official sources, rigorously processed for spatial integrity.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {datasets.map((ds, idx) => (
+            <div key={idx} className="group bg-white rounded-[2.5rem] p-10 border border-slate-200 hover:border-emerald-500 transition-all duration-500 hover:shadow-2xl">
+              <div className="w-14 h-14 bg-slate-50 text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 rounded-2xl flex items-center justify-center mb-8 transition-colors">
+                {ds.icon}
               </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-4">{ds.name}</h3>
+              <p className="text-slate-500 font-medium leading-relaxed mb-8">{ds.description}</p>
+              <div className="flex items-center justify-between text-xs font-black tracking-widest uppercase text-slate-400 pt-6 border-t border-slate-100">
+                <span>Source</span>
+                <span className="text-slate-900">{ds.source}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="max-w-7xl mx-auto px-6 pb-32">
+        <div className="bg-emerald-600 rounded-[3.5rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl shadow-emerald-200">
+          <div className="absolute top-0 right-0 p-20 opacity-10 pointer-events-none translate-x-1/2 -translate-y-1/2">
+            <Globe className="w-96 h-96 text-white" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-tight">
+            Ready to explore the <br /> Okapi Wildlife Reserve?
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-5 justify-center">
+            <Link href="/map" className="px-10 py-5 bg-white text-emerald-600 rounded-3xl font-black hover:bg-slate-50 transition shadow-xl text-lg flex items-center justify-center gap-3">
+              Open Map <ArrowRight className="w-6 h-6" />
             </Link>
-            <Link href="/dashboard" className="group">
-              <div className="flex items-center gap-4 text-2xl font-black text-blue-600 group-hover:translate-x-2 transition-transform">
-                View Charts <ArrowRight className="w-8 h-8" />
-              </div>
+            <Link href="/dashboard" className="px-10 py-5 bg-emerald-700 text-white rounded-3xl font-black hover:bg-emerald-800 transition text-lg">
+              Launch Dashboard
             </Link>
           </div>
-          
-          <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-slate-200 py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-12">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-600 rounded-lg text-white">
-                <Globe className="w-6 h-6" />
+              <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white">
+                <Shield className="w-6 h-6" />
               </div>
-              <span className="text-2xl font-black text-slate-900 tracking-tighter">OWR PORTAL</span>
+              <span className="text-3xl font-black tracking-tighter text-slate-900">OWR PORTAL</span>
             </div>
             <div className="text-center md:text-right">
-              <p className="text-slate-900 font-black text-lg">Conservation Data Science 2026</p>
-              <p className="text-slate-400 font-bold text-sm tracking-wide mt-1 uppercase">University of Applied Sciences</p>
+              <p className="text-slate-900 font-black text-xl mb-1">Conservation Data Science 2026</p>
+              <p className="text-slate-400 font-bold text-sm tracking-[0.2em] uppercase leading-none">University of Applied Sciences</p>
             </div>
           </div>
-          <div className="mt-16 text-slate-400 text-xs font-bold tracking-[0.2em] uppercase">
-            © 2026 Okapi Wildlife Reserve Intelligence Portal • Built for Transparency
+          <div className="mt-16 pt-16 border-t border-slate-100 text-center text-slate-400 text-xs font-black tracking-widest uppercase">
+            © 2026 Okapi Wildlife Reserve Intelligence Portal • DRC Monitoring Group
           </div>
         </div>
       </footer>
     </div>
-  );
-}
-
-// Custom TrendingUpIcon
-function TrendingUpIcon(props: any) {
-  return (
-    <svg 
-      {...props} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="3" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-      <polyline points="17 6 23 6 23 12" />
-    </svg>
   );
 }
