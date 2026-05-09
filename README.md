@@ -5,11 +5,12 @@
 A comprehensive data visualization platform for monitoring the Okapi Wildlife Reserve in the Democratic Republic of Congo (DRC). This portal integrates 25 years of Global Forest Watch satellite data with live mining concession tracking and recent surge analysis (2017-2026).
 
 **Live Features:**
-- 🌐 **Modern Standalone Portal** - A high-performance, v0-inspired HTML/JS landing page with infographics (see `standalone-portal/`).
-- 🗺️ **Interactive Mining Map** - Live visualization of 268 mining concessions using real GeoJSON data. Click sites for detailed metadata.
+- 🌐 **Modern Standalone Portal** - A high-performance, v0-inspired HTML/JS landing page with infographics.
+- 📈 **Impact Analysis** - Statistical correlation (0.94) between mining workforce and forest loss (2017-2023).
+- 🗺️ **Interactive Mining Map** - Live visualization of 268 mining concessions using real GeoJSON data.
 - 📉 **The Mining Surge (2017-2026)** - Detailed tracking of the transition from artisanal to semi-industrial mining.
 - 📊 **Analytics Dashboard** - Time-series forest loss and workforce analysis (2001-2026).
-- 📦 **Standalone Map Version** - A portable HTML/JS version for independent publishing (see `standalone-map/`).
+- 📦 **Standalone Map Version** - A portable HTML/JS version for independent publishing.
 - 📥 **Open Data** - Direct CSV and GeoJSON downloads for all researched and processed datasets.
 
 ## 🎯 Key Data Points

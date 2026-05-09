@@ -8,8 +8,9 @@
 GFW_/
 ├── app/                          # Next.js App Router (all pages and layouts)
 │   ├── layout.tsx                # Root layout wrapper
-│   ├── page.tsx                  # Landing page (index.html equivalent)
-│   ├── globals.css               # Global styles and Tailwind imports
+│   ├── page.tsx                  # Landing page
+│   ├── comparison/               # Impact Analysis feature directory
+│   │   └── page.tsx              # Correlation analysis page (/comparison)
 │   ├── dashboard/                # Dashboard feature directory
 │   │   └── page.tsx              # Dashboard page (/dashboard)
 │   ├── map/                      # Interactive map feature directory
@@ -30,7 +31,8 @@ GFW_/
 │   └── data/                     # CSV and GeoJSON files for map and download
 │
 ├── standalone-portal/            # Standalone modern HTML landing page
-│   └── index.html                # Modern entry point for the portal
+│   ├── index.html                # Modern entry point for the portal
+│   └── comparison.html           # Impact analysis and documentation comparison
 │
 ├── standalone-map/               # Standalone HTML/JS map version
 │   └── index.html                # Portable map for separate publishing

@@ -123,8 +123,7 @@ export default function Home() {
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#metrics" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Metrics</a>
-            <a href="#evolution" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Evolution</a>
-            <a href="#surge" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Trends</a>
+            <Link href="/comparison" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Impact Analysis</Link>
             <a href="#data" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Data</a>
             <Link href="/map" className="px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-800 transition shadow-md">
               Launch Map
@@ -154,10 +153,10 @@ export default function Home() {
               Interactive Map <ChevronRight className="w-5 h-5" />
             </Link>
             <Link
-              href="/dashboard"
+              href="/comparison"
               className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition shadow-sm flex items-center justify-center gap-2"
             >
-              Analytics Dashboard
+              Mining Impact Analysis
             </Link>
           </div>
         </div>
