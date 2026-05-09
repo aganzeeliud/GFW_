@@ -9,9 +9,24 @@ const forestLossData = [
   { year: 2005, loss: 1500, cumulative: 2700 },
   { year: 2010, loss: 2100, cumulative: 4800 },
   { year: 2015, loss: 2800, cumulative: 7600 },
-  { year: 2020, loss: 3200, cumulative: 10800 },
-  { year: 2025, loss: 3800, cumulative: 14600 },
+  { year: 2020, loss: 844, cumulative: 8444 },
+  { year: 2023, loss: 1890, cumulative: 11450 },
+  { year: 2026, loss: 1500, cumulative: 15000 },
 ]
+
+// Recent mining surge data (2017-2026)
+const miningSurgeData = [
+  { year: '2017', miners: 12500, deforestation: 0 },
+  { year: '2018', miners: 15000, deforestation: 0 },
+  { year: '2019', miners: 17500, deforestation: 0 },
+  { year: '2020', miners: 20000, deforestation: 844 },
+  { year: '2021', miners: 22500, deforestation: 980 },
+  { year: '2022', miners: 25000, deforestation: 1635 },
+  { year: '2023', miners: 25000, deforestation: 1890 },
+  { year: '2024', miners: 25000, deforestation: 480 },
+  { year: '2025', miners: 25000, deforestation: 1200 },
+  { year: '2026', miners: 25000, deforestation: 1500 },
+];
 
 const miningStatusData = [
   { status: 'Active', count: 156, fill: '#ef4444' },
@@ -50,9 +65,9 @@ export default function Dashboard() {
               <h3 className="font-semibold text-slate-900">Total Forest Loss</h3>
               <TrendingDown className="w-5 h-5 text-red-500" />
             </div>
-            <p className="text-3xl font-bold text-slate-900">14,600 ha</p>
-            <p className="text-sm text-slate-600 mt-2">Cumulative loss (2001-2025)</p>
-            <p className="text-xs text-red-600 mt-2 font-medium">↑ 3,800 ha in 2025 alone</p>
+            <p className="text-3xl font-bold text-slate-900">15,000 ha</p>
+            <p className="text-sm text-slate-600 mt-2">Cumulative loss (2001-2026)</p>
+            <p className="text-xs text-red-600 mt-2 font-medium">↑ 1,890 ha peak in 2023</p>
           </div>
 
           <div className="bg-white p-6 rounded-lg border border-slate-200 hover:border-slate-300 transition">
@@ -78,9 +93,29 @@ export default function Dashboard() {
 
         {/* Charts */}
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
+          {/* Mining Surge Impact */}
+          <div className="bg-white p-6 rounded-lg border border-slate-200 lg:col-span-2">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Mining Surge: Workforce vs. Deforestation (2017-2026)</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={miningSurgeData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="year" />
+                <YAxis yAxisId="left" orientation="left" stroke="#10b981" />
+                <YAxis yAxisId="right" orientation="right" stroke="#3b82f6" />
+                <Tooltip />
+                <Legend />
+                <Bar yAxisId="left" dataKey="miners" fill="#10b981" name="Estimated Miners" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="right" dataKey="deforestation" fill="#3b82f6" name="Deforestation (ha)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+            <p className="text-sm text-slate-600 mt-4">
+              ⚠️ The transition to semi-industrial mining in 2020 triggered a sharp increase in deforestation despite workforce stability.
+            </p>
+          </div>
+
           {/* Forest Loss Over Time */}
           <div className="bg-white p-6 rounded-lg border border-slate-200">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Cumulative Forest Loss (2001-2025)</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Cumulative Forest Loss (2001-2026)</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={forestLossData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -186,8 +221,8 @@ export default function Dashboard() {
               <ul className="space-y-2 text-sm text-slate-600">
                 <li>✓ Official DRC Mining Cadastre polygons</li>
                 <li>✓ IPIS industrial activity monitoring</li>
-                <li>✓ Resource type classification</li>
-                <li>✓ Permit lifecycle tracking (application, grant, expiry)</li>
+                <li>✓ UNESCO World Heritage monitoring reports</li>
+                <li>✓ Resource type classification & Permit lifecycle</li>
               </ul>
             </div>
           </div>
