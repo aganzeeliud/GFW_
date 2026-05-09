@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { ArrowLeft, TrendingDown, TrendingUp, Zap } from 'lucide-react'
+import { ArrowLeft, TrendingDown, TrendingUp, Zap, Download } from 'lucide-react'
 
 const forestLossData = [
   { year: 2001, loss: 1200, cumulative: 1200 },
@@ -225,6 +225,34 @@ export default function Dashboard() {
                 <li>✓ Resource type classification & Permit lifecycle</li>
               </ul>
             </div>
+          </div>
+        </div>
+        {/* Download Center */}
+        <div className="bg-slate-900 p-8 rounded-lg border border-slate-800 mt-8">
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <Download className="w-6 h-6 text-emerald-400" /> Download Center
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { label: 'Mining Surge (2017-26)', file: 'mining_activities_2017_2026.csv' },
+              { label: 'Impact Details', file: 'industrial_mining_impact_details.csv' },
+              { label: 'Historical Concessions', file: 'mining_concessions_evolution_2006_2012.csv' },
+              { label: 'Site Summaries', file: 'owr_mining_site_summaries_2018_2023.csv' },
+              { label: 'Inside Reserve Data', file: 'OWR_Mining_Inside.csv' },
+              { label: 'Buffer Zone Data', file: 'OWR_Mining_Buffer.csv' },
+              { label: 'Forest Loss (ZAD)', file: 'ZAD forest cover.csv' },
+              { label: 'Hunting Zones', file: 'hunting_zones.csv' },
+            ].map((item, idx) => (
+              <a
+                key={idx}
+                href={`/data/${item.file}`}
+                download
+                className="flex items-center justify-between p-4 bg-slate-800 rounded-lg text-slate-300 hover:bg-emerald-600 hover:text-white transition-all group"
+              >
+                <span className="text-sm font-semibold">{item.label}</span>
+                <Download className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
