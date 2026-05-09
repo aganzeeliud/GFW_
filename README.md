@@ -1,13 +1,15 @@
 # Okapi Wildlife Reserve (OWR) - Conservation Intelligence Portal
 
-A comprehensive data visualization platform for monitoring the Okapi Wildlife Reserve in the Democratic Republic of Congo (DRC). This portal integrates 25 years of Global Forest Watch satellite data with mining concession tracking to provide evidence-based conservation intelligence.
+**Live URL:** [https://aganzeeliud.github.io/GFW_/](https://aganzeeliud.github.io/GFW_/)
+
+A comprehensive data visualization platform for monitoring the Okapi Wildlife Reserve in the Democratic Republic of Congo (DRC). This portal integrates 25 years of Global Forest Watch satellite data with mining concession tracking and recent surge analysis (2017-2026) to provide evidence-based conservation intelligence.
 
 **Live Features:**
-- 🗺️ **Interactive Mining Map** - Color-coded visualization of 268 mining concessions with click-to-view details
-- 📊 **Analytics Dashboard** - Time-series forest loss analysis from 2001-2025
-- 📅 **Permit Lifecycle Tracking** - Application, grant, and expiration dates for each concession
-- 🌍 **Spatial Coverage** - Exact hectare calculations for reserve and buffer zones
-- 🔴🟠⚫ **Activity Classification** - Active, Pending, and Inactive mining operations with distinct colors
+- 🗺️ **Interactive Mining Map** - Color-coded visualization of 268 mining concessions with click-to-view details.
+- 📉 **The Mining Surge (2017-2026)** - Detailed tracking of the transition from artisanal to semi-industrial mining.
+- 📊 **Analytics Dashboard** - Time-series forest loss and workforce analysis (2001-2026).
+- 📅 **Permit Lifecycle Tracking** - Application, grant, and expiration dates for each concession.
+- 📥 **Open Data** - Direct CSV downloads for all researched and processed datasets.
 
 ## 🎯 Key Data Points
 
@@ -18,8 +20,9 @@ A comprehensive data visualization platform for monitoring the Okapi Wildlife Re
 | **Pending Applications** | 78 |
 | **Inside Reserve (ha)** | 813,652 |
 | **Buffer Zone (ha)** | 2,434,380 |
-| **Forest Loss (2001-2025)** | 14,600 ha cumulative |
-| **Data Span** | 25 years |
+| **Forest Loss (2001-2026)** | 15,000 ha cumulative |
+| **Mining Surge Workforce** | 25,000+ estimated miners |
+| **Data Span** | 25 years + Future Projections |
 
 ## 🗂️ Directory Structure
 
