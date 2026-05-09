@@ -1,6 +1,6 @@
 # Okapi Wildlife Reserve (OWR) - Conservation Intelligence Portal
 
-**Live URL:** [https://aganzeeliud.github.io/GFW_/](https://aganzeeliud.github.io/GFW_/)
+**Live URL:** [https://aganzeeliud.github.io/GFW_/standalone-portal/index.html](https://aganzeeliud.github.io/GFW_/standalone-portal/index.html)
 
 A comprehensive data visualization platform for monitoring the Okapi Wildlife Reserve in the Democratic Republic of Congo (DRC). This portal integrates 25 years of Global Forest Watch satellite data with live mining concession tracking and recent surge analysis (2017-2026).
 

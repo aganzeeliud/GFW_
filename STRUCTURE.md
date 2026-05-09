@@ -1,6 +1,6 @@
 # Repository Structure
 
-**Live Portal:** [https://aganzeeliud.github.io/GFW_/](https://aganzeeliud.github.io/GFW_/)
+**Live Portal:** [https://aganzeeliud.github.io/GFW_/standalone-portal/index.html](https://aganzeeliud.github.io/GFW_/standalone-portal/index.html)
 
 ## 📁 Directory Organization
 
