@@ -135,46 +135,107 @@
         </div>
     </section>
 
+    <!-- The Mining Revolution Section -->
+    <section class="max-w-7xl mx-auto px-6 py-24">
+        <div class="mb-20 text-center">
+            <h2 class="text-6xl font-black tracking-tighter text-slate-900 mb-6 uppercase">The Mining Revolution.</h2>
+            <p class="text-xl text-slate-500 max-w-3xl mx-auto font-medium">From historical expansion to the current industrial surge. The data reveals a critical escalation in both workforce and environmental impact.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Historical Expansion Chart -->
+            <div class="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-xl shadow-slate-200/20">
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 class="text-2xl font-black tracking-tight text-slate-900">Historical Expansion</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Timeline: 2006 - 2012</p>
+                    </div>
+                    <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                </div>
+                <canvas id="historicalChart" height="300"></canvas>
+                <p class="mt-8 text-sm text-slate-500 font-medium italic text-center">Peak permit approvals occurred in 2007, setting the stage for current conflicts.</p>
+            </div>
+
+            <!-- Recent Surge Chart -->
+            <div class="bg-slate-900 p-10 rounded-[3.5rem] shadow-2xl shadow-emerald-900/20 text-white">
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 class="text-2xl font-black tracking-tight">The Recent Surge</h3>
+                        <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Timeline: 2017 - 2023</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-emerald-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </div>
+                </div>
+                <canvas id="surgeChart" height="300"></canvas>
+                <p class="mt-8 text-sm text-slate-400 font-medium italic text-center text-emerald-100/60">Correlation between workforce density and primary forest loss.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Chart Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Data for Infographic
-        const impactData = {
-            labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
-            inside: [7469, 206524, 11032, 4160, 0, 9589, 0],
-            buffer: [283678, 304131, 159369, 265360, 173545, 57782, 221313]
+        // Common Chart Options
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { weight: '700' } } },
+                y: { grid: { borderDash: [5, 5], color: '#f1f5f9' }, ticks: { font: { weight: '600' } } }
+            }
         };
 
+        // 1. Spatial Conflict Chart
         new Chart(document.getElementById('impactComparisonChart'), {
             type: 'bar',
             data: {
-                labels: impactData.labels,
+                labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
                 datasets: [
-                    {
-                        label: 'Inside Reserve (ha)',
-                        data: impactData.inside,
-                        backgroundColor: '#ef4444',
-                        borderRadius: 8,
-                    },
-                    {
-                        label: 'Buffer Zone (ha)',
-                        data: impactData.buffer,
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 8,
-                    }
+                    { label: 'Inside ha', data: [7469, 206524, 11032, 4160, 0, 9589, 0], backgroundColor: '#ef4444', borderRadius: 6 },
+                    { label: 'Buffer ha', data: [283678, 304131, 159369, 265360, 173545, 57782, 221313], backgroundColor: '#3b82f6', borderRadius: 6 }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // 2. Historical Expansion
+        new Chart(document.getElementById('historicalChart'), {
+            type: 'line',
+            data: {
+                labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
+                datasets: [{
+                    label: 'Total Permits',
+                    data: [24, 42, 17, 18, 6, 8, 14],
+                    borderColor: '#10b981',
+                    borderWidth: 4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#10b981',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: chartOptions
+        });
+
+        // 3. Recent Surge (Workforce vs Loss)
+        new Chart(document.getElementById('surgeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+                datasets: [
+                    { label: 'Miners', data: [12500, 15000, 17500, 20000, 22500, 25000, 25000], backgroundColor: '#10b981', borderRadius: 6 },
+                    { label: 'Loss ha', data: [0, 0, 0, 844, 980, 1635, 1890], type: 'line', borderColor: '#ef4444', borderWidth: 3, pointRadius: 4 }
                 ]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                },
+                ...chartOptions,
                 scales: {
-                    x: { grid: { display: false } },
-                    y: { 
-                        beginAtZero: true,
-                        ticks: { callback: value => value / 1000 + 'k ha' }
-                    }
+                    x: { grid: { display: false }, ticks: { color: '#fff' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }
                 }
             }
         });

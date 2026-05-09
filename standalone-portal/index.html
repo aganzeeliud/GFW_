@@ -8,195 +8,436 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
         .bento-item {
             background: white;
-            border: 1px border-slate-200;
+            border: 1px solid #e2e8f0;
             border-radius: 2rem;
             padding: 2rem;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .bento-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border-color: #10b981;
         }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); }
         .bg-mesh {
             background-color: #ffffff;
-            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
-                              radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
+            background-image: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+                              radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
         }
     </style>
 </head>
 <body class="bg-mesh text-slate-900 selection:bg-emerald-100 antialiased">
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto glass border border-slate-200/50 rounded-2xl px-6 py-3 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <nav class="fixed top-0 w-full z-[100] px-6 py-6">
+        <div class="max-w-7xl mx-auto glass border border-slate-200/60 rounded-3xl px-8 py-4 flex items-center justify-between shadow-xl shadow-slate-200/20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-                <span class="text-lg font-extrabold tracking-tight">OWR PORTAL</span>
+                <span class="text-xl font-black tracking-tighter uppercase">OWR Portal</span>
             </div>
-            <div class="flex items-center gap-6">
-                <a href="#about" class="text-sm font-semibold text-slate-500 hover:text-emerald-600 transition">About</a>
-                <a href="comparison.html" class="text-sm font-semibold text-slate-500 hover:text-emerald-600 transition">Impact Analysis</a>
-                <a href="#metrics" class="text-sm font-semibold text-slate-500 hover:text-emerald-600 transition">Metrics</a>
-                <a href="../standalone-map/index.html" class="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition">Launch Map</a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#metrics" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Insights</a>
+                <a href="./standalone-portal/comparison.html" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Impact Analysis</a>
+                <a href="./standalone-map/index.html" class="px-6 py-2.5 bg-slate-900 text-white rounded-2xl text-sm font-black hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/20">Launch Map</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="pt-40 pb-20 px-6 overflow-hidden">
+    <!-- Hero -->
+    <header class="pt-52 pb-32 px-6">
         <div class="max-w-6xl mx-auto text-center relative">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-700 text-xs font-black uppercase tracking-widest mb-8 border border-emerald-200">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] mb-10 border border-emerald-100 shadow-sm">
                 <span class="relative flex h-2 w-2">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                Active Monitoring 2026
+                World Heritage In Danger Status: ACTIVE
             </div>
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] mb-8">
-                Protecting the <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400">Okapi Heart.</span>
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter leading-[0.8] mb-10 text-slate-900">
+                Data for <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-emerald-600 to-blue-600">Preservation.</span>
             </h1>
-            <p class="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed mb-12">
-                Advanced spatial intelligence for the Okapi Wildlife Reserve. Monitoring 268 mining concessions across 3.2 million hectares of biodiversity.
+            <p class="text-xl md:text-2xl text-slate-500 max-w-4xl mx-auto font-medium leading-relaxed mb-14">
+                The Okapi Wildlife Reserve (OWR) faces an existential threat from industrial expansion. Our platform provides the spatial evidence needed for policy intervention, donor reporting, and global advocacy.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="../standalone-map/index.html" class="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition shadow-2xl shadow-emerald-200 flex items-center justify-center gap-3 group">
-                    Interactive Map 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="./standalone-map/index.html" class="px-10 py-5 bg-slate-900 text-white rounded-[2rem] font-black text-lg hover:bg-emerald-600 transition shadow-2xl flex items-center justify-center gap-3 group">
+                    Explore Evidence Map 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
-                <a href="comparison.html" class="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition shadow-sm">
-                    Mining Impact Analysis
+                <a href="#advocacy" class="px-10 py-5 bg-white text-slate-900 border border-slate-200 rounded-[2rem] font-black text-lg hover:bg-slate-50 transition shadow-sm flex items-center justify-center gap-2">
+                    Donor Briefing
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Infographic Section (Bento Grid) -->
-    <section id="metrics" class="max-w-7xl mx-auto px-6 py-20">
-        <div class="mb-16">
-            <h2 class="text-4xl font-black tracking-tighter mb-4">Reserve Insights.</h2>
-            <p class="text-lg text-slate-500 font-medium">Critical metrics at a glance.</p>
+    <!-- Key Metrics Cards (Optimized for Decision Makers) -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/20 flex flex-col justify-between hover:border-red-500 transition-all group">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Okapi Population</p>
+                <div>
+                    <h4 class="text-5xl font-black text-red-600 tracking-tighter mb-2">-50%</h4>
+                    <p class="text-sm font-bold text-slate-500">Decline since 1995 due to habitat loss and mining incursions.</p>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/20 flex flex-col justify-between hover:border-emerald-500 transition-all">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Primary Forest</p>
+                <div>
+                    <h4 class="text-5xl font-black text-emerald-600 tracking-tighter mb-2">75%</h4>
+                    <p class="text-sm font-bold text-slate-500">Of 2023 deforestation occurred in critical primary forest zones.</p>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/20 flex flex-col justify-between hover:border-blue-500 transition-all">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">Active Miners</p>
+                <div>
+                    <h4 class="text-5xl font-black text-blue-600 tracking-tighter mb-2">25K+</h4>
+                    <p class="text-sm font-bold text-slate-500">Estimated workforce operating within or adjacent to the reserve.</p>
+                </div>
+            </div>
+            <div class="bg-slate-900 p-8 rounded-[2.5rem] flex flex-col justify-between shadow-2xl shadow-emerald-900/20 group">
+                <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-8 text-center">Threat Level</p>
+                <div class="text-center">
+                    <h4 class="text-4xl font-black text-white tracking-tighter mb-2 uppercase italic">Critical</h4>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">UNESCO "In Danger" Listing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infographics (Inside vs Outside) -->
+    <section id="advocacy" class="max-w-7xl mx-auto px-6 py-24 bg-white rounded-[4rem] border border-slate-100 shadow-sm my-20">
+        <div class="grid lg:grid-cols-2 gap-20 items-center px-12">
+            <div>
+                <h2 class="text-5xl font-black tracking-tighter mb-8 text-slate-900 leading-[0.9]">Spatial Conflict <br/>Analysis.</h2>
+                <p class="text-lg text-slate-500 font-medium leading-relaxed mb-10">
+                    While the reserve is legally protected, the DRC Mining Cadastre (CAMI) has granted 83 concessions inside the core zone. This chart demonstrates the direct pressure on protected land compared to the surrounding buffer zones.
+                </p>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4 p-5 rounded-2xl bg-red-50 border border-red-100">
+                        <div class="w-3 h-3 rounded-full bg-red-600"></div>
+                        <span class="text-sm font-black text-red-900 uppercase tracking-widest">Inside Reserve (High Risk)</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-5 rounded-2xl bg-blue-50 border border-blue-100">
+                        <div class="w-3 h-3 rounded-full bg-blue-600"></div>
+                        <span class="text-sm font-black text-blue-900 uppercase tracking-widest">Buffer Zone (Pressure Points)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="relative bg-slate-50 p-10 rounded-[3rem] border border-slate-100">
+                <canvas id="impactComparisonChart" height="400"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Mining Revolution Section -->
+    <section class="max-w-7xl mx-auto px-6 py-24">
+        <div class="mb-20 text-center">
+            <h2 class="text-6xl font-black tracking-tighter text-slate-900 mb-6 uppercase">The Mining Revolution.</h2>
+            <p class="text-xl text-slate-500 max-w-3xl mx-auto font-medium">From historical expansion to the current industrial surge. The data reveals a critical escalation in both workforce and environmental impact.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[240px]">
-            <!-- Big Stat: Forest Loss -->
-            <div class="md:col-span-2 md:row-span-2 bento-item flex flex-col justify-between overflow-hidden relative">
-                <div class="relative z-10">
-                    <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Total Forest Loss</p>
-                    <h3 class="text-6xl font-black text-slate-900 leading-none">15,000<span class="text-2xl text-slate-300 ml-2">ha</span></h3>
-                    <p class="text-emerald-600 font-bold text-sm mt-4 flex items-center gap-2">
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Historical Expansion Chart -->
+            <div class="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-xl shadow-slate-200/20">
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 class="text-2xl font-black tracking-tight text-slate-900">Historical Expansion</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Timeline: 2006 - 2012</p>
+                    </div>
+                    <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                </div>
+                <canvas id="historicalChart" height="300"></canvas>
+                <p class="mt-8 text-sm text-slate-500 font-medium italic text-center">Peak permit approvals occurred in 2007, setting the stage for current conflicts.</p>
+            </div>
+
+            <!-- Recent Surge Chart -->
+            <div class="bg-slate-900 p-10 rounded-[3.5rem] shadow-2xl shadow-emerald-900/20 text-white">
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 class="text-2xl font-black tracking-tight">The Recent Surge</h3>
+                        <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Timeline: 2017 - 2023</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-emerald-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </div>
+                </div>
+                <canvas id="surgeChart" height="300"></canvas>
+                <p class="mt-8 text-sm text-slate-400 font-medium italic text-center text-emerald-100/60">Correlation between workforce density and primary forest loss.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chart Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Common Chart Options
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { weight: '700' } } },
+                y: { grid: { borderDash: [5, 5], color: '#f1f5f9' }, ticks: { font: { weight: '600' } } }
+            }
+        };
+
+        // 1. Spatial Conflict Chart
+        new Chart(document.getElementById('impactComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
+                datasets: [
+                    { label: 'Inside ha', data: [7469, 206524, 11032, 4160, 0, 9589, 0], backgroundColor: '#ef4444', borderRadius: 6 },
+                    { label: 'Buffer ha', data: [283678, 304131, 159369, 265360, 173545, 57782, 221313], backgroundColor: '#3b82f6', borderRadius: 6 }
+                ]
+            },
+            options: chartOptions
+        });
+
+        // 2. Historical Expansion
+        new Chart(document.getElementById('historicalChart'), {
+            type: 'line',
+            data: {
+                labels: ['2006', '2007', '2008', '2009', '2010', '2011', '2012'],
+                datasets: [{
+                    label: 'Total Permits',
+                    data: [24, 42, 17, 18, 6, 8, 14],
+                    borderColor: '#10b981',
+                    borderWidth: 4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#10b981',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: chartOptions
+        });
+
+        // 3. Recent Surge (Workforce vs Loss)
+        new Chart(document.getElementById('surgeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+                datasets: [
+                    { label: 'Miners', data: [12500, 15000, 17500, 20000, 22500, 25000, 25000], backgroundColor: '#10b981', borderRadius: 6 },
+                    { label: 'Loss ha', data: [0, 0, 0, 844, 980, 1635, 1890], type: 'line', borderColor: '#ef4444', borderWidth: 3, pointRadius: 4 }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#fff' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }
+                }
+            }
+        });
+    </script>
+
+    <!-- Bento Stats -->
+    <section id="metrics" class="max-w-7xl mx-auto px-6 py-24">
+        <div class="mb-20 text-center md:text-left">
+            <h2 class="text-5xl font-black tracking-tighter mb-4">Reserve Insights.</h2>
+            <p class="text-xl text-slate-400 font-bold uppercase tracking-widest text-sm">Critical data metrics at a glance</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 auto-rows-[280px]">
+            <!-- Forest Loss -->
+            <div class="md:col-span-2 md:row-span-2 bento-item flex flex-col justify-between overflow-hidden group">
+                <div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Total Forest Loss</p>
+                    <h3 class="text-7xl font-black text-slate-900 tracking-tighter">15,000<span class="text-3xl text-slate-300 ml-2">ha</span></h3>
+                    <div class="mt-6 flex items-center gap-2 text-red-500 font-black text-xs uppercase tracking-widest bg-red-50 w-fit px-4 py-2 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                        Cumulative (2001-2026)
-                    </p>
+                        Critical Trend
+                    </div>
                 </div>
-                <!-- Mini Infographic SVG -->
-                <div class="mt-8 flex items-end gap-1 h-32">
-                    <div class="flex-1 bg-emerald-100 rounded-t-lg transition-all hover:bg-emerald-200" style="height: 20%"></div>
-                    <div class="flex-1 bg-emerald-100 rounded-t-lg transition-all hover:bg-emerald-200" style="height: 35%"></div>
-                    <div class="flex-1 bg-emerald-100 rounded-t-lg transition-all hover:bg-emerald-200" style="height: 45%"></div>
-                    <div class="flex-1 bg-emerald-200 rounded-t-lg transition-all hover:bg-emerald-300" style="height: 60%"></div>
-                    <div class="flex-1 bg-emerald-300 rounded-t-lg transition-all hover:bg-emerald-400" style="height: 75%"></div>
-                    <div class="flex-1 bg-emerald-500 rounded-t-lg transition-all hover:bg-emerald-600" style="height: 90%"></div>
+                <div class="mt-12 flex items-end gap-2 h-40">
+                    <div class="flex-1 bg-emerald-50 rounded-t-2xl h-[20%] group-hover:h-[25%] transition-all"></div>
+                    <div class="flex-1 bg-emerald-100 rounded-t-2xl h-[35%] group-hover:h-[40%] transition-all"></div>
+                    <div class="flex-1 bg-emerald-200 rounded-t-2xl h-[45%] group-hover:h-[50%] transition-all"></div>
+                    <div class="flex-1 bg-emerald-300 rounded-t-2xl h-[60%] group-hover:h-[65%] transition-all"></div>
+                    <div class="flex-1 bg-emerald-400 rounded-t-2xl h-[75%] group-hover:h-[80%] transition-all"></div>
+                    <div class="flex-1 bg-emerald-600 rounded-t-2xl h-[90%] shadow-2xl shadow-emerald-200"></div>
                 </div>
             </div>
 
-            <!-- Concessions Inside -->
+            <!-- Sites -->
             <div class="md:col-span-2 bento-item flex flex-col justify-center">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div class="flex items-center gap-8 mb-6">
+                    <div class="w-20 h-20 bg-red-50 text-red-600 rounded-[2rem] flex items-center justify-center shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     </div>
                     <div>
-                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest leading-none">Inside Reserve</p>
-                        <h4 class="text-3xl font-black text-slate-900">83 <span class="text-base font-medium text-slate-400">Sites</span></h4>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Inside Reserve</p>
+                        <h4 class="text-5xl font-black text-slate-900 tracking-tighter">83 <span class="text-xl font-medium text-slate-300">Concessions</span></h4>
                     </div>
                 </div>
-                <p class="text-sm text-slate-500 font-medium">813,652 hectares under direct mining pressure within core protection zones.</p>
+                <p class="text-lg text-slate-500 font-medium leading-relaxed">813,652 hectares under direct mining pressure within core protection zones.</p>
             </div>
 
-            <!-- Buffer Zone -->
+            <!-- Buffer -->
             <div class="md:col-span-1 bento-item flex flex-col justify-between">
-                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <div>
-                    <h4 class="text-2xl font-black text-slate-900">185</h4>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Buffer Concessions</p>
+                    <h4 class="text-4xl font-black text-slate-900 tracking-tighter">185</h4>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Buffer Sites</p>
                 </div>
             </div>
 
-            <!-- Data Health -->
-            <div class="md:col-span-1 bento-item bg-slate-900 text-white flex flex-col justify-between">
-                <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/><polyline points="16 5 21 5 21 10"/><line x1="9" y1="15" x2="21" y2="3"/></svg>
+            <!-- Correlation -->
+            <div class="md:col-span-1 bento-item bg-slate-900 text-white border-none flex flex-col justify-between group">
+                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                 </div>
                 <div>
-                    <h4 class="text-2xl font-black">100%</h4>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Open Source Access</p>
+                    <h4 class="text-4xl font-black tracking-tighter">94%</h4>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Correlation</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Detailed Info Section -->
-    <section class="max-w-4xl mx-auto px-6 py-20">
-        <div class="bg-white rounded-[3rem] border border-slate-200 p-12 shadow-sm">
-            <h3 class="text-2xl font-black mb-8 flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                Strategic Monitoring
-            </h3>
-            <div class="space-y-8">
-                <div class="flex gap-6">
-                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex-shrink-0 flex items-center justify-center font-bold text-slate-400">01</div>
-                    <div>
-                        <h4 class="font-bold text-lg mb-2">Real-time Spatial Tracking</h4>
-                        <p class="text-slate-500 leading-relaxed font-medium">We use official CAMI records and IPIS industrial data to provide the most accurate representation of mining activity in the DRC.</p>
-                    </div>
+    <!-- Key Facts Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-                <div class="flex gap-6">
-                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex-shrink-0 flex items-center justify-center font-bold text-slate-400">02</div>
-                    <div>
-                        <h4 class="font-bold text-lg mb-2">Ecological Impact Analysis</h4>
-                        <p class="text-slate-500 leading-relaxed font-medium">Integrating Global Forest Watch satellite data to correlate mining operations with deforestation rates over a 25-year span.</p>
-                    </div>
+                <div>
+                    <h4 class="text-3xl font-black text-slate-900">3.2M Hectares</h4>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">Total Protected Area</p>
                 </div>
-                <div class="flex gap-6">
-                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex-shrink-0 flex items-center justify-center font-bold text-slate-400">03</div>
-                    <div>
-                        <h4 class="font-bold text-lg mb-2">Transparency & Advocacy</h4>
-                        <p class="text-slate-500 leading-relaxed font-medium">Providing open-source data to conservationists and policymakers to drive evidence-based protection strategies.</p>
-                    </div>
+                <p class="text-sm text-slate-500 font-medium">The OWR represents a critical sanctuary for the endangered Okapi and Forest Elephant.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                 </div>
+                <div>
+                    <h4 class="text-3xl font-black text-slate-900">268 Permits</h4>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">Mining Concessions</p>
+                </div>
+                <p class="text-sm text-slate-500 font-medium">Overlapping permits create immediate environmental and legal conflicts within the reserve.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+                <div>
+                    <h4 class="text-3xl font-black text-slate-900">Open Data</h4>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">Transparency First</p>
+                </div>
+                <p class="text-sm text-slate-500 font-medium">All data is sourced from CAMI and Global Forest Watch for public verification and advocacy.</p>
             </div>
         </div>
     </section>
 
-    <!-- CTA Footer -->
-    <footer class="max-w-7xl mx-auto px-6 pb-20">
-        <div class="bg-slate-900 rounded-[4rem] p-16 md:p-24 text-center relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400"><path d="M0 200 C 200 100, 400 300, 800 200" stroke="white" fill="transparent" stroke-width="2" opacity="0.3"/></svg>
+    <!-- Concession Directory -->
+    <section id="directory" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h2 class="text-4xl font-black tracking-tighter mb-2">Concession Directory.</h2>
+                <p class="text-slate-500 font-medium">Detailed database of all 268 mining permits.</p>
             </div>
-            <h2 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter">Explore the Evidence.</h2>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="../standalone-map/index.html" class="px-10 py-5 bg-white text-slate-900 rounded-2xl font-black hover:bg-slate-50 transition shadow-xl text-lg flex items-center justify-center gap-3">
+            <div class="relative w-full md:w-96">
+                <input type="text" id="directorySearch" placeholder="Search by name, code or resource..." class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-sm font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+        </div>
+
+        <div id="concessionGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[800px] overflow-y-auto p-4 bg-slate-50 rounded-[3rem] border border-slate-100 shadow-inner">
+            <!-- Loaded via JS -->
+            <div class="col-span-full py-20 text-center">
+                <div class="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Syncing Concession Data...</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let allConcessions = [];
+        const grid = document.getElementById('concessionGrid');
+        const searchInput = document.getElementById('directorySearch');
+
+        async function loadConcessions() {
+            try {
+                const response = await fetch('./public/data/all_concessions.json');
+                allConcessions = await response.json();
+                renderConcessions(allConcessions);
+            } catch (err) {
+                console.error("Error loading directory:", err);
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-red-500 font-bold">Failed to load concession database.</div>';
+            }
+        }
+
+        function renderConcessions(data) {
+            if (data.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-slate-400 font-bold tracking-widest uppercase">No concessions found matching your search.</div>';
+                return;
+            }
+
+            grid.innerHTML = data.map(item => `
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-emerald-500 transition-all group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-wider text-slate-500">${item.type}</span>
+                        <span class="text-xs font-bold text-slate-400">#${item.code}</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 leading-tight mb-2 truncate" title="${item.parties}">${item.parties}</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                            <p class="text-xs font-bold text-slate-600 truncate">${item.resource}</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-4 border-t border-slate-50">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Area</p>
+                            <p class="text-xs font-black text-slate-900">${parseInt(item.sup_sig_ha).toLocaleString()} ha</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</p>
+                            <p class="text-[10px] font-black uppercase tracking-widest ${item.statut.includes('Approuv') ? 'text-emerald-600' : 'text-amber-500'}">${item.statut}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allConcessions.filter(c => 
+                c.parties.toLowerCase().includes(term) || 
+                c.code.toLowerCase().includes(term) || 
+                c.resource.toLowerCase().includes(term)
+            );
+            renderConcessions(filtered);
+        });
+
+        loadConcessions();
+    </script>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-6 pb-24">
+        <div class="bg-slate-900 rounded-[5rem] p-24 text-center relative overflow-hidden shadow-2xl shadow-emerald-900/20">
+            <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,white_0%,transparent_70%)]"></div>
+            <h2 class="text-6xl md:text-8xl font-black text-white mb-12 tracking-tighter">Protect the Reserve.</h2>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="./standalone-map/index.html" class="px-14 py-6 bg-white text-slate-900 rounded-full font-black text-xl hover:bg-emerald-500 hover:text-white transition-all shadow-2xl flex items-center justify-center gap-4 group">
                     Open Map 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-2 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
             </div>
-            <p class="mt-12 text-slate-500 font-bold text-sm tracking-widest uppercase">
-                © 2026 Okapi Wildlife Reserve Portal • DRC Monitoring Group
+            <p class="mt-20 text-slate-500 font-bold text-xs tracking-[0.5em] uppercase">
+                © 2026 Okapi Wildlife Reserve Intelligence Portal
             </p>
         </div>
     </footer>

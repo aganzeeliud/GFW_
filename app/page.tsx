@@ -182,6 +182,74 @@ export default function Home() {
       {/* Concession Directory Component - We will add this inline for simplicity since it's a small app */}
       <DirectorySection />
 
+      {/* The Mining Revolution Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <div className="mb-20 text-center">
+          <h2 className="text-6xl font-black tracking-tighter text-slate-900 mb-6 uppercase">The Mining Revolution.</h2>
+          <p className="text-xl text-slate-500 max-w-3xl mx-auto font-medium leading-relaxed">
+            From historical expansion to the current industrial surge. Our data highlights a critical escalation in both workforce and environmental impact.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Historical Expansion Chart */}
+          <div className="bg-white rounded-[3.5rem] p-10 border border-slate-200 shadow-xl shadow-slate-200/20">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h3 className="text-2xl font-black tracking-tight text-slate-900 uppercase">Historical Expansion</h3>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Timeline: 2006 - 2012</p>
+              </div>
+              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400">
+                <Layers className="w-6 h-6" />
+              </div>
+            </div>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={evolutionData}>
+                  <defs>
+                    <linearGradient id="colorPermit" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 700}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10, fontWeight: 600}} />
+                  <Tooltip contentStyle={{borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px -10px rgb(0 0 0 / 0.1)'}} />
+                  <Area type="monotone" dataKey="inside" stroke="#10b981" strokeWidth={4} fill="url(#colorPermit)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="mt-8 text-sm text-slate-500 font-medium italic text-center">Approved hectares inside core zones peaking in 2007.</p>
+          </div>
+
+          {/* Recent Surge Chart */}
+          <div className="bg-slate-900 rounded-[3.5rem] p-10 shadow-2xl shadow-emerald-900/20 text-white">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h3 className="text-2xl font-black tracking-tight uppercase tracking-tight">The Recent Surge</h3>
+                <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mt-1">Timeline: 2017 - 2023</p>
+              </div>
+              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-emerald-400">
+                <Activity className="w-6 h-6" />
+              </div>
+            </div>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={miningSurgeData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: 'rgba(255,255,255,0.3)', fontSize: 12, fontWeight: 700}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 600}} />
+                  <Tooltip contentStyle={{backgroundColor: '#111827', borderRadius: '20px', border: 'rgba(255,255,255,0.1)', color: '#fff'}} />
+                  <Bar dataKey="miners" fill="#10b981" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="mt-8 text-sm text-slate-400 font-medium italic text-center text-emerald-100/60">Workforce growth correlates with exponential habitat loss.</p>
+          </div>
+        </div>
+      </section>
+
       {/* Strategic Monitoring Section */}
 ...
       </footer>
