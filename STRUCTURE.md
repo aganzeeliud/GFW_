@@ -1,5 +1,7 @@
 # Repository Structure
 
+**Live Portal:** [https://aganzeeliud.github.io/GFW_/](https://aganzeeliud.github.io/GFW_/)
+
 ## 📁 Directory Organization
 
 ```
@@ -23,11 +25,13 @@ GFW_/
 │   └── utils.ts                  # Common formatting and utility functions
 │
 ├── public/                       # Static assets
-│   └── images/                   # Image files
+│   ├── images/                   # Image files
+│   └── data/                     # CSV files for direct download
 │
 ├── data/                         # Geospatial data (CSV, GeoJSON)
-│   └── processed/                # Processed data files
+│   └── processed/                # Processed data files and research
 │       ├── Agriculture.csv
+│       ├── mining_activities_2017_2026.csv
 │       ├── Mining_*.geojson
 │       └── ... (other data files)
 │
@@ -36,7 +40,7 @@ GFW_/
 ├── utils/                        # Additional utilities
 │
 ├── Configuration Files:
-│   ├── next.config.mjs           # Next.js configuration (export: true for static)
+│   ├── next.config.mjs           # Next.js configuration (basePath: '/GFW_')
 │   ├── tailwind.config.ts        # Tailwind CSS configuration
 │   ├── tsconfig.json             # TypeScript configuration
 │   ├── postcss.config.mjs        # PostCSS configuration
@@ -45,7 +49,7 @@ GFW_/
 │   └── .gitignore                # Git ignore patterns
 │
 └── Documentation:
-    ├── README.md                 # Project overview
+    ├── README.md                 # Project overview and statistics
     └── STRUCTURE.md              # This file
 ```
 
