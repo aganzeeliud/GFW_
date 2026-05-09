@@ -143,44 +143,130 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Strategic Monitoring Section */}
-      <section className="max-w-4xl mx-auto px-6 py-20">
-        <div className="bg-white rounded-[3.5rem] border border-slate-200 p-12 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-            <Globe className="w-64 h-64 text-slate-900" />
+      {/* Key Facts Section */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 group hover:border-emerald-500 transition-colors">
+            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+              <Shield className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-3xl font-black text-slate-900 tracking-tighter">3.2M Hectares</h4>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Protected Area</p>
+            </div>
+            <p className="text-sm text-slate-500 font-medium leading-relaxed">The OWR represents a critical sanctuary for the endangered Okapi and Forest Elephant.</p>
           </div>
-          <h3 className="text-3xl font-black text-slate-900 mb-10 flex items-center gap-4">
-            <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 group hover:border-red-500 transition-colors">
+            <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
+              <Activity className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-3xl font-black text-slate-900 tracking-tighter">268 Permits</h4>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Mining Concessions</p>
+            </div>
+            <p className="text-sm text-slate-500 font-medium leading-relaxed">Overlapping permits create immediate environmental and legal conflicts within the reserve.</p>
+          </div>
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 group hover:border-blue-500 transition-colors">
+            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
               <Info className="w-6 h-6" />
             </div>
-            Strategic Monitoring
-          </h3>
-          <div className="space-y-10 relative z-10">
-            <div className="flex gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-slate-50 flex-shrink-0 flex items-center justify-center font-black text-slate-300 border border-slate-100">01</div>
-              <div>
-                <h4 className="font-bold text-xl text-slate-900 mb-2 tracking-tight">Real-time Spatial Tracking</h4>
-                <p className="text-slate-500 leading-relaxed font-medium">We use official CAMI records and IPIS industrial data to provide the most accurate representation of mining activity in the DRC.</p>
-              </div>
+            <div>
+              <h4 className="text-3xl font-black text-slate-900 tracking-tighter">Open Data</h4>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Transparency First</p>
             </div>
-            <div className="flex gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-slate-50 flex-shrink-0 flex items-center justify-center font-black text-slate-300 border border-slate-100">02</div>
-              <div>
-                <h4 className="font-bold text-xl text-slate-900 mb-2 tracking-tight">Ecological Impact Analysis</h4>
-                <p className="text-slate-500 leading-relaxed font-medium">Integrating Global Forest Watch satellite data to correlate mining operations with deforestation rates over a 25-year span.</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-slate-50 flex-shrink-0 flex items-center justify-center font-black text-slate-300 border border-slate-100">03</div>
-              <div>
-                <h4 className="font-bold text-xl text-slate-900 mb-2 tracking-tight">Transparency & Advocacy</h4>
-                <p className="text-slate-500 leading-relaxed font-medium">Providing open-source data to conservationists and policymakers to drive evidence-based protection strategies.</p>
-              </div>
-            </div>
+            <p className="text-sm text-slate-500 font-medium leading-relaxed">All data is sourced from CAMI and Global Forest Watch for public verification and advocacy.</p>
           </div>
         </div>
       </section>
 
+      {/* Concession Directory Component - We will add this inline for simplicity since it's a small app */}
+      <DirectorySection />
+
+      {/* Strategic Monitoring Section */}
+...
+      </footer>
+    </div>
+  );
+}
+
+function DirectorySection() {
+  const [searchTerm, setSearchInput] = React.useState('');
+  const [concessions, setConcessions] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    fetch('/GFW_/data/all_concessions.json')
+      .then(res => res.json())
+      .then(data => {
+        setConcessions(data);
+        setLoading(false);
+      })
+      .catch(err => console.error("Error loading directory:", err));
+  }, []);
+
+  const filtered = concessions.filter(c => 
+    c.parties.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.code.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.resource.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <section id="directory" className="max-w-7xl mx-auto px-6 py-20">
+      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h2 className="text-4xl font-black tracking-tighter mb-2 text-slate-900 uppercase">Concession Directory.</h2>
+          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Detailed database of all 268 mining permits</p>
+        </div>
+        <div className="relative w-full md:w-96">
+          <input 
+            type="text" 
+            placeholder="Search by name, code or resource..." 
+            className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-sm font-medium text-sm"
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <Info className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[800px] overflow-y-auto p-8 bg-slate-50 rounded-[3rem] border border-slate-100 shadow-inner">
+        {loading ? (
+          <div className="col-span-full py-20 text-center">
+            <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs tracking-widest">Syncing Concession Data...</p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="col-span-full py-20 text-center">
+            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No matches found</p>
+          </div>
+        ) : (
+          filtered.map((item, idx) => (
+            <div key={idx} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-emerald-500 transition-all group">
+              <div className="flex justify-between items-start mb-4">
+                <span className="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-wider text-slate-500">{item.type}</span>
+                <span className="text-[10px] font-black text-slate-300">#{item.code}</span>
+              </div>
+              <h4 className="font-bold text-slate-900 leading-tight mb-2 truncate" title={item.parties}>{item.parties}</h4>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                  <p className="text-[11px] font-bold text-slate-500 truncate uppercase tracking-tight">{item.resource}</p>
+                </div>
+                <div className="flex justify-between items-center pt-4 border-t border-slate-50">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Area</p>
+                  <p className="text-xs font-black text-slate-900">{parseInt(item.sup_sig_ha).toLocaleString()} ha</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</p>
+                  <p className={`text-[10px] font-black uppercase tracking-widest ${item.statut.includes('Approuv') ? 'text-emerald-600' : 'text-amber-500'}`}>{item.statut}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </section>
+  );
+}
       {/* Footer / CTA */}
       <footer className="max-w-7xl mx-auto px-6 pb-20">
         <div className="bg-slate-900 rounded-[4rem] p-16 md:p-24 text-center relative overflow-hidden shadow-2xl shadow-emerald-900/20">
