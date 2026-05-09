@@ -2,14 +2,15 @@
 
 **Live URL:** [https://aganzeeliud.github.io/GFW_/](https://aganzeeliud.github.io/GFW_/)
 
-A comprehensive data visualization platform for monitoring the Okapi Wildlife Reserve in the Democratic Republic of Congo (DRC). This portal integrates 25 years of Global Forest Watch satellite data with mining concession tracking and recent surge analysis (2017-2026) to provide evidence-based conservation intelligence.
+A comprehensive data visualization platform for monitoring the Okapi Wildlife Reserve in the Democratic Republic of Congo (DRC). This portal integrates 25 years of Global Forest Watch satellite data with live mining concession tracking and recent surge analysis (2017-2026).
 
 **Live Features:**
-- 🗺️ **Interactive Mining Map** - Color-coded visualization of 268 mining concessions with click-to-view details.
+- 🌐 **Modern Standalone Portal** - A high-performance, v0-inspired HTML/JS landing page with infographics (see `standalone-portal/`).
+- 🗺️ **Interactive Mining Map** - Live visualization of 268 mining concessions using real GeoJSON data. Click sites for detailed metadata.
 - 📉 **The Mining Surge (2017-2026)** - Detailed tracking of the transition from artisanal to semi-industrial mining.
 - 📊 **Analytics Dashboard** - Time-series forest loss and workforce analysis (2001-2026).
-- 📅 **Permit Lifecycle Tracking** - Application, grant, and expiration dates for each concession.
-- 📥 **Open Data** - Direct CSV downloads for all researched and processed datasets.
+- 📦 **Standalone Map Version** - A portable HTML/JS version for independent publishing (see `standalone-map/`).
+- 📥 **Open Data** - Direct CSV and GeoJSON downloads for all researched and processed datasets.
 
 ## 🎯 Key Data Points
 
@@ -29,39 +30,10 @@ A comprehensive data visualization platform for monitoring the Okapi Wildlife Re
 ```
 GFW_/
 ├── app/                          # Next.js App Router
-│   ├── page.tsx                  # Landing page (/)
-│   ├── layout.tsx                # Root layout wrapper
-│   ├── globals.css               # Global styles
-│   ├── dashboard/
-│   │   └── page.tsx              # Analytics dashboard (/dashboard)
-│   ├── map/
-│   │   └── page.tsx              # Mining map with details (/map)
-│   └── api/                      # API routes (future)
-│
-├── components/                   # Reusable React components
-│   ├── shared/                   # Shared components
-│   │   └── page-header.tsx       # Page header component
-│   └── ui/                       # UI library (shadcn/ui)
-│
-├── lib/                          # Utility functions
-│   └── utils.ts                  # Formatting and helpers
-│
-├── public/                       # Static assets
-│   └── images/                   # Image files
-│
-├── data/                         # Geospatial datasets
-│   └── processed/
-│       ├── OWR_Mining_Inside.csv/.geojson
-│       ├── Mining_Buffer.geojson
-│       ├── Forest Cover CSVs
-│       └── [other data files]
-│
-├── styles/                       # Additional CSS
-│
-├── tailwind.config.ts            # Tailwind configuration
-├── tsconfig.json                 # TypeScript configuration
-├── next.config.mjs               # Next.js configuration
-└── package.json                  # Dependencies
+├── standalone-portal/            # Modern standalone HTML portal
+├── standalone-map/               # Portable HTML/JS map version
+├── public/data/                  # Live GeoJSON and CSV datasets
+└── PUBLISH_MAP.md                # Standalone publishing guide
 ```
 
 ## 🎨 Mining Activity Colors

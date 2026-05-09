@@ -127,6 +127,21 @@ When users click on a mining site, they see:
 
 ---
 
+## 📦 Standalone Map Publishing
+
+### 1. **Portable HTML Version**
+- **Location:** `standalone-map/index.html`
+*   **Tech:** Pure HTML5, Tailwind CSS (via CDN), Leaflet.js
+*   **Independence:** Fully functional without the Next.js framework
+*   **Performance:** ~10KB initial load, zero build time
+
+### 2. **Separate URL Hosting**
+- Designed for publishing to a dedicated GitHub repository (e.g., `github.com/user/owr-mining-map`)
+- Simple directory structure: `index.html` + `data/`
+- Full instructions provided in `PUBLISH_MAP.md`
+
+---
+
 ## 🎨 Design & UX Features
 
 ### 1. **Responsive Layout**

@@ -18,7 +18,8 @@ GFW_/
 │
 ├── components/                   # Reusable React components
 │   ├── shared/                   # Shared components across pages
-│   │   └── page-header.tsx       # Reusable page header component
+│   │   ├── page-header.tsx       # Reusable page header component
+│   │   └── map-component.tsx     # Leaflet-based map component
 │   └── ui/                       # UI component library (shadcn/ui)
 │
 ├── lib/                          # Utility functions and helpers
@@ -26,9 +27,15 @@ GFW_/
 │
 ├── public/                       # Static assets
 │   ├── images/                   # Image files
-│   └── data/                     # CSV files for direct download
+│   └── data/                     # CSV and GeoJSON files for map and download
 │
-├── data/                         # Geospatial data (CSV, GeoJSON)
+├── standalone-portal/            # Standalone modern HTML landing page
+│   └── index.html                # Modern entry point for the portal
+│
+├── standalone-map/               # Standalone HTML/JS map version
+│   └── index.html                # Portable map for separate publishing
+│
+├── data/                         # Geospatial data (source files)
 │   └── processed/                # Processed data files and research
 │       ├── Agriculture.csv
 │       ├── mining_activities_2017_2026.csv
@@ -50,7 +57,10 @@ GFW_/
 │
 └── Documentation:
     ├── README.md                 # Project overview and statistics
-    └── STRUCTURE.md              # This file
+    ├── STRUCTURE.md              # This file
+    ├── FEATURES.md               # Detailed feature documentation
+    ├── DEPLOYMENT.md             # GitHub Pages deployment guide
+    └── PUBLISH_MAP.md            # Standalone map publishing guide
 ```
 
 ## 🔗 Routing Structure
