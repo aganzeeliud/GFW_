@@ -173,6 +173,10 @@ export default function Home() {
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Autorisation (AR)</span>
                 </div>
                 <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 rounded-full border-2 border-emerald-400 bg-emerald-400/20"></div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sites Artisanaux (IPIS/Delve)</span>
+                </div>
+                <div className="flex items-center gap-3">
                   <div className="w-4 h-4 border border-dashed border-slate-400"></div>
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Demande en cours</span>
                 </div>
