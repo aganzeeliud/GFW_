@@ -34,6 +34,7 @@ export default function Home() {
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#metrics" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Metrics</a>
+            <a href="#downloads" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Downloads</a>
             <Link href="/comparison" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Impact Analysis</Link>
             <Link href="/map" className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition">
               Launch Map
@@ -267,6 +268,71 @@ function DirectorySection() {
     </section>
   );
 }
+      {/* Download Data Section */}
+      <section id="downloads" className="max-w-7xl mx-auto px-6 py-24">
+        <div className="bg-emerald-50 rounded-[4rem] p-12 md:p-20 border border-emerald-100 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-200/20 blur-3xl rounded-full -mr-20 -mt-20"></div>
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="max-w-xl">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-slate-900 leading-none uppercase">Processed <br/>Datasets.</h2>
+              <p className="text-lg text-emerald-800 font-medium leading-relaxed mb-10">
+                Access the raw and processed spatial data powering this portal. Available in CSV and GeoJSON formats for researchers, NGOs, and policy makers.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a 
+                  href="/GFW_/data/all_concessions.json" 
+                  download 
+                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
+                >
+                  <span className="text-sm font-bold text-slate-700">All Concessions</span>
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </a>
+                <a 
+                  href="/GFW_/data/OWR_Mining_Inside.geojson" 
+                  download 
+                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
+                >
+                  <span className="text-sm font-bold text-slate-700">Inside Reserve (GeoJSON)</span>
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </a>
+                <a 
+                  href="/GFW_/data/Mining_Buffer.geojson" 
+                  download 
+                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
+                >
+                  <span className="text-sm font-bold text-slate-700">Buffer Zone (GeoJSON)</span>
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </a>
+                <a 
+                  href="/GFW_/data/ZAD forest cover.csv" 
+                  download 
+                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
+                >
+                  <span className="text-sm font-bold text-slate-700">Forest Cover (CSV)</span>
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div className="hidden lg:block w-72 h-72 bg-emerald-600 rounded-[3rem] shadow-2xl shadow-emerald-200 flex items-center justify-center text-white transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <Globe className="w-32 h-32 opacity-20 absolute" />
+              <div className="text-center relative z-10">
+                <BarChart2 className="w-16 h-16 mx-auto mb-4" />
+                <p className="text-2xl font-black tracking-tighter uppercase">Open Data</p>
+                <p className="text-[10px] font-black tracking-[0.3em] uppercase opacity-60">Transparency</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer / CTA */}
       <footer className="max-w-7xl mx-auto px-6 pb-20">
         <div className="bg-slate-900 rounded-[4rem] p-16 md:p-24 text-center relative overflow-hidden shadow-2xl shadow-emerald-900/20">

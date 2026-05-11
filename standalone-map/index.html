@@ -86,6 +86,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
                         Buffer
                     </button>
+                    <button id="toggle-cami-live" class="toggle-layer px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-black uppercase tracking-widest border border-emerald-200 hover:bg-emerald-100 transition flex items-center gap-2" title="Toggle CAMI Live Data">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        CAMI (Live)
+                    </button>
                 </div>
             </div>
         </div>
@@ -182,9 +186,19 @@
         let bufferData = null;
         let showMiningInside = true;
         let showMiningBuffer = true;
+        let showCamiLive = true;
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Official CAMI WMS Layer
+        const camiLayer = L.tileLayer.wms('https://forest-atlas.org/server/services/cod/Affectation_des_terres_en/MapServer/WmsServer', {
+            layers: '101',
+            format: 'image/png',
+            transparent: true,
+            attribution: "CAMI / Ministry of Mines",
+            opacity: 0.7
         }).addTo(map);
 
         function toggleEvolution() {
@@ -194,6 +208,7 @@
         function toggleMiningLayers() {
             const insideBtn = document.getElementById('toggle-mining-inside');
             const bufferBtn = document.getElementById('toggle-mining-buffer');
+            const camiBtn = document.getElementById('toggle-cami-live');
 
             insideBtn.addEventListener('click', function() {
                 showMiningInside = !showMiningInside;
@@ -206,6 +221,12 @@
                 updateLayerVisibility();
                 bufferBtn.classList.toggle('opacity-50');
             });
+
+            camiBtn.addEventListener('click', function() {
+                showCamiLive = !showCamiLive;
+                updateLayerVisibility();
+                camiBtn.classList.toggle('opacity-50');
+            });
         }
 
         function updateLayerVisibility() {
@@ -214,6 +235,9 @@
             }
             if (miningBufferLayer) {
                 map[showMiningBuffer ? 'addLayer' : 'removeLayer'](miningBufferLayer);
+            }
+            if (camiLayer) {
+                map[showCamiLive ? 'addLayer' : 'removeLayer'](camiLayer);
             }
         }
 

@@ -134,6 +134,10 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
                     Buffer Zone
                 </button>
+                <button id="toggle-cami-portal" class="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-bold uppercase border border-emerald-200 hover:bg-emerald-100 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    CAMI (Live)
+                </button>
                 <div class="text-xs font-semibold text-slate-600">
                     <span class="ml-4">Click any concession polygon for details</span>
                 </div>
@@ -167,6 +171,14 @@
                         <span class="text-slate-700">Mining concessions</span>
                     </div>
                     <p class="text-xs text-slate-500 mt-2">Legal mining permits and boundaries</p>
+                </div>
+                <div class="map-legend">
+                    <h4 class="font-bold text-slate-900 mb-3">Official CAMI Records</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #059669; opacity: 0.7;"></div>
+                        <span class="text-slate-700">CAMI Live Data</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">Live feed from DRC Mining Cadastre</p>
                 </div>
             </div>
         </div>
@@ -305,8 +317,10 @@
         let miningInsideLayer;
         let miningBufferLayer;
         let concessionsLayer;
+        let camiLayer;
         let showMiningInside = true;
         let showMiningBuffer = true;
+        let showCami = true;
 
         function initMap() {
             map = L.map('embedded-map').setView([1.5, 28.5], 8);
@@ -315,6 +329,15 @@
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19,
                 opacity: 0.9
+            }).addTo(map);
+
+            // Official CAMI WMS Layer
+            camiLayer = L.tileLayer.wms('https://forest-atlas.org/server/services/cod/Affectation_des_terres_en/MapServer/WmsServer', {
+                layers: '101',
+                format: 'image/png',
+                transparent: true,
+                attribution: "CAMI / Ministry of Mines",
+                opacity: 0.7
             }).addTo(map);
 
             loadConcessions();
@@ -439,6 +462,20 @@
                 }
             }
             this.style.opacity = showMiningBuffer ? '1' : '0.5';
+        });
+
+        document.getElementById('toggle-cami-portal').addEventListener('click', function() {
+            showCami = !showCami;
+            if (camiLayer) {
+                if (showCami) {
+                    map.addLayer(camiLayer);
+                    this.classList.remove('opacity-50');
+                } else {
+                    map.removeLayer(camiLayer);
+                    this.classList.add('opacity-50');
+                }
+            }
+            this.style.opacity = showCami ? '1' : '0.5';
         });
 
         // Initialize map when page loads

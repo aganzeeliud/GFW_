@@ -1,6 +1,6 @@
 'use client'
 
-import { MapContainer, TileLayer, GeoJSON, Popup, ScaleControl } from 'react-leaflet'
+import { MapContainer, TileLayer, GeoJSON, Popup, ScaleControl, WMSTileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useEffect, useState } from 'react'
@@ -77,6 +77,17 @@ export default function MapComponent({ onSiteClick }: MapProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      
+      {/* Official CAMI WMS Layer */}
+      <WMSTileLayer
+        url="https://forest-atlas.org/server/services/cod/Affectation_des_terres_en/MapServer/WmsServer"
+        layers="101"
+        format="image/png"
+        transparent={true}
+        attribution="CAMI / Ministry of Mines"
+        opacity={0.7}
+      />
+
       {insideData && (
         <GeoJSON 
           data={insideData} 

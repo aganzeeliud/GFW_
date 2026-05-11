@@ -56,6 +56,11 @@
                     <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
                         <div class="w-3 h-3 rounded-full bg-[#f59e0b]"></div> Pending
                     </div>
+                    <div class="h-6 w-[1px] bg-slate-200"></div>
+                    <button id="toggle-cami-live" class="toggle-layer px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-black uppercase tracking-widest border border-emerald-200 hover:bg-emerald-100 transition flex items-center gap-2" title="Toggle CAMI Live Data">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        CAMI (Live)
+                    </button>
                 </div>
             </div>
         </div>
@@ -147,12 +152,34 @@
     <script>
         const map = L.map('map').setView([1.5, 28.5], 8);
 
+        let showCamiLive = true;
+
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        // Official CAMI WMS Layer
+        const camiLayer = L.tileLayer.wms('https://forest-atlas.org/server/services/cod/Affectation_des_terres_en/MapServer/WmsServer', {
+            layers: '101',
+            format: 'image/png',
+            transparent: true,
+            attribution: "CAMI / Ministry of Mines",
+            opacity: 0.7
+        }).addTo(map);
+
         function toggleEvolution() {
             document.getElementById('evolution-panel').classList.toggle('open');
+        }
+
+        function toggleCamiLayer() {
+            const camiBtn = document.getElementById('toggle-cami-live');
+            camiBtn.addEventListener('click', function() {
+                showCamiLive = !showCamiLive;
+                if (camiLayer) {
+                    map[showCamiLive ? 'addLayer' : 'removeLayer'](camiLayer);
+                }
+                camiBtn.classList.toggle('opacity-50');
+            });
         }
 
         // Data from evolution analysis
@@ -296,6 +323,8 @@
                     style: getStyle,
                     onEachFeature: onEachFeature
                 }).addTo(map);
+
+                toggleCamiLayer();
 
             } catch (err) {
                 console.error("Error loading GeoJSON data:", err);

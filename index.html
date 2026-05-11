@@ -41,9 +41,11 @@
             </div>
             <div class="hidden md:flex items-center gap-8">
                 <a href="#metrics" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Insights</a>
+                <a href="#downloads" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Downloads</a>
                 <a href="./standalone-portal/comparison.html" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition">Impact Analysis</a>
                 <a href="./standalone-map/index.html" class="px-6 py-2.5 bg-slate-900 text-white rounded-2xl text-sm font-black hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/20">Launch Map</a>
             </div>
+
         </div>
     </nav>
 
@@ -348,6 +350,55 @@
 
         loadConcessions();
     </script>
+
+    <!-- Download Data Section -->
+    <section id="downloads" class="max-w-7xl mx-auto px-6 py-24">
+        <div class="bg-emerald-50 rounded-[4rem] p-12 md:p-20 border border-emerald-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-200/20 blur-3xl rounded-full -mr-20 -mt-20"></div>
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12 text-left">
+                <div class="max-w-xl">
+                    <h2 class="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-slate-900 leading-none uppercase">Processed <br/>Datasets.</h2>
+                    <p class="text-lg text-emerald-800 font-medium leading-relaxed mb-10">
+                        Access the raw and processed spatial data powering this portal. Available in CSV and GeoJSON formats for researchers, NGOs, and policy makers.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="./public/data/all_concessions.json" download class="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group">
+                            <span class="text-sm font-bold text-slate-700">All Concessions</span>
+                            <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </div>
+                        </a>
+                        <a href="./public/data/OWR_Mining_Inside.geojson" download class="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group">
+                            <span class="text-sm font-bold text-slate-700">Inside Reserve (GeoJSON)</span>
+                            <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </div>
+                        </a>
+                        <a href="./public/data/Mining_Buffer.geojson" download class="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group">
+                            <span class="text-sm font-bold text-slate-700">Buffer Zone (GeoJSON)</span>
+                            <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </div>
+                        </a>
+                        <a href="./public/data/ZAD forest cover.csv" download class="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group">
+                            <span class="text-sm font-bold text-slate-700">Forest Cover (CSV)</span>
+                            <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden lg:flex w-72 h-72 bg-emerald-600 rounded-[3rem] shadow-2xl shadow-emerald-200 items-center justify-center text-white transform rotate-3 hover:rotate-0 transition-transform duration-500 relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="opacity-20 absolute"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    <div class="text-center relative z-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        <p class="text-2xl font-black tracking-tighter uppercase">Open Data</p>
+                        <p class="text-[10px] font-black tracking-[0.3em] uppercase opacity-60">Transparency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="max-w-7xl mx-auto px-6 pb-24">
