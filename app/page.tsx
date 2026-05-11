@@ -3,387 +3,221 @@
 import Link from 'next/link';
 import { 
   Shield, 
-  TrendingUp, 
   MapPin, 
   Layers, 
   Activity, 
-  ChevronRight, 
   Info, 
   ArrowRight,
   BarChart2,
-  Globe
+  Globe,
+  Search,
+  Filter,
+  Download,
+  Menu,
+  X,
+  Maximize2
 } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import map to avoid SSR issues
+const MapComponent = dynamic(() => import('@/components/shared/map-component'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-full bg-slate-900 animate-pulse">
+      <p className="text-emerald-500 font-black tracking-widest uppercase">Initializing Cadastral Engine...</p>
+    </div>
+  )
+})
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-emerald-100 antialiased">
-      {/* Mesh Background Effect */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(at_0%_0%,rgba(16,185,129,0.05)_0px,transparent_50%)]" />
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(at_100%_0%,rgba(59,130,246,0.05)_0px,transparent_50%)]" />
-      </div>
+  const [selectedSiteData, setSelectedSiteData] = useState<any>(null)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 px-6 py-4">
-        <div className="max-w-7xl mx-auto bg-white/70 backdrop-blur-xl border border-slate-200/50 rounded-2xl px-6 py-3 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-emerald-200">
-              <Shield className="w-5 h-5" />
-            </div>
-            <span className="text-lg font-extrabold tracking-tighter text-slate-900">OWR PORTAL</span>
+  const getStatusDisplay = (status: string) => {
+    if (status?.includes('Approuv') || status === 'Actif' || status === 'Active' || status?.includes('Force Majeure')) {
+      return { label: 'Active', bg: 'bg-emerald-500', text: 'text-white' }
+    } else if (status?.includes('Demande') || status?.includes('Nouvelle') || status === 'Pending') {
+      return { label: 'Pending', bg: 'bg-amber-500', text: 'text-white' }
+    }
+    return { label: 'Inactive', bg: 'bg-slate-500', text: 'text-white' }
+  }
+
+  return (
+    <div className="h-screen w-full flex flex-col bg-slate-950 text-white overflow-hidden font-sans selection:bg-emerald-500/30">
+      {/* Top Navbar - CAMI Style */}
+      <nav className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-6 z-50 shadow-2xl">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-900/20">
+            <Shield className="w-6 h-6 text-white" />
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#metrics" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Metrics</a>
-            <a href="#downloads" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Downloads</a>
-            <Link href="/comparison" className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition">Impact Analysis</Link>
-            <Link href="/map" className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition">
-              Launch Map
-            </Link>
+          <div>
+            <h1 className="text-lg font-black tracking-tighter leading-none">PORTAIL DU CADASTRE MINIER</h1>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">RDC - Réserve de Faune à Okapis</p>
           </div>
         </div>
+
+        <div className="hidden md:flex items-center gap-6">
+          <Link href="/comparison" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-emerald-400 transition">Analyse d'Impact</Link>
+          <div className="h-4 w-px bg-slate-800"></div>
+          <button className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-black uppercase tracking-widest transition flex items-center gap-2">
+            <Download className="w-4 h-4" /> Export Data
+          </button>
+        </div>
+
+        <button className="md:hidden text-slate-400">
+          <Menu className="w-6 h-6" />
+        </button>
       </nav>
 
-      {/* Hero Section */}
-      <header className="pt-40 pb-20 px-6 overflow-hidden">
-        <div className="max-w-6xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/50 text-emerald-700 text-xs font-black uppercase tracking-widest mb-8 border border-emerald-200">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            Active Monitoring 2026
+      {/* Main Content Area */}
+      <div className="flex-1 flex overflow-hidden relative">
+        
+        {/* Left Sidebar - Statistics and Search */}
+        <aside className={`${isSidebarOpen ? 'w-96' : 'w-0'} bg-slate-900 border-r border-slate-800 transition-all duration-300 overflow-hidden flex flex-col z-40`}>
+          <div className="p-6 border-b border-slate-800">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-sm font-black uppercase tracking-widest text-slate-400">Navigation Cadastrale</h2>
+              <button onClick={() => setIsSidebarOpen(false)} className="text-slate-600 hover:text-white transition">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <input 
+                type="text" 
+                placeholder="Rechercher code CAMI, Titulaire..." 
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-xs font-medium focus:outline-none focus:border-emerald-500 transition shadow-inner"
+              />
+            </div>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] mb-8 text-slate-900">
-            Protecting the <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400">Okapi Heart.</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed mb-12">
-            Advanced spatial intelligence for the Okapi Wildlife Reserve. Monitoring 268 mining concessions across 3.2 million hectares of biodiversity.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/map"
-              className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition shadow-2xl shadow-emerald-200 flex items-center justify-center gap-3 group"
-            >
-              Interactive Map 
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/comparison"
-              className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition shadow-sm flex items-center justify-center gap-2"
-            >
-              Mining Impact Analysis
-            </Link>
-          </div>
-        </div>
-      </header>
 
-      {/* Infographic Section (Bento Grid) */}
-      <section id="metrics" className="max-w-7xl mx-auto px-6 py-20">
-        <div className="mb-16">
-          <h2 className="text-4xl font-black tracking-tighter mb-4 text-slate-900">Reserve Insights.</h2>
-          <p className="text-lg text-slate-500 font-medium">Critical metrics at a glance.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[240px]">
-          {/* Big Stat: Forest Loss */}
-          <div className="md:col-span-2 md:row-span-2 bg-white border border-slate-200 rounded-[2.5rem] p-8 flex flex-col justify-between overflow-hidden relative group hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
-            <div className="relative z-10">
-              <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Total Forest Loss</p>
-              <h3 className="text-6xl font-black text-slate-900 leading-none">15,000<span className="text-2xl text-slate-300 ml-2 font-medium">ha</span></h3>
-              <div className="mt-4 flex items-center gap-2 text-emerald-600 font-bold text-sm">
-                <TrendingUp className="w-4 h-4" /> Cumulative (2001-2026)
+          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/50">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Mines Actives</p>
+                <h3 className="text-2xl font-black text-emerald-400">83</h3>
+              </div>
+              <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/50">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">En Demande</p>
+                <h3 className="text-2xl font-black text-amber-400">185</h3>
               </div>
             </div>
-            {/* Mini Infographic */}
-            <div className="mt-8 flex items-end gap-1.5 h-32">
-              <div className="flex-1 bg-emerald-50 rounded-t-xl h-[20%] group-hover:bg-emerald-100 transition-colors"></div>
-              <div className="flex-1 bg-emerald-100 rounded-t-xl h-[35%] group-hover:bg-emerald-200 transition-colors"></div>
-              <div className="flex-1 bg-emerald-200 rounded-t-xl h-[45%] group-hover:bg-emerald-300 transition-colors"></div>
-              <div className="flex-1 bg-emerald-300 rounded-t-xl h-[60%] group-hover:bg-emerald-400 transition-colors"></div>
-              <div className="flex-1 bg-emerald-400 rounded-t-xl h-[75%] group-hover:bg-emerald-500 transition-colors"></div>
-              <div className="flex-1 bg-emerald-600 rounded-t-xl h-[90%] shadow-lg shadow-emerald-200"></div>
-            </div>
-          </div>
 
-          {/* Concessions Inside */}
-          <div className="md:col-span-2 bg-white border border-slate-200 rounded-[2.5rem] p-8 flex flex-col justify-center hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
-            <div className="flex items-center gap-6 mb-4">
-              <div className="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center shadow-inner">
-                <MapPin className="w-7 h-7" />
-              </div>
-              <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Inside Reserve</p>
-                <h4 className="text-4xl font-black text-slate-900">83 <span className="text-lg font-medium text-slate-400">Sites</span></h4>
-              </div>
-            </div>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed">813,652 hectares under direct mining pressure within core protection zones.</p>
-          </div>
+            {/* Selected Site Details */}
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">Détails du Titre Sélectionné</h3>
+              
+              {!selectedSiteData ? (
+                <div className="py-12 text-center bg-slate-950/50 rounded-3xl border border-dashed border-slate-800">
+                  <Info className="w-8 h-8 text-slate-800 mx-auto mb-4" />
+                  <p className="text-xs font-bold text-slate-600 uppercase tracking-widest px-8">Cliquez sur un polygone pour voir les détails</p>
+                </div>
+              ) : (
+                <div className="bg-slate-950 rounded-3xl border border-slate-800 p-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="mb-6">
+                    <span className={`inline-block px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider mb-3 ${getStatusDisplay(selectedSiteData.statut).bg} ${getStatusDisplay(selectedSiteData.statut).text}`}>
+                      {selectedSiteData.statut}
+                    </span>
+                    <h4 className="text-xl font-black leading-tight text-white mb-1">{selectedSiteData.parties}</h4>
+                    <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Code CAMI: {selectedSiteData.code}</p>
+                  </div>
 
-          {/* Buffer Zone */}
-          <div className="md:col-span-1 bg-white border border-slate-200 rounded-[2.5rem] p-8 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
-            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-              <Layers className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-3xl font-black text-slate-900 leading-none mb-1">185</h4>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Buffer Permits</p>
-            </div>
-          </div>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 bg-slate-900/50 rounded-xl border border-slate-800">
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Type</p>
+                        <p className="text-sm font-bold">{selectedSiteData.type}</p>
+                      </div>
+                      <div className="p-3 bg-slate-900/50 rounded-xl border border-slate-800">
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Zone</p>
+                        <p className="text-sm font-bold">{selectedSiteData.zone}</p>
+                      </div>
+                    </div>
 
-          {/* Data Health */}
-          <div className="md:col-span-1 bg-slate-900 border border-slate-800 rounded-[2.5rem] p-8 flex flex-col justify-between hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group">
-            <div className="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Activity className="w-5 h-5" />
+                    <div className="p-4 bg-slate-900/50 rounded-xl border border-slate-800 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-black text-slate-500 uppercase">Demande</span>
+                        <span className="text-xs font-bold">{selectedSiteData.date_app || '---'}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-black text-slate-500 uppercase">Octroi</span>
+                        <span className="text-xs font-bold">{selectedSiteData.date_grant || '---'}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-black text-slate-500 uppercase">Expiration</span>
+                        <span className="text-xs font-bold text-red-400">{selectedSiteData.date_expiry || '---'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div>
-              <h4 className="text-3xl font-black text-white leading-none mb-1">100%</h4>
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Open Data Access</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Key Facts Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 group hover:border-emerald-500 transition-colors">
-            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
-              <Shield className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-3xl font-black text-slate-900 tracking-tighter">3.2M Hectares</h4>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Protected Area</p>
-            </div>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed">The OWR represents a critical sanctuary for the endangered Okapi and Forest Elephant.</p>
-          </div>
-          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 group hover:border-red-500 transition-colors">
-            <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
-              <Activity className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-3xl font-black text-slate-900 tracking-tighter">268 Permits</h4>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Mining Concessions</p>
-            </div>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed">Overlapping permits create immediate environmental and legal conflicts within the reserve.</p>
-          </div>
-          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 group hover:border-blue-500 transition-colors">
-            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-              <Info className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-3xl font-black text-slate-900 tracking-tighter">Open Data</h4>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Transparency First</p>
-            </div>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed">All data is sourced from CAMI and Global Forest Watch for public verification and advocacy.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Concession Directory Component - We will add this inline for simplicity since it's a small app */}
-      <DirectorySection />
-
-      {/* Strategic Monitoring Section */}
-...
-      </footer>
-    </div>
-  );
-}
-
-function DirectorySection() {
-  const [searchTerm, setSearchInput] = React.useState('');
-  const [concessions, setConcessions] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    fetch('/GFW_/data/all_concessions.json')
-      .then(res => res.json())
-      .then(data => {
-        setConcessions(data);
-        setLoading(false);
-      })
-      .catch(err => console.error("Error loading directory:", err));
-  }, []);
-
-  const filtered = concessions.filter(c => 
-    c.parties.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    c.code.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    c.resource.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  return (
-    <section id="directory" className="max-w-7xl mx-auto px-6 py-20">
-      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h2 className="text-4xl font-black tracking-tighter mb-2 text-slate-900 uppercase">Concession Directory.</h2>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Detailed database of all 268 mining permits</p>
-        </div>
-        <div className="relative w-full md:w-96">
-          <input 
-            type="text" 
-            placeholder="Search by name, code or resource..." 
-            className="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-sm font-medium text-sm"
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <Info className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[800px] overflow-y-auto p-8 bg-slate-50 rounded-[3rem] border border-slate-100 shadow-inner">
-        {loading ? (
-          <div className="col-span-full py-20 text-center">
-            <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs tracking-widest">Syncing Concession Data...</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="col-span-full py-20 text-center">
-            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No matches found</p>
-          </div>
-        ) : (
-          filtered.map((item, idx) => (
-            <div key={idx} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:border-emerald-500 transition-all group">
-              <div className="flex justify-between items-start mb-4">
-                <span className="px-2 py-1 bg-slate-100 rounded text-[10px] font-black uppercase tracking-wider text-slate-500">{item.type}</span>
-                <span className="text-[10px] font-black text-slate-300">#{item.code}</span>
-              </div>
-              <h4 className="font-bold text-slate-900 leading-tight mb-2 truncate" title={item.parties}>{item.parties}</h4>
+            {/* Legend */}
+            <div className="p-4 bg-slate-950/30 rounded-2xl border border-slate-800">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">Légende</h3>
               <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                  <p className="text-[11px] font-bold text-slate-500 truncate uppercase tracking-tight">{item.resource}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 bg-red-500 rounded-sm"></div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Permis d'Exploitation (PE)</span>
                 </div>
-                <div className="flex justify-between items-center pt-4 border-t border-slate-50">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Area</p>
-                  <p className="text-xs font-black text-slate-900">{parseInt(item.sup_sig_ha).toLocaleString()} ha</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 bg-emerald-500 rounded-sm"></div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Permis de Recherche (PR)</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</p>
-                  <p className={`text-[10px] font-black uppercase tracking-widest ${item.statut.includes('Approuv') ? 'text-emerald-600' : 'text-amber-500'}`}>{item.statut}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 bg-blue-500 rounded-sm"></div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Autorisation (AR)</span>
                 </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </section>
-  );
-}
-      {/* Download Data Section */}
-      <section id="downloads" className="max-w-7xl mx-auto px-6 py-24">
-        <div className="bg-emerald-50 rounded-[4rem] p-12 md:p-20 border border-emerald-100 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-200/20 blur-3xl rounded-full -mr-20 -mt-20"></div>
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl">
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 text-slate-900 leading-none uppercase">Processed <br/>Datasets.</h2>
-              <p className="text-lg text-emerald-800 font-medium leading-relaxed mb-10">
-                Access the raw and processed spatial data powering this portal. Available in CSV and GeoJSON formats for researchers, NGOs, and policy makers.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a 
-                  href="/GFW_/data/all_concessions.json" 
-                  download 
-                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
-                >
-                  <span className="text-sm font-bold text-slate-700">All Concessions</span>
-                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </a>
-                <a 
-                  href="/GFW_/data/OWR_Mining_Inside.geojson" 
-                  download 
-                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
-                >
-                  <span className="text-sm font-bold text-slate-700">Inside Reserve (GeoJSON)</span>
-                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </a>
-                <a 
-                  href="/GFW_/data/Mining_Buffer.geojson" 
-                  download 
-                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
-                >
-                  <span className="text-sm font-bold text-slate-700">Buffer Zone (GeoJSON)</span>
-                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </a>
-                <a 
-                  href="/GFW_/data/ZAD forest cover.csv" 
-                  download 
-                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
-                >
-                  <span className="text-sm font-bold text-slate-700">Forest Cover (CSV)</span>
-                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </a>
-                <a 
-                  href="/GFW_/data/mining_activities_2017_2026.csv" 
-                  download 
-                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
-                >
-                  <span className="text-sm font-bold text-slate-700">Mining Trends 2017-2026 (CSV)</span>
-                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </a>
-                <a 
-                  href="/GFW_/data/OWR_Mining_Inside.csv" 
-                  download 
-                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
-                >
-                  <span className="text-sm font-bold text-slate-700">Mines Inside Reserve (CSV)</span>
-                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </a>
-              </div>
-            </div>
-            <div className="hidden lg:block w-72 h-72 bg-emerald-600 rounded-[3rem] shadow-2xl shadow-emerald-200 flex items-center justify-center text-white transform rotate-3 hover:rotate-0 transition-transform duration-500">
-              <Globe className="w-32 h-32 opacity-20 absolute" />
-              <div className="text-center relative z-10">
-                <BarChart2 className="w-16 h-16 mx-auto mb-4" />
-                <p className="text-2xl font-black tracking-tighter uppercase">Open Data</p>
-                <p className="text-[10px] font-black tracking-[0.3em] uppercase opacity-60">Transparency</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-4 border border-dashed border-slate-400"></div>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Demande en cours</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Footer / CTA */}
-      <footer className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="bg-slate-900 rounded-[4rem] p-16 md:p-24 text-center relative overflow-hidden shadow-2xl shadow-emerald-900/20">
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400">
-              <path d="M0 200 C 200 100, 400 300, 800 200" stroke="white" fill="transparent" strokeWidth="2" opacity="0.3" />
-            </svg>
-          </div>
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-10 tracking-tighter leading-tight">
-            Explore the <br className="hidden md:block" /> Conservation Evidence.
-          </h2>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <Link 
-              href="/map" 
-              className="px-12 py-5 bg-white text-slate-900 rounded-3xl font-black hover:bg-slate-100 transition shadow-xl text-lg flex items-center justify-center gap-3 group"
-            >
-              Open Interactive Map 
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+          <div className="p-6 border-t border-slate-800 bg-slate-950/50">
+            <Link href="/map" className="w-full flex items-center justify-between p-4 bg-emerald-600/10 border border-emerald-600/20 rounded-2xl text-emerald-400 font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600/20 transition group">
+              Explorateur Full-Screen 
+              <Maximize2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </Link>
           </div>
-          <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-white/40">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-emerald-500" />
-              <span className="text-sm font-black tracking-widest uppercase">OWR Portal 2026</span>
-            </div>
-            <p className="text-xs font-bold uppercase tracking-widest">
-              Conservation Data Science • University of Applied Sciences
-            </p>
+        </aside>
+
+        {/* Map Area */}
+        <div className="flex-1 relative">
+          {!isSidebarOpen && (
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="absolute top-6 left-6 z-[1000] p-3 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl text-emerald-400 hover:bg-slate-800 transition"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+          
+          <MapComponent onSiteClick={(data) => setSelectedSiteData(data)} />
+
+          {/* Map Controls Floating Overlay */}
+          <div className="absolute bottom-6 right-6 z-[1000] flex flex-col gap-2">
+            <button className="p-3 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl shadow-2xl text-slate-400 hover:text-white transition">
+              <Layers className="w-5 h-5" />
+            </button>
+            <button className="p-3 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl shadow-2xl text-slate-400 hover:text-white transition">
+              <Filter className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Source Attribution Badge */}
+          <div className="absolute top-6 right-6 z-[1000] bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-800 flex items-center gap-3 shadow-2xl">
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Sources:</span>
+            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">CAMI • IPIS • GFW</span>
           </div>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

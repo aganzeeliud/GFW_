@@ -106,10 +106,15 @@ export default function Map() {
                       {selectedSiteData.statut || 'Unknown Status'}
                     </span>
                     <h2 className="text-xl font-black text-slate-900 leading-tight">{selectedSiteData.parties || 'Unnamed Entity'}</h2>
-                    <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">Code: {selectedSiteData.code}</p>
+                    <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">CAMI Code: {selectedSiteData.code}</p>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Permit Type</p>
+                      <p className="text-sm font-bold text-slate-700">{selectedSiteData.type || 'Not specified'}</p>
+                    </div>
+
                     <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Resources</p>
                       <p className="text-sm font-bold text-slate-700">{selectedSiteData.resource || 'Not specified'}</p>
@@ -121,8 +126,23 @@ export default function Map() {
                         <p className="text-sm font-bold text-slate-700">{Math.round(selectedSiteData.sup_sig_ha || 0).toLocaleString()} ha</p>
                       </div>
                       <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Type</p>
-                        <p className="text-sm font-bold text-slate-700">{selectedSiteData.type || 'N/A'}</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Zone</p>
+                        <p className="text-sm font-bold text-slate-700">{selectedSiteData.zone || 'N/A'}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 border-t border-slate-100 pt-4">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-400 font-bold uppercase tracking-wider">Application Date</span>
+                        <span className="text-slate-900 font-bold">{selectedSiteData.date_app || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-400 font-bold uppercase tracking-wider">Grant Date</span>
+                        <span className="text-slate-900 font-bold">{selectedSiteData.date_grant || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-400 font-bold uppercase tracking-wider">Expiry Date</span>
+                        <span className="text-slate-900 font-bold">{selectedSiteData.date_expiry || 'N/A'}</span>
                       </div>
                     </div>
                   </div>
