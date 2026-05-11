@@ -36,7 +36,7 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/data/all_concessions.json')
+    fetch('data/all_concessions.json')
       .then(res => res.json())
       .then(data => {
         setConcessions(data);
