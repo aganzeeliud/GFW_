@@ -43,7 +43,8 @@ GFW_/
 ├── docs/                 # Project Documentation
 ├── public/               # Static Assets & Cadastre Data
 │   ├── data/             # GeoJSON & CSV datasets
-│   └── standalone/       # Portable HTML versions
+│   ├── standalone-map/   # Portable HTML map version
+│   └── standalone-portal/# Portable HTML portal version
 └── research-data/        # Raw research & processed CSVs
 ```
 

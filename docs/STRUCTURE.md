@@ -19,9 +19,8 @@ GFW_/
 │
 ├── public/               # Static Asset Layer
 │   ├── data/             # Spatial & Tabular Datasets (GeoJSON/CSV)
-│   └── standalone/       # Self-contained HTML/JS versions
-│       ├── map/          # Portable Cadastre Map
-│       └── portal/       # Portable Documentation Site
+│   ├── standalone-map/   # Portable Cadastre Map
+│   └── standalone-portal/# Portable Documentation Site
 │
 ├── docs/                 # Documentation Layer
 │   ├── DEPLOYMENT.md     # GitHub Pages & CI/CD guide
