@@ -27,6 +27,25 @@
             transform: translateX(100%);
         }
         #evolution-panel.open { transform: translateX(0); }
+        
+        .toggle-layer {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-layer.disabled {
+            opacity: 0.5;
+        }
+        
+        .mining-info-card {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-900 overflow-hidden">
@@ -35,7 +54,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-[1001] px-6 py-4">
         <div class="max-w-[1600px] mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <a href="../index.html" class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+                <a href="../standalone-portal/index.html" class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-100">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 </a>
                 <div>
@@ -49,13 +68,24 @@
                     Evolution Data
                 </button>
                 <div class="h-8 w-[1px] bg-slate-200"></div>
-                <div class="flex gap-4">
-                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
-                        <div class="w-3 h-3 rounded-full bg-[#ef4444]"></div> Active
+                <div class="flex gap-4 items-center">
+                    <div class="flex gap-4">
+                        <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                            <div class="w-3 h-3 rounded-full bg-[#ef4444]"></div> Active
+                        </div>
+                        <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                            <div class="w-3 h-3 rounded-full bg-[#f59e0b]"></div> Pending
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
-                        <div class="w-3 h-3 rounded-full bg-[#f59e0b]"></div> Pending
-                    </div>
+                    <div class="h-6 w-[1px] bg-slate-200"></div>
+                    <button id="toggle-mining-inside" class="toggle-layer px-3 py-2 bg-orange-50 text-orange-700 rounded-lg text-xs font-black uppercase tracking-widest border border-orange-200 hover:bg-orange-100 transition flex items-center gap-2" title="Toggle Mining Inside">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m2.08 2.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m2.08-2.08l4.24-4.24M19.78 19.78l-4.24-4.24m-2.08-2.08l-4.24-4.24M19.78 4.22l-4.24 4.24m-2.08 2.08l-4.24 4.24"/></svg>
+                        Inside
+                    </button>
+                    <button id="toggle-mining-buffer" class="toggle-layer px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs font-black uppercase tracking-widest border border-blue-200 hover:bg-blue-100 transition flex items-center gap-2" title="Toggle Mining Buffer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
+                        Buffer
+                    </button>
                 </div>
             </div>
         </div>
@@ -70,7 +100,7 @@
                     <h2 class="text-lg font-bold mb-1 tracking-tight">Concession Metadata</h2>
                     <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Official CAMI Records</p>
                     <p class="text-xs text-slate-500 leading-relaxed font-medium">
-                        Select a polygon on the map to inspect granular permit data including resource types and boundary hectares.
+                        Select a polygon on the map to inspect granular permit data including resource types and boundary hectares. Mining activities are highlighted in orange.
                     </p>
                 </div>
 
@@ -146,6 +176,12 @@
     
     <script>
         const map = L.map('map').setView([1.5, 28.5], 8);
+        let miningInsideLayer = null;
+        let miningBufferLayer = null;
+        let insideData = null;
+        let bufferData = null;
+        let showMiningInside = true;
+        let showMiningBuffer = true;
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -153,6 +189,32 @@
 
         function toggleEvolution() {
             document.getElementById('evolution-panel').classList.toggle('open');
+        }
+
+        function toggleMiningLayers() {
+            const insideBtn = document.getElementById('toggle-mining-inside');
+            const bufferBtn = document.getElementById('toggle-mining-buffer');
+
+            insideBtn.addEventListener('click', function() {
+                showMiningInside = !showMiningInside;
+                updateLayerVisibility();
+                insideBtn.classList.toggle('opacity-50');
+            });
+
+            bufferBtn.addEventListener('click', function() {
+                showMiningBuffer = !showMiningBuffer;
+                updateLayerVisibility();
+                bufferBtn.classList.toggle('opacity-50');
+            });
+        }
+
+        function updateLayerVisibility() {
+            if (miningInsideLayer) {
+                map[showMiningInside ? 'addLayer' : 'removeLayer'](miningInsideLayer);
+            }
+            if (miningBufferLayer) {
+                map[showMiningBuffer ? 'addLayer' : 'removeLayer'](miningBufferLayer);
+            }
         }
 
         // Data from evolution analysis
@@ -193,7 +255,7 @@
         });
 
         function getStyle(feature) {
-...            const status = feature.properties.statut;
+            const status = feature.properties.statut;
             let color = '#9ca3af';
             if (status === 'Demande Approuvée' || status === 'Active') color = '#ef4444';
             else if (status === 'En Instance' || status === 'Pending') color = '#f59e0b';
@@ -221,8 +283,16 @@
             if (status === 'Demande Approuvée' || status === 'Active') statusClass = 'bg-red-100 text-red-700';
             else if (status === 'En Instance' || status === 'Pending') statusClass = 'bg-amber-100 text-amber-700';
 
+            let miningCount = 0;
+            if (insideData) {
+                miningCount += insideData.features.length;
+            }
+            if (bufferData) {
+                miningCount += bufferData.features.length;
+            }
+
             panel.innerHTML = `
-                <div class="p-8 animate-in fade-in duration-300">
+                <div class="p-8 animate-in fade-in duration-300 mining-info-card">
                     <span class="inline-block px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider mb-4 ${statusClass}">
                         ${status}
                     </span>
@@ -266,15 +336,31 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="pt-6 border-t border-slate-100">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Mining Activity Summary</p>
+                            <div id="mining-activities" class="space-y-2 text-sm">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="p-3 bg-orange-50 rounded-lg border border-orange-100">
+                                        <p class="text-[10px] font-black text-orange-600 uppercase">Mining Sites</p>
+                                        <p class="text-lg font-black text-orange-700">${miningCount}</p>
+                                    </div>
+                                    <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                        <p class="text-[10px] font-black text-blue-600 uppercase">Status</p>
+                                        <p class="text-sm font-bold text-blue-700">Active</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
-        // Fetch Data from the data folder (relative paths)
+        // Fetch Data from the data folder
         const dataPaths = {
-            inside: '../public/data/OWR_Mining_Inside.geojson',
-            buffer: '../public/data/Mining_Buffer.geojson'
+            inside: '/data/Mining_Inside.geojson',
+            buffer: '/data/Mining_Buffer.geojson'
         };
 
         async function loadData() {
@@ -284,18 +370,38 @@
                     fetch(dataPaths.buffer)
                 ]);
 
-                const insideData = await insideRes.json();
-                const bufferData = await bufferRes.json();
+                insideData = await insideRes.json();
+                bufferData = await bufferRes.json();
 
-                L.geoJSON(bufferData, {
-                    style: (f) => ({ ...getStyle(f), fillOpacity: 0.25 }),
-                    onEachFeature: onEachFeature
+                // Buffer layer - less opaque
+                miningBufferLayer = L.geoJSON(bufferData, {
+                    style: {
+                        fillColor: '#3b82f6',
+                        weight: 1,
+                        opacity: 1,
+                        color: '#ffffff',
+                        fillOpacity: 0.3
+                    },
+                    onEachFeature: (feature, layer) => {
+                        layer.bindPopup(`<strong>Mining Activity (Buffer Zone)</strong><br/>Status: Active`);
+                    }
                 }).addTo(map);
 
-                L.geoJSON(insideData, {
-                    style: getStyle,
-                    onEachFeature: onEachFeature
+                // Inside layer - more opaque
+                miningInsideLayer = L.geoJSON(insideData, {
+                    style: {
+                        fillColor: '#f97316',
+                        weight: 2,
+                        opacity: 1,
+                        color: '#ea580c',
+                        fillOpacity: 0.7
+                    },
+                    onEachFeature: (feature, layer) => {
+                        layer.bindPopup(`<strong>Mining Activity (Inside Reserve)</strong><br/>Status: Active - High Threat`);
+                    }
                 }).addTo(map);
+
+                toggleMiningLayers();
 
             } catch (err) {
                 console.error("Error loading GeoJSON data:", err);
