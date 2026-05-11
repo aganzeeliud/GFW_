@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, TrendingUp, AlertTriangle, Info, Download, BarChart2, Zap, TrendingDown, Globe, Maximize2 } from 'lucide-react'
+import { ArrowLeft, TrendingUp, AlertTriangle, Info, Download, BarChart2, Zap, TrendingDown, Globe, Maximize2, Shield } from 'lucide-react'
 import { 
   ComposedChart, 
   Line, 
@@ -214,7 +214,7 @@ export default function ComparisonPage() {
             Accédez aux jeux de données complets ayant servi à cette analyse. La transparence est le premier pas vers une conservation efficace.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            <Link href="/public/data/OWR_Mining_Inside.csv" className="px-10 py-5 bg-white text-emerald-700 rounded-3xl font-black hover:bg-emerald-50 transition shadow-2xl flex items-center gap-3 group text-lg">
+            <Link href="/data/OWR_Mining_Inside.csv" className="px-10 py-5 bg-white text-emerald-700 rounded-3xl font-black hover:bg-emerald-50 transition shadow-2xl flex items-center gap-3 group text-lg">
               <Download className="w-6 h-6 group-hover:translate-y-1 transition-transform" />
               Dataset CSV (Mines)
             </Link>
