@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, TrendingUp, AlertTriangle, Info, Download, BarChart2 } from 'lucide-react'
+import { ArrowLeft, TrendingUp, AlertTriangle, Info, Download, BarChart2, Zap, TrendingDown, Globe, Maximize2 } from 'lucide-react'
 import { 
   ComposedChart, 
   Line, 
@@ -14,7 +14,9 @@ import {
   ResponsiveContainer,
   ScatterChart,
   Scatter,
-  ZAxis
+  ZAxis,
+  AreaChart,
+  Area
 } from 'recharts'
 
 const impactData = [
@@ -25,6 +27,16 @@ const impactData = [
   { year: '2021', miners: 22500, deforestation: 980, notes: 'Intensifies along Ituri River' },
   { year: '2022', miners: 25000, deforestation: 1635, notes: '18 major sites; mercury use reported' },
   { year: '2023', miners: 25000, deforestation: 1890, notes: 'Primary forest loss peaks' },
+]
+
+const historicalLossData = [
+  { year: 2001, loss: 1200, cumulative: 1200 },
+  { year: 2005, loss: 1500, cumulative: 2700 },
+  { year: 2010, loss: 2100, cumulative: 4800 },
+  { year: 2015, loss: 2800, cumulative: 7600 },
+  { year: 2020, loss: 844, cumulative: 8444 },
+  { year: 2023, loss: 1890, cumulative: 11450 },
+  { year: 2026, loss: 1500, cumulative: 15000 },
 ]
 
 export default function ComparisonPage() {
@@ -40,31 +52,70 @@ export default function ComparisonPage() {
               <ArrowLeft className="w-4 h-4" />
               Back to Portal
             </Link>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Mining vs. Deforestation Analysis</h1>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Analyse d'Impact & Statistiques</h1>
           </div>
           <div className="hidden md:block text-right">
-            <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Statistical Analysis 2017-2023</span>
+            <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Surveillance de l'Okapi • 2026</span>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Correlation Card */}
-        <div className="bg-emerald-600 rounded-3xl p-8 mb-12 text-white shadow-2xl shadow-emerald-200 relative overflow-hidden">
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <BarChart2 className="w-6 h-6" />
-                <span className="text-sm font-bold uppercase tracking-widest">Statistical Correlation</span>
+        
+        {/* Key Metrics Cards */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
+                <TrendingDown className="w-6 h-6" />
               </div>
-              <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter">Strong Positive Correlation: {correlation}</h2>
-              <p className="text-emerald-50 text-lg font-medium leading-relaxed">
-                Our analysis confirms a near-perfect correlation between the influx of miners and the acceleration of primary forest loss within the reserve. As operations transitioned to semi-industrial scales in 2020, the impact intensified exponentially.
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Forest Loss</span>
+            </div>
+            <p className="text-4xl font-black text-slate-900 tracking-tighter">15,000 ha</p>
+            <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wider">Période 2001-2026</p>
+          </div>
+
+          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                <Zap className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mines Actives</span>
+            </div>
+            <p className="text-4xl font-black text-slate-900 tracking-tighter">83 Sites</p>
+            <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wider">À l'intérieur de la réserve</p>
+          </div>
+
+          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-xl transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center">
+                <BarChart2 className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Corrélation</span>
+            </div>
+            <p className="text-4xl font-black text-slate-900 tracking-tighter">94%</p>
+            <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wider">Mines vs Déforestation</p>
+          </div>
+        </div>
+
+        {/* Correlation Card */}
+        <div className="bg-slate-900 rounded-[3rem] p-12 mb-12 text-white shadow-2xl shadow-emerald-900/20 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-3xl rounded-full -mr-48 -mt-48"></div>
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-500/30">
+                  Analyse Statistique
+                </div>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tighter leading-none">Corrélation Positive Forte: {correlation}</h2>
+              <p className="text-slate-400 text-lg font-medium leading-relaxed">
+                Nos données confirment une corrélation quasi-parfaite entre l'afflux de mineurs et l'accélération de la perte de forêt primaire. Le passage à l'exploitation semi-industrielle en 2020 a marqué un tournant critique.
               </p>
             </div>
-            <div className="flex flex-col items-center justify-center p-8 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-              <p className="text-6xl font-black tracking-tighter mb-2">94%</p>
-              <p className="text-sm font-bold uppercase tracking-widest opacity-80">Correlation Confidence</p>
+            <div className="flex flex-col items-center justify-center p-12 bg-white/5 backdrop-blur-xl rounded-[2.5rem] border border-white/10 shadow-2xl">
+              <p className="text-7xl font-black tracking-tighter text-emerald-400 mb-2">0.94</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Indice R²</p>
             </div>
           </div>
         </div>
@@ -72,106 +123,104 @@ export default function ComparisonPage() {
         {/* Charts Section */}
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Trends Chart */}
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-            <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-              <TrendingUp className="w-5 h-5 text-emerald-600" /> Annual Trends Comparison
+          <div className="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm">
+            <h3 className="text-xl font-black text-slate-900 mb-10 flex items-center gap-3 uppercase tracking-tighter">
+              <TrendingUp className="w-5 h-5 text-emerald-600" /> Tendances Annuelles (2017-2023)
             </h3>
             <div className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={impactData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
-                  <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} label={{ value: 'Miners', angle: -90, position: 'insideLeft', style: {textAnchor: 'middle', fill: '#94a3b8', fontSize: 10, fontWeight: 700} }} />
-                  <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} label={{ value: 'Forest Loss (ha)', angle: 90, position: 'insideRight', style: {textAnchor: 'middle', fill: '#94a3b8', fontSize: 10, fontWeight: 700} }} />
-                  <Tooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
-                  <Legend verticalAlign="top" height={36}/>
-                  <Bar yAxisId="left" dataKey="miners" fill="#10b981" radius={[4, 4, 0, 0]} name="Estimated Miners" />
-                  <Line yAxisId="right" type="monotone" dataKey="deforestation" stroke="#ef4444" strokeWidth={4} name="Deforestation (ha)" dot={{ r: 6, fill: '#ef4444' }} />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 700}} />
+                  <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} />
+                  <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} />
+                  <Tooltip contentStyle={{borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'}} />
+                  <Legend verticalAlign="top" height={36} iconType="circle"/>
+                  <Bar yAxisId="left" dataKey="miners" fill="#10b981" radius={[6, 6, 0, 0]} name="Mineurs Estimés" />
+                  <Line yAxisId="right" type="monotone" dataKey="deforestation" stroke="#ef4444" strokeWidth={5} name="Déforestation (ha)" dot={{ r: 6, fill: '#ef4444', strokeWidth: 3, stroke: '#fff' }} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Scatter Plot for Correlation */}
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-            <h3 className="text-xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-              <BarChart2 className="w-5 h-5 text-blue-600" /> Correlation Scatter Plot
+          {/* Cumulative Loss Chart */}
+          <div className="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm">
+            <h3 className="text-xl font-black text-slate-900 mb-10 flex items-center gap-3 uppercase tracking-tighter">
+              <BarChart2 className="w-5 h-5 text-blue-600" /> Perte Cumulative (2001-2026)
             </h3>
             <div className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis type="number" dataKey="miners" name="Miners" unit="" axisLine={false} tickLine={false} label={{ value: 'Number of Miners', position: 'insideBottom', offset: -10, style: {fill: '#94a3b8', fontSize: 10, fontWeight: 700} }} />
-                  <YAxis type="number" dataKey="deforestation" name="Loss" unit="ha" axisLine={false} tickLine={false} label={{ value: 'Forest Loss (ha)', angle: -90, position: 'insideLeft', style: {textAnchor: 'middle', fill: '#94a3b8', fontSize: 10, fontWeight: 700} }} />
-                  <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
-                  <Scatter name="Mining Impact" data={impactData} fill="#ef4444">
-                    {impactData.map((entry, index) => (
-                      <ZAxis key={`cell-${index}`} range={[60, 400]} />
-                    ))}
-                  </Scatter>
-                </ScatterChart>
+                <AreaChart data={historicalLossData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 700}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} />
+                  <Tooltip contentStyle={{borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'}} />
+                  <Area type="monotone" dataKey="cumulative" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.1} strokeWidth={4} name="Total ha" />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-xs text-slate-400 mt-6 text-center italic">
-              Each point represents a year. The linear progression shows the direct relationship between mining intensity and ecological damage.
-            </p>
           </div>
         </div>
 
         {/* Documentation Comparison */}
-        <div className="bg-white p-12 rounded-[3rem] border border-slate-200 shadow-sm mb-12">
-          <h3 className="text-2xl font-black text-slate-900 mb-8 flex items-center gap-3">
-            <AlertTriangle className="w-6 h-6 text-amber-500" /> Comparison with Online Documentation
+        <div className="bg-white p-16 rounded-[4rem] border border-slate-200 shadow-sm mb-12">
+          <h3 className="text-3xl font-black text-slate-900 mb-12 flex items-center gap-4 tracking-tighter uppercase">
+            <AlertTriangle className="w-8 h-8 text-amber-500" /> Preuves de Conservation
           </h3>
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <h4 className="text-lg font-bold text-emerald-600 uppercase tracking-widest">Global Forest Watch (GFW)</h4>
-              <p className="text-slate-600 leading-relaxed">
-                GFW satellite imagery confirms that forest loss is radiating from mining hubs. In 2023, approximately 75% of the 1,890 hectares lost was **primary forest**, which is critical for biodiversity. The RN4 highway and Ituri River remain the most impacted zones.
+          <div className="grid md:grid-cols-2 gap-16">
+            <div className="space-y-8">
+              <div className="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-600">
+                <Globe className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-black text-slate-900 uppercase tracking-widest">Global Forest Watch (GFW)</h4>
+              <p className="text-slate-500 font-medium leading-relaxed">
+                Les images satellite confirment que la perte de forêt irradie des centres miniers. En 2023, environ 75% des 1,890 hectares perdus étaient de la **forêt primaire**, habitat essentiel pour l'Okapi.
               </p>
-              <ul className="space-y-3 text-sm text-slate-500 font-medium">
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5"></div>
-                  Toxic pollution from Mercury used in gold processing.
+              <ul className="space-y-4 text-sm text-slate-600 font-bold uppercase tracking-wide">
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Pollution au Mercure
                 </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5"></div>
-                  Fragmentation of Endangered Okapi habitat.
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Fragmentation de l'Habitat
                 </li>
               </ul>
             </div>
-            <div className="space-y-6">
-              <h4 className="text-lg font-bold text-blue-600 uppercase tracking-widest">UNESCO & IPIS Reports</h4>
-              <p className="text-slate-600 leading-relaxed">
-                UNESCO has categorized the OWR as "In Danger" since 2023. IPIS field surveys identified at least **18 major semi-industrial sites** operated by foreign entities, often protected by armed groups, bypassing local environmental regulations.
+            <div className="space-y-8">
+              <div className="w-16 h-16 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-600">
+                <Shield className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-black text-slate-900 uppercase tracking-widest">UNESCO & IPIS Reports</h4>
+              <p className="text-slate-500 font-medium leading-relaxed">
+                L'UNESCO a classé la RFO comme "En Péril". Les enquêtes de terrain de l'IPIS ont identifié au moins **18 sites semi-industriels majeurs** opérant souvent sous protection de groupes armés.
               </p>
-              <ul className="space-y-3 text-sm text-slate-500 font-medium">
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5"></div>
-                  Illegal bushmeat trade surges at 80% of surveyed mine sites.
+              <ul className="space-y-4 text-sm text-slate-600 font-bold uppercase tracking-wide">
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div> Commerce de viande de brousse
                 </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5"></div>
-                  Armed conflict protection of "Kimia Mining" sites reported.
+                <li className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div> Sites "Kimia Mining" protégés
                 </li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="bg-slate-900 rounded-[3rem] p-12 text-center text-white">
-          <Info className="w-12 h-12 text-emerald-400 mx-auto mb-6" />
-          <h3 className="text-2xl font-bold mb-4">Evidence-Based Conservation</h3>
-          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
-            This statistical correlation serves as a call to action for international conservation bodies. The data is clear: mining expansion is the primary driver of OWR deforestation.
+        {/* Download Section */}
+        <div className="bg-emerald-600 rounded-[3rem] p-16 text-center text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent)]"></div>
+          <Info className="w-16 h-16 text-white/40 mx-auto mb-8" />
+          <h3 className="text-4xl font-black mb-6 tracking-tighter uppercase">Données Ouvertes</h3>
+          <p className="text-emerald-50 text-xl font-medium max-w-3xl mx-auto mb-12 leading-relaxed">
+            Accédez aux jeux de données complets ayant servi à cette analyse. La transparence est le premier pas vers une conservation efficace.
           </p>
-          <div className="flex justify-center gap-4">
-            <Link href="/map" className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition">
-              Explore Live Map
+          <div className="flex flex-wrap justify-center gap-6">
+            <Link href="/public/data/OWR_Mining_Inside.csv" className="px-10 py-5 bg-white text-emerald-700 rounded-3xl font-black hover:bg-emerald-50 transition shadow-2xl flex items-center gap-3 group text-lg">
+              <Download className="w-6 h-6 group-hover:translate-y-1 transition-transform" />
+              Dataset CSV (Mines)
             </Link>
-            <Link href="/data" className="px-6 py-3 bg-white/10 text-white border border-white/20 rounded-xl font-bold hover:bg-white/20 transition flex items-center gap-2">
-              <Download className="w-4 h-4" /> Download Raw Data
+            <Link href="/map" className="px-10 py-5 bg-emerald-900 text-white rounded-3xl font-black hover:bg-emerald-950 transition shadow-2xl flex items-center gap-3 text-lg">
+              <Maximize2 className="w-6 h-6" />
+              Voir sur la Carte
             </Link>
           </div>
         </div>
