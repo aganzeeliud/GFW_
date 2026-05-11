@@ -319,6 +319,26 @@ function DirectorySection() {
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </a>
+                <a 
+                  href="/GFW_/data/mining_activities_2017_2026.csv" 
+                  download 
+                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
+                >
+                  <span className="text-sm font-bold text-slate-700">Mining Trends 2017-2026 (CSV)</span>
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </a>
+                <a 
+                  href="/GFW_/data/OWR_Mining_Inside.csv" 
+                  download 
+                  className="flex items-center justify-between p-4 bg-white rounded-2xl border border-emerald-200 hover:border-emerald-500 transition shadow-sm group"
+                >
+                  <span className="text-sm font-bold text-slate-700">Mines Inside Reserve (CSV)</span>
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </a>
               </div>
             </div>
             <div className="hidden lg:block w-72 h-72 bg-emerald-600 rounded-[3rem] shadow-2xl shadow-emerald-200 flex items-center justify-center text-white transform rotate-3 hover:rotate-0 transition-transform duration-500">
