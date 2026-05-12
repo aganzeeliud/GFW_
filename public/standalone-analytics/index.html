@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OWR Impact Analytics Dashboard</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-value {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="text-slate-900 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-black tracking-tight leading-none uppercase">OWR Analytics</h1>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Impact Intelligence 2026</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="../index.html" class="text-xs font-black text-slate-500 hover:text-emerald-600 uppercase tracking-widest transition">Main Portal</a>
+                    <a href="../standalone-map/index.html" class="text-xs font-black text-slate-500 hover:text-emerald-600 uppercase tracking-widest transition">Spatial Map</a>
+                    <div class="h-6 w-[1px] bg-slate-200"></div>
+                    <button class="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition shadow-lg shadow-emerald-100">
+                        Export Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <!-- Dashboard Header -->
+        <div class="mb-12">
+            <h2 class="text-4xl font-black tracking-tighter text-slate-900 mb-2">Environmental Impact Dashboard</h2>
+            <p class="text-slate-500 max-w-2xl font-medium">Consolidated monitoring of forest cover loss, mining expansion, and industrial encroachment within the Okapi Wildlife Reserve.</p>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Forest Loss (ha)</p>
+                <h3 class="text-3xl font-black text-emerald-600">14,285</h3>
+                <p class="text-[11px] font-bold text-slate-400 mt-2 flex items-center gap-1">
+                    <span class="text-red-500">↑ 12%</span> vs last decade
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Active Miners</p>
+                <h3 class="text-3xl font-black text-emerald-600">25,000+</h3>
+                <p class="text-[11px] font-bold text-slate-400 mt-2 flex items-center gap-1">
+                    <span class="text-red-500">↑ 100%</span> since 2017
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Industrial Sites</p>
+                <h3 class="text-3xl font-black text-emerald-600">18</h3>
+                <p class="text-[11px] font-bold text-slate-400 mt-2 flex items-center gap-1">
+                    <span class="text-amber-500">High Risk</span> monitoring active
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Conservation Status</p>
+                <h3 class="text-3xl font-black text-red-600">In Danger</h3>
+                <p class="text-[11px] font-bold text-slate-400 mt-2 flex items-center gap-1 uppercase">
+                    UNESCO World Heritage
+                </p>
+            </div>
+        </div>
+
+        <!-- Main Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            
+            <!-- Chart 1: Forest Cover Loss -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h4 class="text-xl font-bold tracking-tight">Annual Forest Cover Loss</h4>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">2001 — 2024 (Hectares)</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="forestLossChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Mining Activities -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h4 class="text-xl font-bold tracking-tight">Mining Expansion vs Workforce</h4>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Deforestation & Estimated Miners</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="miningChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 3: Industrial Comparison -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm lg:col-span-2">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h4 class="text-xl font-bold tracking-tight">Industrial Mining Footprint Growth</h4>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Major Site Comparison (2020 vs 2023)</p>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="industrialChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Source Footer -->
+        <div class="mt-20 pt-8 border-t border-slate-200 text-center">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Data Sources: Global Forest Watch • IPIS Research • OWR Management • Satellite Analysis 2026</p>
+        </div>
+    </main>
+
+    <script>
+        // Common Chart Options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: { size: 11, weight: 'bold' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    padding: 12,
+                    cornerRadius: 12,
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 12 }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(241, 245, 249, 1)', drawBorder: false },
+                    ticks: { font: { size: 10, weight: 'bold' }, color: '#94a3b8' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 10, weight: 'bold' }, color: '#94a3b8' }
+                }
+            }
+        };
+
+        // Forest Loss Data (Synthesized from ZAD forest cover.csv)
+        const forestLossYears = ['2001', '2005', '2010', '2015', '2020', '2021', '2022', '2023', '2024'];
+        const forestLossData = [34, 2410, 611, 475, 288, 603, 118, 208, 610];
+
+        new Chart(document.getElementById('forestLossChart'), {
+            type: 'line',
+            data: {
+                labels: forestLossYears,
+                datasets: [{
+                    label: 'Annual Loss (ha)',
+                    data: forestLossData,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#10b981',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: commonOptions
+        });
+
+        // Mining Activity Data (from mining_activities_2017_2026.csv)
+        const miningYears = ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'];
+        const deforestationData = [0, 0, 0, 844, 980, 1635, 1890, 480, 1200, 1500];
+        const minersData = [12500, 15000, 17500, 20000, 22500, 25000, 25000, 25000, 25000, 25000];
+
+        new Chart(document.getElementById('miningChart'), {
+            type: 'bar',
+            data: {
+                labels: miningYears,
+                datasets: [
+                    {
+                        label: 'Deforestation (ha)',
+                        data: deforestationData,
+                        backgroundColor: '#ef4444',
+                        borderRadius: 8,
+                    },
+                    {
+                        label: 'Miners Count',
+                        type: 'line',
+                        data: minersData.map(d => d / 10), // Scale for visual comparison
+                        borderColor: '#3b82f6',
+                        borderDash: [5, 5],
+                        tension: 0,
+                        pointRadius: 0,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    ...commonOptions.scales,
+                    y1: {
+                        position: 'right',
+                        grid: { display: false },
+                        ticks: { 
+                            font: { size: 10, weight: 'bold' }, 
+                            color: '#3b82f6',
+                            callback: (val) => val * 10
+                        }
+                    }
+                }
+            }
+        });
+
+        // Industrial Comparison (from industrial_mining_impact_details.csv)
+        const sites = ['Muchacha', 'Bandisende', 'Epulu-West', 'Ituri-South'];
+        const data2020 = [844, 120, 45, 210];
+        const data2023 = [1890, 450, 180, 560];
+
+        new Chart(document.getElementById('industrialChart'), {
+            type: 'bar',
+            data: {
+                labels: sites,
+                datasets: [
+                    {
+                        label: 'Deforestation 2020 (ha)',
+                        data: data2020,
+                        backgroundColor: '#cbd5e1',
+                        borderRadius: 12,
+                    },
+                    {
+                        label: 'Deforestation 2023 (ha)',
+                        data: data2023,
+                        backgroundColor: '#1e293b',
+                        borderRadius: 12,
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                indexAxis: 'y',
+            }
+        });
+    </script>
+</body>
+</html>

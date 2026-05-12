@@ -16,65 +16,151 @@ const fixLeafletIcon = () => {
   })
 }
 
+export interface MapFilters {
+  year?: number;
+  status?: string;
+  company?: string;
+  type?: string;
+  zone?: string;
+  minSize?: number;
+}
+
 interface MapProps {
-  onSiteClick: (site: any) => void
+  filters?: MapFilters;
+  onSiteClick?: (site: any) => void;
 }
 
 const CAMI_COLORS = {
-  PE: '#ff0055',
+  PE: '#ff0055',    // Permis d'Exploitation (Magenta)
   PER: '#ff0055',
-  PR: '#00d5ff',
+  PR: '#00d5ff',    // Permis de Recherches (Cyan)
   AR: '#00d5ff',
-  ZEA: '#ffd500',
+  ZEA: '#ffd500',   // Zone d'Exploitation Artisanale (Yellow)
   DEFAULT: '#94a3b8'
 }
 
-export default function MapComponent({ onSiteClick }: MapProps) {
+export default function MapComponent({ filters, onSiteClick }: MapProps) {
   const [insideData, setInsideData] = useState<any>(null)
   const [bufferData, setBufferData] = useState<any>(null)
+  const [csvData, setCsvData] = useState<any[]>([])
 
   useEffect(() => {
     fixLeafletIcon()
     const path = window.location.pathname.includes('/GFW_') ? '/GFW_' : ''
     
-    Promise.all([
-      fetch(`${path}/data/OWR_Mining_Inside.geojson`).then(res => res.json()),
-      fetch(`${path}/data/Mining_Buffer.geojson`).then(res => res.json())
-    ]).then(([inside, buffer]) => {
-      setInsideData({
-        ...inside,
-        features: inside.features.map((f: any) => ({
-          ...f,
-          properties: { ...f.properties, zone: 'Inside Reserve', exploitation_status: f.properties.statut?.includes('Approuv') ? 'Active' : 'Pending', active_count: f.properties.statut?.includes('Approuv') ? 1 : 0 }
-        }))
-      })
-      setBufferData({
-        ...buffer,
-        features: buffer.features.map((f: any) => ({
-          ...f,
-          properties: { ...f.properties, zone: 'Buffer Zone', exploitation_status: f.properties.statut?.includes('Approuv') ? 'Active' : 'Pending' }
-        }))
-      })
-    }).catch(err => console.error('Error loading data:', err))
+    // Load CSV and GeoJSON
+    const loadData = async () => {
+      try {
+        const [insideCsvRes, bufferCsvRes, insideGeoRes, bufferGeoRes] = await Promise.all([
+          fetch(`${path}/data/OWR_Mining_Inside.csv`),
+          fetch(`${path}/data/OWR_Mining_Buffer.csv`),
+          fetch(`${path}/data/OWR_Mining_Inside.geojson`),
+          fetch(`${path}/data/Mining_Buffer.geojson`)
+        ]);
+
+        const insideCsvText = await insideCsvRes.text();
+        const bufferCsvText = await bufferCsvRes.text();
+        
+        const parseCSV = (text: string) => {
+          const lines = text.split('\n');
+          const headers = lines[0].split(',');
+          return lines.slice(1).filter(l => l.trim()).map(line => {
+            const values = line.split(',');
+            const obj: any = {};
+            headers.forEach((h, i) => { obj[h.trim()] = values[i]?.trim(); });
+            return obj;
+          });
+        };
+
+        const mergedCsv = [...parseCSV(insideCsvText), ...parseCSV(bufferCsvText)];
+        setCsvData(mergedCsv);
+
+        const insideGeo = await insideGeoRes.json();
+        const bufferGeo = await bufferGeoRes.json();
+
+        // Join logic: Enrich GeoJSON properties with CSV data
+        const enrichGeo = (geo: any, zoneName: string) => {
+          return {
+            ...geo,
+            features: geo.features.map((f: any) => {
+              const csvMatch = mergedCsv.find(c => c.code === f.properties.code);
+              return {
+                ...f,
+                properties: {
+                  ...f.properties,
+                  ...csvMatch,
+                  zone: zoneName,
+                  // Ensure year is extractable
+                  year: csvMatch?.date_app ? new Date(csvMatch.date_app).getFullYear() : (f.properties.year || 2020)
+                }
+              };
+            })
+          };
+        };
+
+        setInsideData(enrichGeo(insideGeo, 'Inside Reserve'));
+        setBufferData(enrichGeo(bufferGeo, 'Buffer Zone'));
+      } catch (err) {
+        console.error('Error loading geospatial data:', err);
+      }
+    };
+
+    loadData();
   }, [])
+
+  const filterFeatures = (data: any) => {
+    if (!data || !filters) return data;
+    return {
+      ...data,
+      features: data.features.filter((f: any) => {
+        const p = f.properties;
+        if (filters.year && p.year && p.year !== filters.year) return false;
+        if (filters.status && !p.statut?.toLowerCase().includes(filters.status.toLowerCase())) return false;
+        if (filters.company && !p.parties?.toLowerCase().includes(filters.company.toLowerCase())) return false;
+        if (filters.type && !p.type?.toLowerCase().includes(filters.type.toLowerCase())) return false;
+        if (filters.zone && p.zone !== filters.zone) return false;
+        if (filters.minSize && (parseFloat(p.sup_sig_ha) || 0) < filters.minSize) return false;
+        return true;
+      })
+    };
+  };
+
+  const filteredInside = useMemo(() => filterFeatures(insideData), [insideData, filters]);
+  const filteredBuffer = useMemo(() => filterFeatures(bufferData), [bufferData, filters]);
 
   const getStyle = (feature: any) => {
     const type = feature.properties.type || ''
     const status = feature.properties.statut || ''
     const isPending = status.toLowerCase().includes('demande') || status.toLowerCase().includes('instance')
+    
     let color = CAMI_COLORS.DEFAULT
     if (type.startsWith('PE')) color = CAMI_COLORS.PE
     else if (type.startsWith('PR') || type.startsWith('AR')) color = CAMI_COLORS.PR
     else if (type.startsWith('ZEA')) color = CAMI_COLORS.ZEA
 
-    return { fillColor: color, weight: isPending ? 1 : 2, opacity: 1, color: isPending ? color : 'white', fillOpacity: isPending ? 0.2 : 0.7, dashArray: isPending ? '5, 10' : '' }
+    return {
+      fillColor: color,
+      weight: isPending ? 1 : 2,
+      opacity: 1,
+      color: isPending ? color : 'white',
+      fillOpacity: isPending ? 0.2 : 0.7,
+      dashArray: isPending ? '5, 10' : ''
+    }
   }
 
   const onEachFeature = (feature: any, layer: any) => {
     layer.on({
-      mouseover: (e: any) => e.target.setStyle({ fillOpacity: 0.9, weight: 4, color: '#ffffff' }),
-      mouseout: (e: any) => e.target.setStyle(getStyle(feature)),
-      click: () => onSiteClick(feature.properties)
+      mouseover: (e: any) => {
+        const l = e.target
+        l.setStyle({ fillOpacity: 0.9, weight: 4, color: '#ffffff' })
+      },
+      mouseout: (e: any) => {
+        const l = e.target
+        l.setStyle(getStyle(feature))
+      },
+      click: () => {
+        if (onSiteClick) onSiteClick(feature.properties)
+      }
     })
   }
 
@@ -85,35 +171,48 @@ export default function MapComponent({ onSiteClick }: MapProps) {
         <LayersControl.BaseLayer checked name="Satellite (Esri)">
           <TileLayer attribution='&copy; Esri' url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
         </LayersControl.BaseLayer>
-        <LayersControl.Overlay checked name="CAMI Concessions (Live Source)">
-          <WMSTileLayer url="https://drclicences.cami.cd/arcgis/rest/services/DRC_Public/MapServer/export" layers="0,1,2,3,4,5,6,7" format="image/png" transparent={true} version="1.3.0" opacity={0.5} />
-        </LayersControl.Overlay>
-        <LayersControl.Overlay checked name="OWR Mining Filter (Inside)">
-          {insideData && (
-            <>
-              <GeoJSON data={insideData} style={getStyle} onEachFeature={onEachFeature} />
-              {insideData.features.map((feature: any, idx: number) => {
-                if (feature.properties.exploitation_status === 'Active' && feature.geometry.type === 'Polygon') {
-                   const polygon = L.polygon(feature.geometry.coordinates as any);
-                   const center = polygon.getBounds().getCenter();
-                   return (
-                     <Marker key={`marker-inside-${idx}`} position={center} icon={L.divIcon({ className: 'bg-transparent', html: '' })}>
-                       <Tooltip permanent direction="center" className="bg-emerald-500 border-none shadow-none text-white font-black text-[10px] rounded-full w-5 h-5 flex items-center justify-center p-0 opacity-100 ring-2 ring-white z-[1000]">
-                         {feature.properties.active_count}
-                       </Tooltip>
-                     </Marker>
-                   )
-                }
-                return null
-              })}
-            </>
+        
+        <LayersControl.Overlay checked name="CAMI Concessions (Inside)">
+          {filteredInside && (
+            <GeoJSON data={filteredInside} style={getStyle} onEachFeature={onEachFeature}>
+              {filteredInside.features.map((f: any, i: number) => (
+                <Tooltip key={`inside-${i}`} sticky>
+                  <div className="p-2 font-sans">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{f.properties.type}</p>
+                    <p className="text-sm font-black">{f.properties.parties}</p>
+                    <div className="mt-1 pt-1 border-t border-slate-100 flex justify-between gap-4">
+                      <span className="text-[9px] font-bold text-slate-500 uppercase">Code: {f.properties.code}</span>
+                      <span className="text-[9px] font-bold text-slate-500 uppercase">{Math.round(f.properties.sup_sig_ha)} ha</span>
+                    </div>
+                  </div>
+                </Tooltip>
+              ))}
+            </GeoJSON>
           )}
         </LayersControl.Overlay>
+
+        <LayersControl.Overlay checked name="CAMI Concessions (Buffer)">
+          {filteredBuffer && (
+            <GeoJSON data={filteredBuffer} style={getStyle} onEachFeature={onEachFeature}>
+              {filteredBuffer.features.map((f: any, i: number) => (
+                <Tooltip key={`buffer-${i}`} sticky>
+                  <div className="p-2 font-sans">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{f.properties.type}</p>
+                    <p className="text-sm font-black">{f.properties.parties}</p>
+                    <p className="text-[9px] font-black text-blue-600 uppercase">Buffer Zone</p>
+                  </div>
+                </Tooltip>
+              ))}
+            </GeoJSON>
+          )}
+        </LayersControl.Overlay>
+
         <LayersControl.Overlay name="IPIS Artisanal Mapping">
           <WMSTileLayer url="https://geo.ipisresearch.be/geoserver/wms" layers="ipis_drc:ipis_drc_mining_data" format="image/png" transparent={true} version="1.1.1" />
         </LayersControl.Overlay>
-        <LayersControl.Overlay name="USGS Copperbelt Mining">
-          <WMSTileLayer url="https://www.sciencebase.gov/catalog/item/64dfd268d34e5f6cd553c2cf/wms" layers="sb:sb" format="image/png" transparent={true} version="1.3.0" />
+
+        <LayersControl.Overlay name="Sentinel-2 (EOX Cloudless)">
+          <WMSTileLayer url="https://tiles.maps.eox.at/wms" layers="s2cloudless-2023" format="image/jpeg" version="1.3.0" />
         </LayersControl.Overlay>
       </LayersControl>
       <ScaleControl position="bottomleft" />

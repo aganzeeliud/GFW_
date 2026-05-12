@@ -1,218 +1,315 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
-import dynamic from 'next/dynamic'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { 
   Shield, 
-  Info, 
-  Layers, 
   Map as MapIcon, 
   Activity, 
+  History, 
+  BarChart3, 
+  FileText, 
+  ArrowRight,
+  TrendingUp,
   AlertTriangle,
-  ChevronRight,
-  ChevronLeft,
-  Search,
-  X,
-  Calendar,
-  Building2,
-  Maximize2
+  ChevronRight
 } from 'lucide-react'
-
-// Dynamically import map to avoid SSR issues
-const MapComponent = dynamic(() => import('@/components/shared/map-component'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-full bg-slate-950 animate-pulse">
-      <div className="text-center">
-        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-emerald-500/70 font-black uppercase tracking-widest text-xs">Initializing CAMI Spatial Engine...</p>
-      </div>
-    </div>
-  )
-})
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip as ChartTooltip, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  AreaChart,
+  Area,
+  LineChart,
+  Line
+} from 'recharts'
+import { fetchMiningStats, MiningStats } from '@/lib/data-utils'
 
 export default function LandingPage() {
-  const [selectedSite, setSelectedSite] = useState<any>(null)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [stats, setStats] = useState<MiningStats | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const getStatusInfo = (status: string) => {
-    const s = status?.toLowerCase() || ''
-    if (s.includes('approuv') || s.includes('octroy') || s.includes('valide')) {
-      return { label: 'Active', color: 'text-emerald-400', bg: 'bg-emerald-400/10', dot: 'bg-emerald-500' }
-    }
-    if (s.includes('demande') || s.includes('instance')) {
-      return { label: 'Pending', color: 'text-amber-400', bg: 'bg-amber-400/10', dot: 'bg-amber-500' }
-    }
-    return { label: 'Expired/Other', color: 'text-slate-400', bg: 'bg-slate-400/10', dot: 'bg-slate-500' }
+  useEffect(() => {
+    fetchMiningStats().then(data => {
+      setStats(data)
+      setLoading(false)
+    })
+  }, [])
+
+  const COLORS = ['#ef4444', '#3b82f6', '#eab308', '#22c55e']
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full"></div>
+      </div>
+    )
   }
 
+  const pieData = [
+    { name: 'Active', value: stats?.activeCount || 0 },
+    { name: 'Pending', value: stats?.pendingCount || 0 },
+  ]
+
+  const areaData = [
+    { name: 'Inside', value: stats?.insideHectares || 0 },
+    { name: 'Buffer', value: stats?.bufferHectares || 0 },
+  ]
+
   return (
-    <div className="h-screen w-full bg-slate-950 text-slate-200 flex flex-col overflow-hidden font-sans">
-      <header className="h-16 border-b border-white/5 bg-slate-950/80 backdrop-blur-md px-6 flex items-center justify-between z-50 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-900/40">
-            <Shield className="w-6 h-6" />
+    <div className="min-h-screen bg-[#fafafa] text-slate-900 selection:bg-emerald-100 font-sans pb-20">
+      
+      {/* Hero Header */}
+      <header className="bg-slate-950 text-white pt-32 pb-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,white_0%,transparent_70%)]"></div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-900/40">
+              <Shield className="w-7 h-7" />
+            </div>
+            <span className="text-2xl font-black tracking-tighter uppercase">OWR Platform</span>
           </div>
-          <div>
-            <h1 className="text-lg font-black tracking-tighter uppercase leading-none">OWR Mining Intelligence</h1>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Real-time Geospatial Dashboard</p>
+          
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-8">
+            Okapi Wildlife Reserve <br/>
+            <span className="text-emerald-500">Mining Monitoring.</span>
+          </h1>
+          
+          <p className="text-xl text-slate-400 max-w-3xl font-medium leading-relaxed mb-12">
+            A comprehensive geospatial intelligence system dedicated to tracking mining concessions and environmental impact within the Okapi Wildlife Reserve (DRC) and its critical buffer zones.
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+            <Link href="/explorer" className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black hover:bg-emerald-500 transition shadow-xl flex items-center gap-3 group">
+              Launch Interactive Map
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link href="/methodology" className="px-8 py-4 bg-white/10 text-white border border-white/10 rounded-2xl font-black hover:bg-white/20 transition backdrop-blur-md">
+              View Methodology
+            </Link>
           </div>
-        </div>
-        <div className="hidden lg:flex items-center gap-6">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-red-400">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-            </span>
-            Status: UNESCO "In Danger"
-          </div>
-          <div className="h-4 w-px bg-white/10"></div>
-          <nav className="flex items-center gap-4">
-            <button className="text-xs font-bold text-slate-400 hover:text-white transition uppercase tracking-widest">About</button>
-            <button className="text-xs font-bold text-slate-400 hover:text-white transition uppercase tracking-widest">Data Sources</button>
-            <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-black hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/20 uppercase tracking-widest">
-              Export Report
-            </button>
-          </nav>
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden relative">
-        <div className={`transition-all duration-300 ease-in-out border-r border-white/5 bg-slate-950 z-40 flex flex-col ${sidebarOpen ? 'w-96' : 'w-0 overflow-hidden'}`}>
-          <div className="p-6 border-b border-white/5 shrink-0">
-            <h2 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-4">Spatial Explorer</h2>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 w-4 h-4" />
-              <input 
-                type="text" 
-                placeholder="Search permit code or company..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition text-sm font-medium"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+      {/* Statistics Grid */}
+      <section className="max-w-7xl mx-auto px-6 -mt-12 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Inside Reserve</p>
+            <h4 className="text-4xl font-black text-red-600 tracking-tighter">{(stats?.insideHectares || 0).toLocaleString()} <span className="text-sm text-slate-400">ha</span></h4>
+            <p className="text-xs font-bold text-slate-500 mt-2">Total concession area</p>
+          </div>
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Buffer Zone</p>
+            <h4 className="text-4xl font-black text-blue-600 tracking-tighter">{(stats?.bufferHectares || 0).toLocaleString()} <span className="text-sm text-slate-400">ha</span></h4>
+            <p className="text-xs font-bold text-slate-500 mt-2">Area under pressure</p>
+          </div>
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Active Permits</p>
+            <h4 className="text-4xl font-black text-slate-900 tracking-tighter">{stats?.activeCount}</h4>
+            <p className="text-xs font-bold text-emerald-600 mt-2 flex items-center gap-1">
+              <TrendingUp className="w-3 h-3" /> Valid Concessions
+            </p>
+          </div>
+          <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Pending Apps</p>
+            <h4 className="text-4xl font-black text-slate-900 tracking-tighter">{stats?.pendingCount}</h4>
+            <p className="text-xs font-bold text-amber-500 mt-2">In process at CAMI</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Navigation Cards */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="/explorer" className="group bg-white p-8 rounded-[2.5rem] border border-slate-200 hover:border-emerald-500 transition-all shadow-sm">
+            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <MapIcon className="w-7 h-7" />
             </div>
+            <h3 className="text-xl font-black mb-2">Interactive Map</h3>
+            <p className="text-sm text-slate-500 leading-relaxed font-medium mb-6">Explore detailed mining layers, concessions, and spatial overlaps.</p>
+            <span className="text-xs font-black uppercase text-emerald-600 flex items-center gap-1">
+              Open Explorer <ChevronRight className="w-4 h-4" />
+            </span>
+          </Link>
+
+          <Link href="/timeline" className="group bg-white p-8 rounded-[2.5rem] border border-slate-200 hover:border-blue-500 transition-all shadow-sm">
+            <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <History className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-black mb-2">Historical Timeline</h3>
+            <p className="text-sm text-slate-500 leading-relaxed font-medium mb-6">Visualize the temporal evolution of mining interests since 2006.</p>
+            <span className="text-xs font-black uppercase text-blue-600 flex items-center gap-1">
+              View History <ChevronRight className="w-4 h-4" />
+            </span>
+          </Link>
+
+          <Link href="/dashboard" className="group bg-white p-8 rounded-[2.5rem] border border-slate-200 hover:border-amber-500 transition-all shadow-sm">
+            <div className="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <BarChart3 className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-black mb-2">Analytics Dashboard</h3>
+            <p className="text-sm text-slate-500 leading-relaxed font-medium mb-6">In-depth statistical analysis and environmental impact charts.</p>
+            <span className="text-xs font-black uppercase text-amber-600 flex items-center gap-1">
+              View Analytics <ChevronRight className="w-4 h-4" />
+            </span>
+          </Link>
+
+          <Link href="/methodology" className="group bg-white p-8 rounded-[2.5rem] border border-slate-200 hover:border-purple-500 transition-all shadow-sm">
+            <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <FileText className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-black mb-2">Documentation</h3>
+            <p className="text-sm text-slate-500 leading-relaxed font-medium mb-6">Learn about our data sources, workflows, and spatial methodology.</p>
+            <span className="text-xs font-black uppercase text-purple-600 flex items-center gap-1">
+              Read Docs <ChevronRight className="w-4 h-4" />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* Comparison Charts */}
+      <section className="max-w-7xl mx-auto px-6 py-20 bg-white rounded-[4rem] border border-slate-100 shadow-sm mb-24">
+        <div className="px-6 md:px-12">
+          <div className="mb-16">
+            <h2 className="text-4xl font-black tracking-tighter mb-4">Impact Analysis & Evolution</h2>
+            <p className="text-slate-500 font-medium">Comparative data across zones and temporal trends.</p>
           </div>
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            {!selectedSite ? (
-              <div className="space-y-6">
-                <div className="bg-emerald-500/5 border border-emerald-500/20 p-5 rounded-2xl">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Activity className="w-5 h-5 text-emerald-400" />
-                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-emerald-400">Context Summary</h3>
-                  </div>
-                  <p className="text-xs text-slate-400 leading-relaxed font-medium">
-                    This platform integrates official CAMI data with satellite monitoring to track industrial incursions within the Okapi Wildlife Reserve. 
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Inside OWR</p>
-                    <p className="text-xl font-black text-white">83</p>
-                    <p className="text-[10px] font-bold text-red-400 uppercase tracking-tighter mt-1">Critical Risk</p>
-                  </div>
-                  <div className="bg-white/5 border border-white/10 p-4 rounded-xl">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Buffer Zone</p>
-                    <p className="text-xl font-black text-white">185</p>
-                    <p className="text-[10px] font-bold text-amber-400 uppercase tracking-tighter mt-1">High Pressure</p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Quick Navigation</h4>
-                  <div className="space-y-2">
-                    {['Epulu Station', 'Ituri River Crossing', 'Mambasa Junction'].map((place) => (
-                      <button key={place} className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition group">
-                        <span className="text-xs font-bold text-slate-400 group-hover:text-white">{place}</span>
-                        <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="space-y-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mining Area: Inside vs Buffer</p>
+              <div className="h-[300px] bg-slate-50 rounded-3xl p-6">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={areaData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontWeight: 700}} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontWeight: 700}} />
+                    <ChartTooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
+                    <Bar dataKey="value" fill="#ef4444" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
-            ) : (
-              <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-6">
-                <button 
-                  onClick={() => setSelectedSite(null)}
-                  className="flex items-center gap-2 text-[10px] font-black text-slate-500 hover:text-white uppercase tracking-[0.2em] mb-4 transition"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Back to Overview
-                </button>
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${getStatusInfo(selectedSite.statut).bg} ${getStatusInfo(selectedSite.statut).color}`}>
-                      {selectedSite.statut || 'Unknown'}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-wider text-slate-400">
-                      {selectedSite.type}
-                    </span>
-                  </div>
-                  <h2 className="text-2xl font-black text-white leading-none tracking-tight mb-1">{selectedSite.parties || 'Unnamed Entity'}</h2>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Permit: {selectedSite.code}</p>
-                </div>
-                <div className="space-y-3">
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Operator</p>
-                    <p className="text-sm font-bold text-white">{selectedSite.parties || 'N/A'}</p>
-                  </div>
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Resources</p>
-                    <p className="text-sm font-bold text-white">{selectedSite.resource || 'N/A'}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Area</p>
-                      <p className="text-sm font-bold text-white">{Math.round(selectedSite.sup_sig_ha || 0).toLocaleString()} ha</p>
-                    </div>
-                    <div className="p-4 bg-white/5 border border-white/10 rounded-2xl">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Zone</p>
-                      <p className="text-sm font-bold text-white">{selectedSite.zone || 'N/A'}</p>
-                    </div>
-                  </div>
-                </div>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Permit Status: Active vs Pending</p>
+              <div className="h-[300px] bg-slate-50 rounded-3xl p-6 flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <ChartTooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            )}
-          </div>
-          <div className="p-4 border-t border-white/5 shrink-0 bg-slate-950/50">
-            <div className="flex items-center justify-between text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-              <span>Data Sync: 2026-05-12</span>
-              <span className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                CAMI Linked
-              </span>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Historical Evolution (Permit Count)</p>
+              <div className="h-[300px] bg-slate-50 rounded-3xl p-6">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats?.evolutionData}>
+                    <defs>
+                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontWeight: 700}} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontWeight: 700}} />
+                    <ChartTooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
+                    <Area type="monotone" dataKey="count" stroke="#10b981" fillOpacity={1} fill="url(#colorCount)" strokeWidth={3} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Forest Loss Trends (Buffer Zone - ha)</p>
+              <div className="h-[300px] bg-slate-50 rounded-3xl p-6">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={stats?.forestLossData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontWeight: 700}} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontWeight: 700}} />
+                    <ChartTooltip contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
+                    <Line type="monotone" dataKey="loss" stroke="#ef4444" strokeWidth={3} dot={{fill: '#ef4444', r: 6}} activeDot={{r: 8}} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex-1 relative bg-slate-900">
-          <MapComponent onSiteClick={(data) => {
-            setSelectedSite(data)
-            setSidebarOpen(true)
-          }} />
-          <button 
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="absolute left-4 top-4 z-40 w-10 h-10 bg-slate-950 border border-white/10 rounded-xl flex items-center justify-center text-slate-400 hover:text-white hover:border-white/20 transition shadow-2xl"
-          >
-            {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-          </button>
-          <div className="absolute bottom-6 right-6 z-40 bg-slate-950/90 backdrop-blur-md border border-white/10 p-4 rounded-2xl shadow-2xl max-w-xs">
-            <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3">Map Legend (CAMI Standard)</h4>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-sm bg-[#ff0055]"></div>
-                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Exploitation (PE/PER)</span>
+      </section>
+
+      {/* Methodology Summary */}
+      <section className="max-w-7xl mx-auto px-6 py-20 bg-slate-900 text-white rounded-[4rem] overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+          <Activity className="w-full h-full text-emerald-500 rotate-12" />
+        </div>
+        <div className="relative z-10 px-6 md:px-12">
+          <h2 className="text-4xl font-black tracking-tighter mb-8">Methodology & Transparency</h2>
+          <div className="grid md:grid-cols-2 gap-12">
+            <div>
+              <p className="text-lg text-slate-400 font-medium leading-relaxed mb-8">
+                We integrate official data from the DRC Mining Cadastre (CAMI) with satellite-derived environmental monitoring. Our spatial analysis workflow automatically detects overlaps between mining concessions and primary forest cover.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                  <div className="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold">Spatial Join Automation</h4>
+                    <p className="text-xs text-slate-500">Auto-synchronizing CSV records into GeoJSON layers.</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-sm bg-[#00d5ff]"></div>
-                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Research (PR/AR)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-sm bg-[#ffd500]"></div>
-                <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Artisanal (ZEA)</span>
-              </div>
+            </div>
+            <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
+              <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500 mb-6">Core Data Pipeline</h4>
+              <ul className="space-y-4">
+                <li className="flex justify-between text-sm">
+                  <span className="text-slate-400 font-bold">Primary Source</span>
+                  <span className="font-black">CAMI Cadastre Minier</span>
+                </li>
+                <li className="flex justify-between text-sm">
+                  <span className="text-slate-400 font-bold">Remote Sensing</span>
+                  <span className="font-black">Sentinel-2 / GEE</span>
+                </li>
+                <li className="flex justify-between text-sm">
+                  <span className="text-slate-400 font-bold">Update Frequency</span>
+                  <span className="font-black">Monthly Synchronization</span>
+                </li>
+              </ul>
+              <Link href="/methodology" className="mt-8 block text-center py-3 bg-white text-slate-900 rounded-xl font-black text-sm hover:bg-emerald-500 hover:text-white transition">
+                Detailed Methodology
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
     </div>
   )
 }
