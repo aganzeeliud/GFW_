@@ -34,13 +34,19 @@ export async function fetchMiningStats(): Promise<MiningStats> {
 
     const parseCSV = (text: string, zone: 'Inside Reserve' | 'Buffer Zone'): MiningConcession[] => {
       const lines = text.split('\n');
-      const headers = lines[0].split(',');
+      if (lines.length === 0) return [];
+      const headers = lines[0].split(',').map(h => h.trim());
+      
       return lines.slice(1).filter(l => l.trim()).map(line => {
-        const values = line.split(',');
+        // Robust CSV split that handles commas inside quotes
+        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         const obj: any = {};
         headers.forEach((h, i) => {
-          obj[h.trim()] = values[i]?.trim();
+          let val = values[i]?.trim() || '';
+          val = val.replace(/^"|"$/g, ''); // Remove quotes
+          obj[h] = val;
         });
+        
         return {
           code: obj.code,
           parties: obj.parties,
@@ -94,5 +100,39 @@ export async function fetchMiningStats(): Promise<MiningStats> {
       evolutionData: [],
       forestLossData: []
     };
+  }
+}
+
+export async function fetchUniqueCompanies(): Promise<string[]> {
+  try {
+    const basePath = window.location.pathname.includes('/GFW_') ? '/GFW_' : '';
+    
+    const [insideRes, bufferRes] = await Promise.all([
+      fetch(`${basePath}/data/OWR_Mining_Inside.csv`),
+      fetch(`${basePath}/data/OWR_Mining_Buffer.csv`)
+    ]);
+
+    const insideText = await insideRes.text();
+    const bufferText = await bufferRes.text();
+
+    const extractParties = (text: string): string[] => {
+      const lines = text.split('\n');
+      if (lines.length === 0) return [];
+      const headers = lines[0].split(',').map(h => h.trim());
+      const partiesIdx = headers.findIndex(h => h === 'parties');
+      if (partiesIdx === -1) return [];
+      
+      return lines.slice(1).filter(l => l.trim()).map(line => {
+        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        let val = values[partiesIdx]?.trim() || '';
+        return val.replace(/^"|"$/g, '');
+      }).filter(Boolean);
+    };
+
+    const companies = [...extractParties(insideText), ...extractParties(bufferText)];
+    return Array.from(new Set(companies)).sort();
+  } catch (error) {
+    console.error('Error fetching unique companies:', error);
+    return [];
   }
 }

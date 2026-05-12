@@ -1,0 +1,213 @@
+{
+  "categories": [
+    {
+      "id": "active_research",
+      "name_fr": "Droits de Recherches Actifs",
+      "name_en": "Active Research Rights",
+      "icon": "🔍",
+      "color": "#00d5ff",
+      "permits": [
+        {
+          "code": "PR",
+          "name_fr": "Permis de Recherches",
+          "name_en": "Research Permit",
+          "short": "PR"
+        },
+        {
+          "code": "ARC",
+          "name_fr": "Autorisation de Recherches des Produits de Carrières",
+          "name_en": "Quarry Products Research Authorization",
+          "short": "ARC"
+        }
+      ]
+    },
+    {
+      "id": "active_exploitation",
+      "name_fr": "Droits d'Exploitation Actifs",
+      "name_en": "Active Exploitation Rights",
+      "icon": "⛏️",
+      "color": "#ff0055",
+      "permits": [
+        {
+          "code": "PE",
+          "name_fr": "Permis d'Exploitation",
+          "name_en": "Exploitation Permit",
+          "short": "PE"
+        },
+        {
+          "code": "PEM",
+          "name_fr": "Permis d'Exploitation de Petite Mine",
+          "name_en": "Small-Scale Mining Permit",
+          "short": "PEM"
+        },
+        {
+          "code": "PER",
+          "name_fr": "Permis d'Exploitation des Rejets",
+          "name_en": "Tailings Exploitation Permit",
+          "short": "PER"
+        },
+        {
+          "code": "AECP",
+          "name_fr": "Autorisation d'Exploitation de Carrières Permanente",
+          "name_en": "Permanent Quarry Exploitation Authorization",
+          "short": "AECP"
+        },
+        {
+          "code": "CUP",
+          "name_fr": "Carrière d'Utilité Publique",
+          "name_en": "Public Utility Quarry",
+          "short": "CUP"
+        }
+      ]
+    },
+    {
+      "id": "applications",
+      "name_fr": "Applications",
+      "name_en": "Applications",
+      "icon": "📋",
+      "color": "#ffd500",
+      "permits": [
+        {
+          "code": "PR_APP",
+          "name_fr": "Permis de Recherches",
+          "name_en": "Research Permit Application",
+          "short": "PR_APP"
+        },
+        {
+          "code": "ARC_APP",
+          "name_fr": "Autorisation de Recherches des Produits de Carrières",
+          "name_en": "Quarry Products Research Application",
+          "short": "ARC_APP"
+        },
+        {
+          "code": "PE_APP",
+          "name_fr": "Permis d'Exploitation",
+          "name_en": "Exploitation Permit Application",
+          "short": "PE_APP"
+        },
+        {
+          "code": "PEM_APP",
+          "name_fr": "Permis d'Exploitation de Petite Mine",
+          "name_en": "Small-Scale Mining Application",
+          "short": "PEM_APP"
+        },
+        {
+          "code": "PER_APP",
+          "name_fr": "Permis d'Exploitation des Rejets",
+          "name_en": "Tailings Exploitation Application",
+          "short": "PER_APP"
+        },
+        {
+          "code": "AECP_APP",
+          "name_fr": "Autorisation d'Exploitation de Carrières Permanente",
+          "name_en": "Permanent Quarry Exploitation Application",
+          "short": "AECP_APP"
+        },
+        {
+          "code": "CUP_APP",
+          "name_fr": "Carrière d'Utilité Publique",
+          "name_en": "Public Utility Quarry Application",
+          "short": "CUP_APP"
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "name_fr": "Autres",
+      "name_en": "Other",
+      "icon": "📍",
+      "color": "#8b5cf6",
+      "permits": [
+        {
+          "code": "ZEA",
+          "name_fr": "Zone d'Exploitation Artisanale",
+          "name_en": "Artisanal Exploitation Zone",
+          "short": "ZEA"
+        },
+        {
+          "code": "ATE",
+          "name_fr": "Amodiation Totale Enregistrée",
+          "name_en": "Registered Total Farming",
+          "short": "ATE"
+        },
+        {
+          "code": "APE",
+          "name_fr": "Amodiation Partielle Enregistrée",
+          "name_en": "Registered Partial Farming",
+          "short": "APE"
+        },
+        {
+          "code": "ZRG",
+          "name_fr": "Zone de Recherches Géologiques",
+          "name_en": "Geological Research Zone",
+          "short": "ZRG"
+        },
+        {
+          "code": "ZI",
+          "name_fr": "Zone Interdite",
+          "name_en": "Prohibited Zone",
+          "short": "ZI"
+        }
+      ]
+    },
+    {
+      "id": "administration",
+      "name_fr": "Administration",
+      "name_en": "Administration",
+      "icon": "🏛️",
+      "color": "#06b6d4",
+      "permits": [
+        {
+          "code": "PROV",
+          "name_fr": "Provinces",
+          "name_en": "Provinces",
+          "short": "PROV"
+        },
+        {
+          "code": "TERR",
+          "name_fr": "Territoires",
+          "name_en": "Territories",
+          "short": "TERR"
+        },
+        {
+          "code": "ZP",
+          "name_fr": "Zones protégées",
+          "name_en": "Protected Zones",
+          "short": "ZP"
+        }
+      ]
+    }
+  ],
+  "status_mapping": {
+    "Approuv": {
+      "name_fr": "Approuvé",
+      "name_en": "Approved",
+      "badge_color": "bg-green-500"
+    },
+    "Demande": {
+      "name_fr": "Demande Approuvée",
+      "name_en": "Request Approved",
+      "badge_color": "bg-blue-500"
+    },
+    "Instance": {
+      "name_fr": "En Instance",
+      "name_en": "Under Review",
+      "badge_color": "bg-yellow-500"
+    },
+    "Rejet": {
+      "name_fr": "Rejeté",
+      "name_en": "Rejected",
+      "badge_color": "bg-red-500"
+    },
+    "Suspendu": {
+      "name_fr": "Suspendu",
+      "name_en": "Suspended",
+      "badge_color": "bg-orange-500"
+    },
+    "Expiré": {
+      "name_fr": "Expiré",
+      "name_en": "Expired",
+      "badge_color": "bg-gray-500"
+    }
+  }
+}

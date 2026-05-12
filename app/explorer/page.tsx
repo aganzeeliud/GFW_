@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { 
@@ -14,9 +14,12 @@ import {
   Layers, 
   Maximize2,
   AlertTriangle,
-  Info
+  Info,
+  ChevronDown
 } from 'lucide-react'
 import { MapFilters } from '@/components/shared/map-component'
+import { fetchUniqueCompanies } from '@/lib/data-utils'
+import { permitCategoriesData, getPermitCategory, getStatusBadge } from '@/lib/permit-utils'
 
 const MapComponent = dynamic(() => import('@/components/shared/map-component'), {
   ssr: false,
@@ -29,8 +32,14 @@ const MapComponent = dynamic(() => import('@/components/shared/map-component'), 
 
 export default function ExplorerPage() {
   const [selectedSite, setSelectedSite] = useState<any>(null)
-  const [filters, setFilters] = useState<MapFilters>({})
+  const [filters, setFilters] = useState<MapFilters & { category?: string; status?: string }>({})
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [companies, setCompanies] = useState<string[]>([])
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchUniqueCompanies().then(setCompanies)
+  }, [])
 
   const handleFilterChange = (key: keyof MapFilters, value: any) => {
     setFilters(prev => ({ ...prev, [key]: value || undefined }))
@@ -73,9 +82,19 @@ export default function ExplorerPage() {
             
             {/* Active Filters */}
             <section>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 mb-6 flex items-center gap-2">
-                <Filter className="w-3 h-3" /> Advanced Filtering
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 flex items-center gap-2">
+                  <Filter className="w-3 h-3" /> Advanced Filtering
+                </h2>
+                {Object.keys(filters).length > 0 && (
+                  <button 
+                    onClick={() => setFilters({})}
+                    className="text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
               
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -84,11 +103,47 @@ export default function ExplorerPage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 w-3 h-3" />
                     <input 
                       type="text" 
+                      list="company-list"
                       placeholder="Search company..." 
-                      className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-xs font-medium"
+                      className="w-full pl-9 pr-10 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-xs font-medium"
                       value={filters.company || ''}
                       onChange={(e) => handleFilterChange('company', e.target.value)}
                     />
+                    {filters.company && (
+                      <button 
+                        onClick={() => handleFilterChange('company', '')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                    <datalist id="company-list">
+                      {companies.map(company => (
+                        <option key={company} value={company} />
+                      ))}
+                    </datalist>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Target Resource</label>
+                  <div className="relative">
+                    <Layers className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 w-3 h-3" />
+                    <input 
+                      type="text" 
+                      placeholder="Search resource (Au, Cu, etc...)" 
+                      className="w-full pl-9 pr-10 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-xs font-medium"
+                      value={filters.resource || ''}
+                      onChange={(e) => handleFilterChange('resource', e.target.value)}
+                    />
+                    {filters.resource && (
+                      <button 
+                        onClick={() => handleFilterChange('resource', '')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -101,36 +156,23 @@ export default function ExplorerPage() {
                       onChange={(e) => handleFilterChange('year', parseInt(e.target.value))}
                     >
                       <option value="">All Years</option>
-                      {[2023, 2022, 2021, 2020, 2019, 2018].map(y => <option key={y} value={y}>{y}</option>)}
+                      {[2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018].map(y => <option key={y} value={y}>{y}</option>)}
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Approval Status</label>
                     <select 
                       className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-xs font-medium appearance-none"
                       value={filters.status || ''}
-                      onChange={(e) => handleFilterChange('status', e.target.value)}
+                      onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value || undefined }))}
                     >
                       <option value="">All Status</option>
-                      <option value="Approuv">Active/Approved</option>
-                      <option value="Demande">Pending</option>
-                      <option value="Instance">In Instance</option>
+                      <option value="Approuv">Approved</option>
+                      <option value="Demande">Requested</option>
+                      <option value="Instance">In Review</option>
+                      <option value="Suspendu">Suspended</option>
+                      <option value="Expiré">Expired</option>
                     </select>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Permit Type</label>
-                  <div className="flex flex-wrap gap-2">
-                    {['PE', 'PR', 'AR', 'ZEA'].map(t => (
-                      <button 
-                        key={t}
-                        onClick={() => handleFilterChange('type', filters.type === t ? '' : t)}
-                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition ${filters.type === t ? 'bg-emerald-600 text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
-                      >
-                        {t}
-                      </button>
-                    ))}
                   </div>
                 </div>
 
@@ -144,7 +186,54 @@ export default function ExplorerPage() {
                     <option value="">All Zones</option>
                     <option value="Inside Reserve">Inside Reserve</option>
                     <option value="Buffer Zone">Buffer Zone</option>
+                    <option value="OWR Region">OWR Region</option>
                   </select>
+                </div>
+
+                <hr className="border-white/10" />
+
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Permit Categories</label>
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                    {permitCategoriesData.categories.map(category => (
+                      <div key={category.id}>
+                        <button
+                          onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
+                          className={`w-full px-3 py-2 rounded-lg flex items-center justify-between text-xs font-bold uppercase tracking-widest transition ${
+                            filters.category === category.id 
+                              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' 
+                              : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span text-lg>{category.icon}</span>
+                            {category.name_en.split(' ').slice(0, 2).join(' ')}
+                          </span>
+                          <ChevronDown className={`w-3 h-3 transition-transform ${expandedCategory === category.id ? 'rotate-180' : ''}`} />
+                        </button>
+                        {expandedCategory === category.id && (
+                          <div className="mt-1 bg-black/30 rounded-lg p-2 space-y-1 border border-white/5">
+                            {category.permits.map(permit => (
+                              <button
+                                key={permit.code}
+                                onClick={() => {
+                                  setFilters(prev => ({ ...prev, category: category.id, type: permit.code }))
+                                }}
+                                className={`w-full text-left px-2 py-1.5 rounded text-[8px] font-medium leading-tight transition truncate ${
+                                  filters.type === permit.code
+                                    ? 'bg-emerald-500 text-white'
+                                    : 'bg-white/5 text-slate-300 hover:bg-white/10'
+                                }`}
+                                title={permit.name_en}
+                              >
+                                {permit.short}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </section>
@@ -249,21 +338,29 @@ export default function ExplorerPage() {
           />
 
           {/* Map Legend (Floating) */}
-          <div className="absolute bottom-6 right-6 z-40 bg-slate-950/90 backdrop-blur-md border border-white/10 p-4 rounded-2xl shadow-2xl max-w-xs pointer-events-none">
-            <h4 className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3">Map Legend (CAMI Standard)</h4>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-sm bg-[#ff0055]"></div>
-                <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Exploitation (PE)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-sm bg-[#00d5ff]"></div>
-                <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Research (PR)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-sm bg-[#ffd500]"></div>
-                <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Artisanal (ZEA)</span>
-              </div>
+          <div className="absolute bottom-6 right-6 z-40 bg-slate-950/90 backdrop-blur-md border border-white/10 p-4 rounded-2xl shadow-2xl max-w-xs pointer-events-none max-h-[400px] overflow-y-auto">
+            <h4 className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-slate-950/90">Map Legend (CAMI Categories)</h4>
+            <div className="space-y-3">
+              {permitCategoriesData.categories.map(category => (
+                <div key={category.id} className="border-l-2 pl-3" style={{ borderColor: category.color }}>
+                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
+                    <span>{category.icon}</span>
+                    {category.name_en}
+                  </p>
+                  <div className="space-y-0.5">
+                    {category.permits.slice(0, 2).map(permit => (
+                      <div key={permit.code} className="text-[7px] text-slate-500 font-medium">
+                        • {permit.short}
+                      </div>
+                    ))}
+                    {category.permits.length > 2 && (
+                      <div className="text-[7px] text-slate-600 font-medium italic">
+                        + {category.permits.length - 2} more
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

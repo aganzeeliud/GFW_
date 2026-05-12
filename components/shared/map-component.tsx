@@ -22,6 +22,7 @@ export interface MapFilters {
   company?: string;
   type?: string;
   zone?: string;
+  resource?: string;
   minSize?: number;
 }
 
@@ -63,11 +64,16 @@ export default function MapComponent({ filters, onSiteClick }: MapProps) {
         
         const parseCSV = (text: string) => {
           const lines = text.split('\n');
-          const headers = lines[0].split(',');
+          if (lines.length === 0) return [];
+          const headers = lines[0].split(',').map(h => h.trim());
           return lines.slice(1).filter(l => l.trim()).map(line => {
-            const values = line.split(',');
+            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             const obj: any = {};
-            headers.forEach((h, i) => { obj[h.trim()] = values[i]?.trim(); });
+            headers.forEach((h, i) => {
+              let val = values[i]?.trim() || '';
+              val = val.replace(/^"|"$/g, '');
+              obj[h] = val;
+            });
             return obj;
           });
         };
@@ -119,6 +125,7 @@ export default function MapComponent({ filters, onSiteClick }: MapProps) {
         if (filters.company && !p.parties?.toLowerCase().includes(filters.company.toLowerCase())) return false;
         if (filters.type && !p.type?.toLowerCase().includes(filters.type.toLowerCase())) return false;
         if (filters.zone && p.zone !== filters.zone) return false;
+        if (filters.resource && !p.resource?.toLowerCase().includes(filters.resource.toLowerCase())) return false;
         if (filters.minSize && (parseFloat(p.sup_sig_ha) || 0) < filters.minSize) return false;
         return true;
       })
